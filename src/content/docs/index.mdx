@@ -17,6 +17,7 @@ hero:
 ---
 
 import { Card, CardGrid } from "@astrojs/starlight/components";
+import { Icon } from "@astrojs/starlight/components";
 
 <CardGrid stagger>
   <Card title=" Learn Programming Easily" icon="open-book">
@@ -32,3 +33,47 @@ import { Card, CardGrid } from "@astrojs/starlight/components";
     Improve your skills with advanced techniques and examples.
   </Card>
 </CardGrid>
+
+<br />
+
+<h2 style="text-align: center;">Why OpenPrep?</h2>
+
+<CardGrid>
+  <Card title="Learn Multiple Languages">
+    Comprehensive guides to help you learn programming languages quickly and
+    efficiently.
+    <Icon name="laptop" size="1.5rem" color="orange" />
+  </Card>
+  <Card title="Ready-to-Use Snippets">
+    Access a library of code snippets for immediate use in your projects.
+    <Icon name="pen" size="1.5rem" color="orange" />
+  </Card>
+  <Card title="Best Practices & Tips">
+    Follow industry-standard best practices for writing clean and maintainable
+    code.
+    <Icon name="approve-check-circle" size="1.5rem" color="orange" />
+  </Card>
+  <Card title="Performance Optimization">
+    Get insights on how to optimize your applications for speed and scalability.
+    <Icon name="rocket" size="1.5rem" color="orange" />
+  </Card>
+</CardGrid>
+
+<br />
+<br />
+<footer
+  style={{
+    textAlign: "center",
+    width: "100%",
+  }}
+>
+  <p>Brought to you by</p>
+  <a
+    href="https://codequestic.devs.org.in/"
+    target="_blank"
+    rel="noopener noreferrer"
+    style={{ textDecoration: "none" }}
+  >
+    <h2 style={{ color: "#ff6138" }}>CodeQuestic</h2>
+  </a>
+</footer>
