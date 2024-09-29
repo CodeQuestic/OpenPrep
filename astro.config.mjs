@@ -6,7 +6,8 @@ export default defineConfig({
     starlight({
       title: "OpenPrep",
       logo: {
-        src: "./src/assets/logo.svg",
+        light: './src/assets/light-logo.svg',
+        dark: './src/assets/dark-logo.svg',
       },
       social: {
         github: "https://github.com/CodeQuestic/OpenPrep",
