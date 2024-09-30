@@ -2,7 +2,7 @@
 
 First of all, thank you for taking the time to contribute! 🎉<br>
 The following is a set of guidelines for contributing to this repository.<br>
-Before contributing, we encourage you to read our [Code of Conduct](https://github.com/rakshixh/FakeAuthentication-API/blob/master/.github/CODE_OF_CONDUCT.md).
+Before contributing, we encourage you to read our [Code of Conduct](https://github.com/CodeQuestic/OpenPrep/edit/main/.github/CODE_OF_CONDUCT.md).
 
 <h2>📝 Contributing to the repository</h2>
 
@@ -14,7 +14,7 @@ Before contributing, we encourage you to read our [Code of Conduct](https://gith
 
 #### 1. Fork the Repository
 
-Click the fork button at the top right of the page to create a copy of this repo in your account, or go to this repository's [fork page](https://github.com/rakshixh/FakeAuthentication-API/fork). After successfully forking the repo, you will be directed to your repo copy.
+Click the fork button at the top right of the page to create a copy of this repo in your account, or go to this repository's [fork page](https://github.com/CodeQuestic/OpenPrep/fork). After successfully forking the repo, you will be directed to your repo copy.
 
 #### 2. Clone the Forked Repository
 
@@ -25,7 +25,7 @@ For `HTTPS`, open up your terminal and run the following command:
 ```bash
 git clone <your-clone-link>
 # or
-git clone https://github.com/<your-username>/FakeAuthentication-API.git
+git clone https://github.com/<your-username>/OpenPrep.git
 ```
 
 Replace `<your-username>` with your GitHub username.<br>
@@ -33,7 +33,7 @@ Replace `<your-username>` with your GitHub username.<br>
 You can also clone the repo using the `GitHub CLI`. To do this, run the following command:
 
 ```bash
-gh repo clone <your-username>/FakeAuthentication-API
+gh repo clone <your-username>/OpenPrep
 ```
 
 ### Making your Changes
@@ -59,7 +59,7 @@ Work on the code on your local machine.
 > You are to make only `one contribution` per `pull request`. It makes it easier to review and merge. If you want to add `multiple contributions` or if you have solved `multiple issues`, create `separate pull requests` for each.
 
 > [!NOTE]
-> Before you begin with coding, please ensure that you create a [new issue](https://github.com/rakshixh/FakeAuthentication-API/issues) detailing the new feature you wish to implement and get assigned to it. Pull requests will only be accepted if the code address the existing issue assigned to you. Furthermore, if there are other existing issues you'd like to contribute to, you can request to be assigned to them.
+> Before you begin with coding, please ensure that you create a [new issue](https://github.com/CodeQuestic/OpenPrep/issues) detailing the new feature you wish to implement and get assigned to it. Pull requests will only be accepted if the code address the existing issue assigned to you. Furthermore, if there are other existing issues you'd like to contribute to, you can request to be assigned to them.
 
 #### 3. Commit your Changes
 
@@ -88,9 +88,28 @@ git push origin <your-branch-name>
 
 #### 1. Create a new Pull Request(PR)
 
-Go to the [FakeAuthentication-API](https://github.com/rakshixh/FakeAuthentication-API) repository and click the `compare & pull request` button or go to the [Pull Request](https://github.com/rakshixh/FakeAuthentication-API/pulls) page and click on the `New pull request` button. It will take you to the `Open a pull request` page.
+To submit a pull request for the CodeQuestic/OpenPrep repository, follow these steps:
 
-> Note: Make sure your PR points to the `main` branch, not any other one.
+1. **Ensure Naming Conventions**: 
+   - Follow the Conventional Commits specification for naming your pull request.
+   - Use the format: `<language>[#issue-id]: <description>`
+   - Example: `JavaScript(#123): added new sorting algorithm`
+
+2. **Create the Pull Request**:
+   - Go to the repository on GitHub.
+   - Click on the "Pull requests" tab.
+   - Click on "New pull request".
+   - Select the branch that contains your changes.
+   - Ensure the title follows the Conventional Commits naming convention.
+
+3. **Add a Detailed Description**:
+   - In the description field of the pull request, provide a detailed explanation of the changes.
+   - Describe what was changed, why it was changed, and any other relevant details.
+
+4. **Submit the Pull Request**:
+   - After filling out the title and description, click on "Create pull request".
+
+Ensure your pull request complies with the repository's contribution guidelines before submission.
 
 #### 2. Wait for the Review
 
