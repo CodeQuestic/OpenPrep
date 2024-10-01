@@ -34,6 +34,6 @@ Happy Coding! 🚀
 
 <div align="center">
 
-<a href="https://starlight.astro.build/" style="text-decoration: none;">🚀 POWERED BY ASTRO - STAR LIGHT 🚀</a>
+<a href="https://starlight.astro.build/">🚀 POWERED BY ASTRO - STAR LIGHT 🚀</a>
 
 </div>
