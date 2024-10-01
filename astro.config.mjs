@@ -6,33 +6,35 @@ export default defineConfig({
     starlight({
       title: "OpenPrep",
       logo: {
-        light: './src/assets/light-logo.svg',
-        dark: './src/assets/dark-logo.svg',
+        light: "./src/assets/light-logo.svg",
+        dark: "./src/assets/dark-logo.svg",
       },
       social: {
         github: "https://github.com/CodeQuestic/OpenPrep",
       },
       sidebar: [
         {
-          label: "React",
+          label: "Introduction",
           items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Theory Concepts", slug: "react/theory-concepts" },
+            { label: "Getting Started", slug: "get-started" },
+            { label: "FAQ", slug: "faq" },
           ],
+        },
+        {
+          label: "React",
+          items: [{ label: "Introduction", slug: "react/introduction" }],
+        },
+        {
+          label: "React Components",
+          items: [{ label: "Buttons", slug: "react-components/buttons" }],
         },
         {
           label: "Node",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Theory Concepts", slug: "node/theory-concepts" },
-          ],
+          items: [{ label: "Introduction", slug: "node/introduction" }],
         },
         {
           label: "Mongo DB",
-          items: [
-            // Each item here is one entry in the navigation menu.
-            { label: "Theory Concepts", slug: "mongodb/theory-concepts" },
-          ],
+          items: [{ label: "Introduction", slug: "mongodb/introduction" }],
         },
       ],
     }),
