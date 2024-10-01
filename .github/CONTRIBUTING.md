@@ -61,6 +61,91 @@ Work on the code on your local machine.
 > [!NOTE]
 > Before you begin with coding, please ensure that you create a [new issue](https://github.com/CodeQuestic/OpenPrep/issues) detailing the new feature you wish to implement and get assigned to it. Pull requests will only be accepted if the code address the existing issue assigned to you. Furthermore, if there are other existing issues you'd like to contribute to, you can request to be assigned to them.
 
+### Creating a New Page in Astro Starlight
+
+To create a new page in Astro Starlight, follow these steps:
+
+1. **Navigate to the Pages Directory**
+   - Go to the `src/pages/` directory in your project. This is where all the pages for your Astro Starlight site are located.
+
+2. **Create a New Markdown File**
+   - Create a new file with the `.md` extension. For example, `new-page.md`.
+
+3. **Add Frontmatter to the New Page**
+   - At the top of your new Markdown file, add frontmatter in YAML format. This includes metadata for your page. Here's an example:
+     ```yaml
+     ---
+     title: "New Page Title"
+     description: "A brief description of the new page."
+     layout: "@/layouts/BaseLayout.astro"
+     ---
+     ```
+     Adjust the `title`, `description`, and `layout` as needed.
+
+4. **Write Content for the New Page**
+   - Below the frontmatter, add the content for your new page using Markdown syntax. For example:
+     ```markdown
+     # Welcome to the New Page
+     
+     This is the content of your new page. You can add text, images, links, and more using Markdown.
+     ```
+
+5. **Save and Commit Your Changes**
+   - Save your new Markdown file and commit the changes to your branch:
+     ```bash
+     git add src/pages/new-page.md
+     git commit -m "Add new page for Astro Starlight"
+     git push origin <your-branch-name>
+     ```
+
+6. **Open a Pull Request**
+   - Follow the [contribution guidelines](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) to open a pull request for your changes.
+
+By following these steps, you will create a new page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
+
+
+### Editing an Existing Page in Astro Starlight
+
+To edit an existing page in Astro Starlight, follow these steps:
+
+1. **Navigate to the Pages Directory**
+   - Go to the `src/pages/` directory in your project. This is where all the pages for your Astro Starlight site are located.
+
+2. **Locate the Page to Edit**
+   - Find the Markdown file (`.md`) of the page you want to edit. For instance, if you want to edit `existing-page.md`, locate this file.
+
+3. **Open the File for Editing**
+   - Open the file in your preferred text editor or integrated development environment (IDE).
+
+4. **Make Your Changes**
+   - Edit the frontmatter or the content as needed. For example, you can update the title, description, or content of the page:
+     ```yaml
+     ---
+     title: "Updated Page Title"
+     description: "An updated description of the page."
+     layout: "@/layouts/BaseLayout.astro"
+     ---
+     ```
+     ```markdown
+     # Updated Content
+
+     This is the updated content of your existing page. Modify the text, images, links, and other elements as needed.
+     ```
+
+5. **Save and Commit Your Changes**
+   - Save your modifications and commit the changes to your branch:
+     ```bash
+     git add src/pages/existing-page.md
+     git commit -m "Edit existing page in Astro Starlight"
+     git push origin <your-branch-name>
+     ```
+
+6. **Open a Pull Request**
+   - Follow the [contribution guidelines](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) to open a pull request for your changes.
+
+By following these steps, you can edit an existing page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
+
+
 #### 3. Commit your Changes
 
 Your commit message should give a concise idea of the issue you are solving. Please be specific about the commit message.
