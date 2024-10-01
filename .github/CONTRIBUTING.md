@@ -53,20 +53,14 @@ git checkout -b <your-branch-name>
 
 #### 2. Make your Changes
 
-Work on the code on your local machine.
-
-> [!IMPORTANT]
-> You are to make only `one contribution` per `pull request`. It makes it easier to review and merge. If you want to add `multiple contributions` or if you have solved `multiple issues`, create `separate pull requests` for each.
-
-> [!NOTE]
-> Before you begin with coding, please ensure that you create a [new issue](https://github.com/CodeQuestic/OpenPrep/issues) detailing the new feature you wish to implement and get assigned to it. Pull requests will only be accepted if the code address the existing issue assigned to you. Furthermore, if there are other existing issues you'd like to contribute to, you can request to be assigned to them.
+By following these steps, you can edit an existing page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
 
 ### Creating a New Page in Astro Starlight
 
 To create a new page in Astro Starlight, follow these steps:
 
 1. **Navigate to the Pages Directory**
-   - Go to the `src/pages/` directory in your project. This is where all the pages for your Astro Starlight site are located.
+   - Go to the `src/content/docs/` directory in your project. This is where all the pages for your Astro Starlight site are located.
 
 2. **Create a New Markdown File**
    - Create a new file with the `.md` extension. For example, `new-page.md`.
@@ -109,7 +103,7 @@ By following these steps, you will create a new page in Astro Starlight and cont
 To edit an existing page in Astro Starlight, follow these steps:
 
 1. **Navigate to the Pages Directory**
-   - Go to the `src/pages/` directory in your project. This is where all the pages for your Astro Starlight site are located.
+   - Go to the `src/content/docs/` directory in your project. This is where all the pages for your Astro Starlight site are located.
 
 2. **Locate the Page to Edit**
    - Find the Markdown file (`.md`) of the page you want to edit. For instance, if you want to edit `existing-page.md`, locate this file.
@@ -143,7 +137,11 @@ To edit an existing page in Astro Starlight, follow these steps:
 6. **Open a Pull Request**
    - Follow the [contribution guidelines](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) to open a pull request for your changes.
 
-By following these steps, you can edit an existing page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
+> [!IMPORTANT]
+> You are to make only `one contribution` per `pull request`. It makes it easier to review and merge. If you want to add `multiple contributions` or if you have solved `multiple issues`, create `separate pull requests` for each.
+
+> [!NOTE]
+> Before you begin with coding, please ensure that you create a [new issue](https://github.com/CodeQuestic/OpenPrep/issues) detailing the new feature you wish to implement and get assigned to it. Pull requests will only be accepted if the code address the existing issue assigned to you. Furthermore, if there are other existing issues you'd like to contribute to, you can request to be assigned to them.
 
 
 #### 3. Commit your Changes
@@ -170,6 +168,7 @@ git push origin <your-branch-name>
 ```
 
 ### Opening a Pull Request(PR)
+
 
 #### 1. Create a new Pull Request(PR)
 
