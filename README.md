@@ -9,7 +9,6 @@ Welcome to **OpenPrep**! This repository is a comprehensive collection of resour
 - Best Practices 🛠️
 - Reference Materials 📖
 
-
 ## Code of Conduct 📝
 
 Please note that this project is released with a [Contributor Code of Conduct](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
@@ -24,17 +23,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact 📬
 
-If you have any questions or suggestions, feel free to hop on discussions or contact us directly via discord. 
+If you have any questions or suggestions, feel free to hop on discussions or contact us directly via discord.
 
 - [Discord](https://discord.com/invite/33VBS64Ju5)
 - [Discussions](https://github.com/CodeQuestic/OpenPrep/discussions)
 
 Happy Coding! 🚀
 
+##
+
 <div align="center">
 
-## Powered by Astro 🚀
-
-![Powered by Astro](https://github.com/user-attachments/assets/0933b0b5-101e-4c71-9c35-f186b40ef591)
+<a href="https://starlight.astro.build/" style="text-decoration: none; color: inherit;">🚀 POWERED BY ASTRO - STAR LIGHT 🚀</a>
 
 </div>
