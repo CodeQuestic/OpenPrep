@@ -53,7 +53,7 @@ git checkout -b <your-branch-name>
 
 #### 2. Make your Changes
 
-By following these steps, you can edit an existing page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
+By following these steps, you will create a new page or you can edit an existing page.
 
 ### Creating a New Page in Astro Starlight
 
@@ -63,7 +63,7 @@ To create a new page in Astro Starlight, follow these steps:
    - Go to the `src/content/docs/` directory in your project. This is where all the pages for your Astro Starlight site are located.
 
 2. **Create a New Markdown File**
-   - Create a new file with the `.md` extension. For example, `new-page.md`.
+   - Create a new file with the `.mdx` extension. For example, `new-page.mdx` (both .md & .mdx are accepted)
 
 3. **Add Frontmatter to the New Page**
    - At the top of your new Markdown file, add frontmatter in YAML format. This includes metadata for your page. Here's an example:
@@ -83,11 +83,12 @@ To create a new page in Astro Starlight, follow these steps:
      
      This is the content of your new page. You can add text, images, links, and more using Markdown.
      ```
+   - [Learn more about building components in the Astro Starlight](https://starlight.astro.build/components/using-components/)
 
 5. **Save and Commit Your Changes**
    - Save your new Markdown file and commit the changes to your branch:
      ```bash
-     git add src/pages/new-page.md
+     git add src/content/docs/new-page.mdx
      git commit -m "Add new page for Astro Starlight"
      git push origin <your-branch-name>
      ```
@@ -95,7 +96,6 @@ To create a new page in Astro Starlight, follow these steps:
 6. **Open a Pull Request**
    - Follow the [contribution guidelines](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) to open a pull request for your changes.
 
-By following these steps, you will create a new page in Astro Starlight and contribute it to the CodeQuestic/OpenPrep repository.
 
 
 ### Editing an Existing Page in Astro Starlight
@@ -106,7 +106,7 @@ To edit an existing page in Astro Starlight, follow these steps:
    - Go to the `src/content/docs/` directory in your project. This is where all the pages for your Astro Starlight site are located.
 
 2. **Locate the Page to Edit**
-   - Find the Markdown file (`.md`) of the page you want to edit. For instance, if you want to edit `existing-page.md`, locate this file.
+   - Find the Markdown file (`.mdx`) of the page you want to edit. For instance, if you want to edit `existing-page.mdx`, locate this file.
 
 3. **Open the File for Editing**
    - Open the file in your preferred text editor or integrated development environment (IDE).
@@ -125,11 +125,12 @@ To edit an existing page in Astro Starlight, follow these steps:
 
      This is the updated content of your existing page. Modify the text, images, links, and other elements as needed.
      ```
+   - [Learn more about building components in the Astro Starlight](https://starlight.astro.build/components/using-components/)
 
 5. **Save and Commit Your Changes**
    - Save your modifications and commit the changes to your branch:
      ```bash
-     git add src/pages/existing-page.md
+     git add src/content/docs/existing-page.mdx
      git commit -m "Edit existing page in Astro Starlight"
      git push origin <your-branch-name>
      ```
