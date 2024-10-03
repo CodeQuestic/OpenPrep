@@ -2,7 +2,7 @@
 name: Hacktoberfest Contribution
 about: Help contribute to this project for Hacktoberfest!
 title: "[Hacktoberfest]:<Short Description>"
-labels: hacktoberfest, help wanted
+labels: hacktoberfest, help wanted, good first issue
 assignees: ''
 ---
 
