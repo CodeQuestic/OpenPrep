@@ -32,7 +32,7 @@ assignees: ''
 
 ## 🎃 Hacktoberfest Participation
 
-✔️ This issue is tagged for Hacktoberfest. <br>
+✔️ This issue is tagged for Hacktoberfest.
 ✔️ PR should reference this issue and adhere to contribution guidelines.
 
 ## 👥 Contributors
