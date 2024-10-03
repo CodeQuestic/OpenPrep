@@ -14,7 +14,7 @@ We take security vulnerabilities seriously and appreciate your efforts to respon
 
 If you discover a vulnerability in our project, please follow the steps below to report it:
 
-1. **Contact**: Send an email to [your-email@example.com] with the subject "Vulnerability Report: [Project Name]".
+1. **Contact**: Send an email to rakshixh.info@gmail.com & dev.saurabhm@gmail.com with the subject "Vulnerability Report: [Project Name]".
 2. **Information**: Please include as much information as possible, including:
    - A detailed description of the vulnerability.
    - Steps to reproduce the issue.
