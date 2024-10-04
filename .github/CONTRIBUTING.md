@@ -72,8 +72,10 @@ To run the OpenPrep locally, follow these steps:
 
 Create a new branch from the main branch. Your branch name should be descriptive of the changes you are making along with your first name. Some ideas to get you started:
 
-- For documentation: `docs-<your-first-name>`
-- For adding new features: `new-f-<your-first-name>`
+- Branch name format:
+- For documentation: `docs-[issue-id]`
+- For bugs: `bugs-[issue-id]`
+- Example: `docs[#123]`
 
 To create a new branch, use the following command:
 
@@ -208,7 +210,7 @@ To submit a pull request for the CodeQuestic/OpenPrep repository, follow these s
 1. **Ensure Naming Conventions**: 
    - Follow the Conventional Commits specification for naming your pull request.
    - Use the format: `<language>[#issue-id]: <description>`
-   - Example: `JavaScript(#123): added new sorting algorithm`
+   - Example: `JavaScript[#123]: added new sorting algorithm`
 
 2. **Create the Pull Request**:
    - Go to the repository on GitHub.
