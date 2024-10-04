@@ -1,7 +1,7 @@
 ---
 name: Pull Request
 about: Submit code changes for review and merging
-title: [PR]:<Enter your Pull Request Title>
+title: '[PR]:<Enter your Pull Request Title>'
 labels: ''
 assignees: ''
 ---
