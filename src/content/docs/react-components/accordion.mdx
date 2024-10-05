@@ -8,11 +8,15 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import accordionApp from './codes/accordionApp.txt?raw'
-import accordion from './codes/accordion.txt?raw'
+import accordionApp from './codes/Accordion/accordionApp.txt?raw'
+import accordion from './codes/Accordion/accordion.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    Install the following libraries
+    <Code code={`npm install framer-motion`} lang="shell" />
+  </TabItem>
   <TabItem label="Usage"><Code code={accordionApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={accordion} lang="jsx" title="Accordion.jsx" /></TabItem>
 </Tabs>

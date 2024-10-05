@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import ratingApp from './codes/ratingApp.txt?raw'
-import rating from './codes/rating.txt?raw'
+import ratingApp from './codes/Rating/ratingApp.txt?raw'
+import rating from './codes/Rating/rating.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={ratingApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={rating} lang="jsx" title="rating.jsx" /></TabItem>
 </Tabs>

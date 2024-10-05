@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import inputApp from './codes/inputApp.txt?raw'
-import input from './codes/input.txt?raw'
+import inputApp from './codes/Input/inputApp.txt?raw'
+import input from './codes/Input/input.txt?raw'
 
 
-<Tabs syncKey="pkg">
+<Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={inputApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={input} lang="jsx" title="input.jsx" /></TabItem>
 </Tabs>

@@ -8,11 +8,15 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import alertApp from './codes/alertApp.txt?raw'
-import alert from './codes/alert.txt?raw'
+import alertApp from './codes/Alert/alertApp.txt?raw'
+import alert from './codes/Alert/alert.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    Install the following libraries
+    <Code code={`npm install framer-motion lucide-react`} lang="shell" />
+  </TabItem>
   <TabItem label="Usage"><Code code={alertApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={alert} lang="jsx" title="alert.jsx" /></TabItem>
 </Tabs>

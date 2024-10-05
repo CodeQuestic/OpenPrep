@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import testimonialsApp from './codes/testimonialsApp.txt?raw'
-import testimonials from './codes/testimonials.txt?raw'
+import testimonialsApp from './codes/Testimonials/testimonialsApp.txt?raw'
+import testimonials from './codes/Testimonials/testimonials.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={testimonialsApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={testimonials} lang="jsx" title="testimonials.jsx" /></TabItem>
 </Tabs>

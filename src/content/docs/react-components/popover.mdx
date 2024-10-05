@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import popoverApp from './codes/popoverApp.txt?raw'
-import popover from './codes/popover.txt?raw'
+import popoverApp from './codes/Popover/popoverApp.txt?raw'
+import popover from './codes/Popover/popover.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={popoverApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={popover} lang="jsx" title="popover.jsx" /></TabItem>
 </Tabs>

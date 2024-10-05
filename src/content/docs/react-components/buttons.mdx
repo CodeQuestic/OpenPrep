@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import buttonsApp from './codes/buttonsApp.txt?raw'
-import buttons from './codes/buttons.txt?raw'
+import buttonsApp from './codes/Buttons/buttonsApp.txt?raw'
+import buttons from './codes/Buttons/buttons.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={buttonsApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={buttons} lang="jsx" title="buttons.jsx" /></TabItem>
 </Tabs>

@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import modalApp from './codes/modalApp.txt?raw'
-import modal from './codes/modal.txt?raw'
+import modalApp from './codes/Modal/modalApp.txt?raw'
+import modal from './codes/Modal/modal.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={modalApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={modal} lang="jsx" title="modal.jsx" /></TabItem>
 </Tabs>

@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import tooltipApp from './codes/tooltipApp.txt?raw'
-import tooltip from './codes/tooltip.txt?raw'
+import tooltipApp from './codes/Tooltip/tooltipApp.txt?raw'
+import tooltip from './codes/Tooltip/tooltip.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={tooltipApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={tooltip} lang="jsx" title="tooltip.jsx" /></TabItem>
 </Tabs>

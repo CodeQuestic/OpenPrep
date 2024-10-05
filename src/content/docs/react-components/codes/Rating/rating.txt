@@ -1,6 +1,5 @@
 // Rating.jsx
 import React, { useState } from 'react';
-import PropTypes from 'prop-types';
 
 const Rating = ({
   totalStars = 5,

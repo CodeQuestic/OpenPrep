@@ -8,11 +8,14 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import toastApp from './codes/toastApp.txt?raw'
-import toast from './codes/toast.txt?raw'
+import toastApp from './codes/Toast/toastApp.txt?raw'
+import toast from './codes/Toast/toast.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    No extra libraries required
+  </TabItem>
   <TabItem label="Usage"><Code code={toastApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={toast} lang="jsx" title="toast.jsx" /></TabItem>
 </Tabs>

@@ -8,11 +8,15 @@ import { Card } from '@astrojs/starlight/components';
 import { Tabs, TabItem } from '@astrojs/starlight/components';
 import { Code } from '@astrojs/starlight/components';
 
-import socialbuttonsApp from './codes/socialbuttonApp.txt?raw'
-import socialbuttons from './codes/socialbuttons.txt?raw'
+import socialbuttonsApp from './codes/Socials/socialbuttonApp.txt?raw'
+import socialbuttons from './codes/Socials/socialbuttons.txt?raw'
 
 
 <Tabs>
+  <TabItem label="Libraries Installation">
+    Install the following libraries
+    <Code code={`npm install react-icons`} lang="shell" />
+  </TabItem>
   <TabItem label="Usage"><Code code={socialbuttonsApp} lang="jsx" title="App.jsx" /></TabItem>
   <TabItem label="Component"><Code code={socialbuttons} lang="jsx" title="socialbuttons.jsx" /></TabItem>
 </Tabs>

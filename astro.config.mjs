@@ -24,7 +24,6 @@ export default defineConfig({
           label: "React",
           items: [
             { label: "Introduction", slug: "react/introduction" },
-            { label: "Components", slug: "react/components" }
           ],
         },
         {
