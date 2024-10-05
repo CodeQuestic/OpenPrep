@@ -23,12 +23,17 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Contact 📬
 
-If you have any questions or suggestions, feel free to hop on discussions or contact us directly via discord.
+If you have any questions or suggestions, feel free to hop on [discussions](https://github.com/CodeQuestic/OpenPrep/discussions) or contact us directly via [discord](https://discord.com/invite/33VBS64Ju5).
 
-- [Discord](https://discord.com/invite/33VBS64Ju5)
-- [Discussions](https://github.com/CodeQuestic/OpenPrep/discussions)
+<div align="center">
 
-Happy Coding! 🚀
+## Contributors
+  
+<a href="https://github.com/CodeQuestic/OpenPrep/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=CodeQuestic/OpenPrep" />
+</a>
+
+</div>
 
 ##
 
