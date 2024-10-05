@@ -1,0 +1,18 @@
+---
+title: Input
+---
+
+The following input component is a simple and minimal input component. You can use it as a single component and style it extensively by yourself if you desire. It takes in a `label` and `placeholder` and `value` as well as others for error handling and form validation. You can easily customize it more as per your needs.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import inputApp from './codes/inputApp.txt?raw'
+import input from './codes/input.txt?raw'
+
+
+<Tabs syncKey="pkg">
+  <TabItem label="Usage"><Code code={inputApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={input} lang="jsx" title="input.jsx" /></TabItem>
+</Tabs>

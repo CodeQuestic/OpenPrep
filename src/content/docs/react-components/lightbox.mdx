@@ -1,0 +1,18 @@
+---
+title: Lightbox
+---
+
+The following lightbox component is used for displaying images in a modal, and has good accessibility with keyboard. You have to pass in an array of images and set state variables to use it. You can customize it very easily via Tailwind and it's also a single component. An example of usage is:
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import lightboxApp from './codes/lightboxApp.txt?raw'
+import lightbox from './codes/lightbox.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Usage"><Code code={lightboxApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={lightbox} lang="jsx" title="lightbox.jsx" /></TabItem>
+</Tabs>

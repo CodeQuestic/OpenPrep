@@ -1,0 +1,18 @@
+---
+title: Star Ratings
+---
+
+The following rating component is single component meant to be used in a form or a feedback area. It takes allows to set any icons (Not just stars) and allows you set how many stars you want to display. It can be easily paired with an API or database and update in real time. You can also style it however you want quite easily.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import ratingApp from './codes/ratingApp.txt?raw'
+import rating from './codes/rating.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Usage"><Code code={ratingApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={rating} lang="jsx" title="rating.jsx" /></TabItem>
+</Tabs>

@@ -1,0 +1,18 @@
+---
+title: Chips
+---
+
+The following chips component is used for displaying tags. It can be used as a single component and styled quite easily. It has some predefined variants and sizes so not much effort is required in most scenario but you can easily add your own depending on your needs. It also handles deletion and can act as a link flawlessly.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import chipsApp from './codes/chipsApp.txt?raw'
+import chips from './codes/chips.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Usage"><Code code={chipsApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={chips} lang="jsx" title="chips.jsx" /></TabItem>
+</Tabs>

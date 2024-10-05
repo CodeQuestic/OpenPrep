@@ -1,0 +1,18 @@
+---
+title: Breadcrumb
+---
+
+The following breadcrumb component is used to show the current location in a hierarchy. It is a single component and you can style both the items within the breadcrumb as well as the entire component. It takes in an array of `breadcrumbItems` and you may pass in icons as well to have a nicer look.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import breadcrumbApp from './codes/breadcrumbApp.txt?raw'
+import breadcrumb from './codes/breadcrumb.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Usage"><Code code={breadcrumbApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={breadcrumb} lang="jsx" title="breadcrumb.jsx" /></TabItem>
+</Tabs>

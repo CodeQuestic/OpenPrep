@@ -1,0 +1,18 @@
+---
+title: Toast
+---
+
+You can use this single component to push notifications to your users and choose from multiple sizes, colors, styles, and positions. You can the example usage below, the component can be used as a single component and style it extensively by yourself if you desire.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import toastApp from './codes/toastApp.txt?raw'
+import toast from './codes/toast.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Usage"><Code code={toastApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={toast} lang="jsx" title="toast.jsx" /></TabItem>
+</Tabs>
