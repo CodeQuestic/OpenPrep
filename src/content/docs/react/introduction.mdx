@@ -1,6 +1,101 @@
 ---
-title: Introduction
+title: Introduction to React
+description: An introduction to react with an overview of it's main features and how to start a new project
 ---
 
-Guides lead a user through a specific task they want to accomplish, often with a sequence of steps.
-Writing a good guide requires thinking about what your users are trying to do.
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+import { FileTree } from '@astrojs/starlight/components';
+
+Welcome! This page will educate you about React and how to scaffold your first project with it.
+
+## Why React?
+
+Firstly, what is React? React is an open-source Javascript library created by Facebook (Meta) to make creating user interfaces much more easier, while it is deemed as a _frontend framework_ it isn't a framework technically. React is the most popular frontend technology and boasts the following features:
+
+- **Component based architecture**: Allows you to break down UI into reusable components which makes it incredibly easier to manage the UI of your app. 
+- **Virtual DOM**: React uses a virtual DOM which allows it to efficiently update the UI without having to re-render the entire app. This heavily boosts performance 
+- **Declarative**: React uses a declarative approach to define how your UI should look based on its current state. You specify what you want, and React takes care of updating the DOM to match that desired state.
+- **JSX**: React uses JSX (Javascript Syntax Extension) which makes development much more intutive allowing ES6 Javascript to allow HTML-like syntax to coexist with it, _and much more..._
+
+## Getting Started
+
+<Card title="Prerequisites" icon="laptop">
+  To start off you need to make sure you have the following
+  - Node (https://nodejs.org/en/)
+  - Package Manager ([NPM](https://www.npmjs.com/) | [Yarn](https://yarnpkg.com/) | [PNPM](https://pnpm.io/))
+</Card>
+
+To get started go to the directory where you want your project folder to reside in. Then either open up your terminal or editor (Like VS Code, and in there go to the terminal by <kbd>CTRL+`</kbd>) and put in the following commands:
+
+---
+export const tabs = [
+  {
+    command: `npx create-react-app your-project-name\ncd your-project-name\nnpm start`
+  },
+  {
+    command: `yarn create react-app your-project-name\ncd your-project-name\nyarn start`
+  },
+  {
+    command: `pnpm create react-app your-project-name\ncd your-project-name\npnpm start`
+  }
+];
+
+export const highlightCreate = 'create-react-app';
+
+---
+<Tabs syncKey="pkg">
+  <TabItem label="NPM"><Code code={tabs[0].command} lang="shell" mark={highlightCreate} /></TabItem>
+  <TabItem label="Yarn"><Code code={tabs[1].command} lang="shell" mark={highlightCreate} /></TabItem>
+  <TabItem label="PNPM"><Code code={tabs[2].command} lang="shell" mark={highlightCreate} /></TabItem>
+</Tabs>
+
+You should have the following structure in your editor file tree:
+
+<FileTree>
+
+- public Ignore this
+  - favicon.ico
+  - index.html
+  - logo192.png
+  - logo512.png
+  - manifest.json
+  - robots.txt
+- src
+  - App.css CSS styles for the _App_ component.
+  - App.js Main React component serving as entry point
+  - App.test.js Contains test cases for the _App_ component
+  - index.css Global CSS styles applied everywhere.
+  - index.js Renders App component into the DOM
+  - logo.svg The SVG image file for the application's logo
+  - reportWebVitals.js Utility for performance metrics
+  - setupTests.js Configuration file for the testing environment
+- .gitignore
+- package-lock.json Different depending on package manager
+- packagon.json
+- README.md
+
+</FileTree>
+
+Once you run `npm run start` you will see a link in the terminal which you can click on to view your app in your browser. You will see some text, the React logo and counter and so on. Open `App.jsx` in your editor and change the HTML in the `return` statement to render your own HTML.
+
+<Card title="Vite" icon="rocket">
+  Nowadays, a better way to build your project is using [Vite](https://vitejs.dev/). Use the command below and it set up the project for you. If you wish to scaffold the project in current directory use `.` for project name.
+  <Tabs syncKey="pkg">
+    <TabItem label="NPM"><Code code="npm create vite@latest your-project-name -- --template react" lang="shell" /></TabItem>
+    <TabItem label="Yarn"><Code code="yarn create vite@latest your-project-name -- --template react" lang="shell" /></TabItem>
+    <TabItem label="PNPM"><Code code="pnpm create vite@latest your-project-name -- --template react" lang="shell" /></TabItem>
+  </Tabs>
+  By just running `npm create vite@latest` you get interactive prompts to choose various templates. Vite is a centralized way to start your project, for any frontend technology.
+</Card>
+
+
+## What's Next?
+
+React has much much more to learn about. You can go to the next page and learn about making your first component, what are props in React, what does state mean and how to use it and much more. Apart from that, there are many other features that you can learn about. Below are some reference links below that you can also view to learn more about React.
+
+- [Official React Docs](https://react.dev/)
+- [React on MDN](https://developer.mozilla.org/en-US/docs/Learn/Tools_and_testing/Client-side_JavaScript_frameworks/React_getting_started)
+- [Scrimba](https://scrimba.com/g/glearnreact)
+- [University of Helsinki: Full Stack Open MOOC](https://fullstackopen.com/en/)

@@ -1,0 +1,21 @@
+---
+title: Tabs
+---
+
+The following tabs component is a single component which takes in an array of `tabs` and displays them. It can be heavily customized where you can style the tabs themselves via `itemClassName` or the container too. Further functionality or styles can be added on top of this exisiting markup of the component.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import tabsApp from './codes/Tabs/tabsApp.txt?raw'
+import tabs from './codes/Tabs/tabs.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    No extra libraries required. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+  </TabItem>
+  <TabItem label="Usage"><Code code={tabsApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={tabs} lang="jsx" title="tabs.jsx" /></TabItem>
+</Tabs>

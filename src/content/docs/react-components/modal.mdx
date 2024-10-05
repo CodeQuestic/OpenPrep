@@ -1,0 +1,21 @@
+---
+title: Modal
+---
+
+The following modal component is used to display content in a modal. It is a single component and you can customize it very easily via Tailwind on the spot. You can also style the overlay, define a title specifcally as well the main content via `footer`. In any some logic is required on close we have it covered too
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import modalApp from './codes/Modal/modalApp.txt?raw'
+import modal from './codes/Modal/modal.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    No extra libraries required. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+  </TabItem>
+  <TabItem label="Usage"><Code code={modalApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={modal} lang="jsx" title="modal.jsx" /></TabItem>
+</Tabs>

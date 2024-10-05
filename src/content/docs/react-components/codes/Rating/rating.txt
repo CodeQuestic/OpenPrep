@@ -1,0 +1,46 @@
+// Rating.jsx
+import React, { useState } from 'react';
+
+const Rating = ({
+  totalStars = 5,
+  initialRating = 0,
+  filledIcon: FilledIcon,
+  emptyIcon: EmptyIcon,
+  iconClassName = '',
+  readOnly = false,
+  onClick
+}) => {
+  const [rating, setRating] = useState(initialRating);
+
+  const handleMouseEnter = (value) => { if (!readOnly) setRating(value); };
+  const handleMouseLeave = () => { if (!readOnly) setRating(initialRating); };
+
+  const handleClick = (value) => {
+    if (!readOnly) {
+      setRating(value);
+      if (onClick) onClick(value);
+    }
+  };
+
+  return (
+    <div className="flex items-center">
+      {[...Array(totalStars)].map((_, index) => {
+        const value = index + 1;
+        return (
+          <button
+            key={index}
+            onClick={() => handleClick(value)}
+            onMouseEnter={() => handleMouseEnter(value)}
+            onMouseLeave={handleMouseLeave}
+            className={`focus:outline-none ${iconClassName}`}
+          >
+            {value <= rating ? <FilledIcon /> : <EmptyIcon />}
+          </button>
+        );
+      })}
+      <span className="ml-2 text-gray-700">{rating} / {totalStars}</span>
+    </div>
+  );
+};
+
+export default Rating;

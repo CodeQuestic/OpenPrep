@@ -1,0 +1,42 @@
+// App.jsx
+import React, { useState } from 'react';
+import Modal from './components/modal';
+
+const App = () => {
+  const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
+
+  return (
+    <div className="flex items-center justify-center h-screen">
+      <button
+        onClick={openModal}
+        className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-600 transition"
+      >
+        Open Modal
+      </button>
+
+      <Modal
+        isOpen={isOpen}
+        onClose={closeModal}
+        title="My Custom Modal"
+        className="bg-gray-100" // Customize modal styles here
+        overlayClassName="bg-opacity-70" // Customize overlay styles here
+        footer={
+          <div className="flex justify-end">
+            <button
+              onClick={closeModal}
+              className="bg-green-500 text-white px-4 py-2 rounded-lg shadow hover:bg-green-600 transition"
+            >
+              Close
+            </button>
+          </div>
+        }
+      >
+        <p>This is the content of the modal. You can customize it as needed.</p>
+      </Modal>
+    </div>
+  );
+}
+
+export default App;

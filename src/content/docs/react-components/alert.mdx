@@ -1,0 +1,22 @@
+---
+title: Alert
+---
+
+The following alert component is used to show success, error, warning and info or any other messages. It is a single component and highly versatile allowing you to define your own variants and you may set duration it appears for, `onClose` and if it should be dismissed automatically. You can style it in place via Tailwind and `className`.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import alertApp from './codes/Alert/alertApp.txt?raw'
+import alert from './codes/Alert/alert.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    Install the following libraries. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+    <Code code={`npm install framer-motion lucide-react`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage"><Code code={alertApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={alert} lang="jsx" title="alert.jsx" /></TabItem>
+</Tabs>

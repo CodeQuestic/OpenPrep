@@ -1,0 +1,21 @@
+---
+title: Dropdown
+---
+
+The following dropdown component takes in an array of `options` and displays them when you click over the component. Styling the container or the dropdown elements is very straightforward making it suit any UI. It is a single component and can be easily customized without much hassle or complexity.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import dropdownApp from './codes/Dropdown/dropdownApp.txt?raw'
+import dropdown from './codes/Dropdown/dropdown.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    No extra libraries required. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+  </TabItem>
+  <TabItem label="Usage"><Code code={dropdownApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={dropdown} lang="jsx" title="dropdown.jsx" /></TabItem>
+</Tabs>

@@ -1,0 +1,25 @@
+// App.jsx
+import React, { useState } from 'react';
+import Navbar from './components/nav';
+
+const App = () => {
+  return (
+    <div>
+      <Navbar
+        logo="https://via.placeholder.com/150" // Logo URL
+        className="bg-gray-100" // Additional styles if needed
+      >
+        <a href="#" className="text-gray-700 hover:text-blue-600 transition">Home</a>
+        <a href="#" className="text-gray-700 hover:text-blue-600 transition">About</a>
+        <a href="#" className="text-gray-700 hover:text-blue-600 transition">Services</a>
+        <a href="#" className="text-gray-700 hover:text-blue-600 transition">Contact</a>
+      </Navbar>
+      <main className="p-8">
+        <h1 className="text-2xl font-bold">Welcome</h1>
+        <p>Main content</p>
+      </main>
+    </div>
+  );
+}
+
+export default App;

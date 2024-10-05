@@ -1,0 +1,24 @@
+// App.jsx
+import React from 'react';
+import ButtonGroup from './components/ButtonGroup';
+
+const App = () => {
+  return (
+    <div className="p-4">
+      {/* Row Direction */}
+      <ButtonGroup className="mb-4">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Button 1</button>
+        <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Button 2</button>
+        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 transition">Button 3</button>
+      </ButtonGroup>
+
+      {/* Column Direction */}
+      <ButtonGroup direction="column" className="mb-4">
+        <button className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Button A</button>
+        <button className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Button B</button>
+      </ButtonGroup>
+    </div>
+  );
+};
+
+export default App;

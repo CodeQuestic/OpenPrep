@@ -1,0 +1,21 @@
+---
+title: Button Group
+---
+
+The following button group component is a single component which is generically used to group buttons. It is a great component to use if you want to group buttons together. You can style it in place via Tailwind and `className`, also you may define `direction` and `spacing` in place wherever you may use it.
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import buttonGroupApp from './codes/Button-Group/buttonGroupApp.txt?raw'
+import buttonGroup from './codes/Button-Group/buttonGroup.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    No extra libraries needed. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+  </TabItem>
+  <TabItem label="Usage"><Code code={buttonGroupApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={buttonGroup} lang="jsx" title="buttonGroup.jsx" /></TabItem>
+</Tabs>

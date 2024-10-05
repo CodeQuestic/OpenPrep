@@ -1,0 +1,22 @@
+---
+title: Accordion
+---
+
+The following accordion component is used for showing hidden information based on the collapse and expand. You can use it as a single component and style it extensively by yourself if you desire. It takes in an array of elements `items` with `title` and `content`. An example of usage is:
+
+import { Card } from '@astrojs/starlight/components';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+import { Code } from '@astrojs/starlight/components';
+
+import accordionApp from './codes/Accordion/accordionApp.txt?raw'
+import accordion from './codes/Accordion/accordion.txt?raw'
+
+
+<Tabs>
+  <TabItem label="Install Dependencies">
+    Install the following libraries. Assuming you have [Tailwind CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+    <Code code={`npm install framer-motion`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage"><Code code={accordionApp} lang="jsx" title="App.jsx" /></TabItem>
+  <TabItem label="Component"><Code code={accordion} lang="jsx" title="Accordion.jsx" /></TabItem>
+</Tabs>
