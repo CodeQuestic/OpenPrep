@@ -35,6 +35,36 @@ You can also clone the repo using the `GitHub CLI`. To do this, run the followin
 ```bash
 gh repo clone <your-username>/OpenPrep
 ```
+### Running the Astro Starlight Website
+
+To run the OpenPrep locally, follow these steps:
+
+1. **Install Dependencies**
+   - Ensure you have Node.js installed (version 14.18.1 or higher).
+   - Navigate to the root directory of the project and run:
+     ```bash
+     npm install
+     ```
+
+2. **Run the Development Server**
+   - Start the development server by running:
+     ```bash
+     npm start
+     ```
+   - This will start the Astro Starlight website on a local server. By default, it will be accessible at `http://localhost:3000`.
+
+3. **Build the Project for Production**
+   - To create a production build of the website, run:
+     ```bash
+     npm run build
+     ```
+   - The build output will be located in the `dist/` directory.
+
+4. **Preview the Production Build**
+   - You can preview the production build locally by running:
+     ```bash
+     npm run preview
+     ```
 
 ### Making your Changes
 
@@ -42,8 +72,10 @@ gh repo clone <your-username>/OpenPrep
 
 Create a new branch from the main branch. Your branch name should be descriptive of the changes you are making along with your first name. Some ideas to get you started:
 
-- For documentation: `docs-<your-first-name>`
-- For adding new features: `new-f-<your-first-name>`
+- Branch name format:
+- For documentation: `docs-[issue-id]`
+- For bugs: `bugs-[issue-id]`
+- Example: `docs[#123]`
 
 To create a new branch, use the following command:
 
@@ -178,7 +210,7 @@ To submit a pull request for the CodeQuestic/OpenPrep repository, follow these s
 1. **Ensure Naming Conventions**: 
    - Follow the Conventional Commits specification for naming your pull request.
    - Use the format: `<language>[#issue-id]: <description>`
-   - Example: `JavaScript(#123): added new sorting algorithm`
+   - Example: `JavaScript[#123]: added new sorting algorithm`
 
 2. **Create the Pull Request**:
    - Go to the repository on GitHub.
