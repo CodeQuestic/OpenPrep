@@ -17,7 +17,8 @@ export default defineConfig({
           label: "Introduction",
           items: [
             { label: "Getting Started", slug: "get-started" },
-            { label: "FAQ", slug: "faq" },
+            { label: "Code Of Conduct", slug: "code-of-conduct" },
+            { label: "Contribute", slug: "contribute" },
           ],
         },
         {
