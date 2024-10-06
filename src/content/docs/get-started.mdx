@@ -1,27 +1,114 @@
 ---
-title: "Getting Started"
+title: "Welcome to OpenPrep 🚀"
 ---
 
-Welcome to **OpenPrep**! This repository is a comprehensive collection of resources for various programming languages. It includes tutorials, code samples, best practices, and reference materials to help developers of all levels enhance their skills and knowledge in multiple languages.
+import { LinkButton } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
 
-## Contents 📜
+This repository is a comprehensive collection of resources for various programming languages. It includes tutorials, code samples, best practices, and reference materials to help developers of all levels enhance their skills and knowledge in multiple languages.
 
-- Tutorials 🎓
-- Code Samples 💻
-- Best Practices 🛠️
-- Reference Materials 📖
+## Start Learning Instantly
 
-## Code of Conduct 📝
+You don’t need to install anything! Simply browse through the available languages, and under each one, you’ll find a collection of tutorials, code samples, and resources to help you learn and grow. Just pick a topic and dive right in!
 
-Please note that this project is released with a [Contributor Code of Conduct](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md). By participating in this project you agree to abide by its terms.
+## Interested in contributing to OpenPrep?
 
-## Contributing 🤝
+First of all, thank you for taking the time to contribute! 🤙<br />
+The following is a set of guidelines for contributing to this repository. Before contributing, we encourage you to read our Code of Conduct.
 
-We welcome contributions from the community. Please read our [Contributing Guide](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) to get started.
+<LinkButton href="/code-of-conduct" variant="secondary">
+  Code Of Conduct
+</LinkButton>
 
-## License 📄
+## Contributing Guide ✨
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+<Steps>
+
+1. ### Forking the OpenPrep Repository
+
+   Click the **Fork** button at the top right of the **OpenPrep** repository's <a href="https://github.com/CodeQuestic/OpenPrep" target="_blank" rel="nopener noreferrer"> GitHub Page </a> to create a copy in your account, or go directly to the <a href="https://github.com/CodeQuestic/OpenPrep/fork" target="_blank" rel="nopener noreferrer"> Fork Page </a> & click on **Create Fork** button. After successfully forking the repo, you'll be redirected to your copy of the OpenPrep repository.
+
+2. ### Cloning the OpenPrep Repository
+
+   On your forked repo, click the button that says `<> Code`. Under `Local` tab, it will open a dropdown menu. Copy the link in the input with the label `HTTPS` or `GitHub CLI` depending on your preferred cloning mode.
+
+   For cloning via `HTTPS`, first create a folder on your system and open it in `VS Code` or any other code editor. Then, open the terminal inside this folder and run the following command to clone or have a local copy of the forked repository in this folder:
+
+   ```bash
+   git clone https://github.com/<your-username>/OpenPrep.git
+
+   ```
+
+   Here, replace `<your-username>` with your GitHub username.
+
+   You can also clone the forked repo using the `GitHub CLI`. <br/> To do this, run the following command:
+
+   ```bash
+   gh repo clone <your-username>/OpenPrep
+
+   ```
+
+3. ### Setup the Development Environment
+
+   Ensure you have the following installed:
+
+   | **Dependency** | **Version Requirement**                                      |
+   | -------------- | ------------------------------------------------------------ |
+   | **Node.js**    | Version 20 or higher (recommended to use the latest version) |
+   | **npm**        | Latest version (ensure you're using the most recent release) |
+
+   Now, navigate to the root directory of the project and run:
+
+   ```bash
+   npm install
+
+   ```
+
+   Once installation done, Run the development server:
+
+   ```bash
+   npm start
+
+   ```
+
+   or
+
+   ```bash
+   npm run dev
+
+   ```
+
+   Now open your browser and navigate to `http://localhost:4321` to view the website.
+
+   To create a production build of the website, run:
+
+   ```bash
+   npm run build
+
+   ```
+
+   To preview the production build of the website, run:
+
+   ```bash
+   npm run preview
+
+   ```
+
+4. ### Making your Changes
+
+   Before you can make any changes to the code base please go through the <br/> <br/> <LinkButton variant="secondary" href="/naming-conventions" icon="information" iconPlacement="end">Naming Conventions</LinkButton>
+
+5. ### Opening a Pull Request
+
+   Replace `<your-username>` with your GitHub username.
+
+   You can also clone the repo using the `GitHub CLI`. To do this, run the following command:
+
+   ```bash
+   gh repo clone <your-username>/OpenPrep
+   ```
+
+</Steps>
 
 ## Contact 📬
 

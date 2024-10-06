@@ -18,14 +18,13 @@ export default defineConfig({
           items: [
             { label: "Getting Started", slug: "get-started" },
             { label: "Code Of Conduct", slug: "code-of-conduct" },
+            { label: "Naming Conventions", slug: "naming-conventions" },
             { label: "Contribute", slug: "contribute" },
           ],
         },
         {
           label: "React",
-          items: [
-            { label: "Introduction", slug: "react/introduction" },
-          ],
+          items: [{ label: "Introduction", slug: "react/introduction" }],
         },
         {
           label: "React Components",
@@ -42,7 +41,10 @@ export default defineConfig({
             { label: "Modal", slug: "react-components/modal" },
             { label: "Navigation Bar", slug: "react-components/navbar" },
             { label: "Popovers", slug: "react-components/popover" },
-            { label: "Social Buttons", slug: "react-components/social-buttons" },
+            {
+              label: "Social Buttons",
+              slug: "react-components/social-buttons",
+            },
             { label: "Star Rating", slug: "react-components/star-rating" },
             { label: "Tabs", slug: "react-components/tabs" },
             { label: "Testimonials", slug: "react-components/testimonials" },
