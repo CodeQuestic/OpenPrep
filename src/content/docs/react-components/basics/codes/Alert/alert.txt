@@ -1,0 +1,55 @@
+// Alert.jsx
+import React, { useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { CheckCircle, XCircle, TriangleAlert, Info } from 'lucide-react';
+
+const alertVariants = {
+  success: {
+    icon: <CheckCircle className="w-5 h-5 text-green-600" />,
+    className: 'bg-green-100 text-green-700 border-green-500/50 text-sm',
+  },
+  error: {
+    icon: <XCircle className="w-5 h-5 text-red-600" />,
+    className: 'bg-red-100 text-red-700 border-red-500/50 text-sm',
+  },
+  warning: {
+    icon: <TriangleAlert className="w-5 h-5 text-yellow-600" />,
+    className: 'bg-yellow-100 text-yellow-700 border-yellow-500/50 text-sm',
+  },
+  info: {
+    icon: <Info className="w-5 h-5 text-blue-600" />,
+    className: 'bg-blue-100 text-blue-700 border-blue-500/50 text-sm',
+  },
+};
+
+const Alert = ({ message, variant = 'info', onClose, autoDismiss = false, duration = 3000, className = '' }) => {
+  useEffect(() => {
+    if (autoDismiss) {
+      const timer = setTimeout(onClose, duration);
+      return () => clearTimeout(timer);
+    }
+  }, [autoDismiss, duration, onClose]);
+
+  return (
+    <AnimatePresence>
+      <motion.div
+        initial={{ opacity: 0, translateY: -20 }}
+        animate={{ opacity: 1, translateY: 0 }}
+        exit={{ opacity: 0, translateY: -20 }}
+        className={`flex items-center p-2 mb-4 border-2 justify-between rounded-lg ${alertVariants[variant].className}`}
+        role="alert"
+      >
+        {alertVariants[variant].icon}
+        <span className="flex-1 ml-2">{message}</span>
+        <button
+          onClick={onClose}
+          className="ml-4 text-lg font-semibold focus:outline-none"
+        >
+          &times;
+        </button>
+      </motion.div>
+    </AnimatePresence>
+  );
+};
+
+export default Alert;

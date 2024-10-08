@@ -1,0 +1,47 @@
+// Social-Buttons.jsx
+import React from 'react';
+
+const SocialButton = ({ platform, icon, url, itemClassName, onClick }) => {
+  const baseStyle = "flex items-center justify-center w-10 h-10 rounded-full text-white transition-all duration-300";
+
+  const platformStyles = {
+    facebook: "bg-blue-600 hover:bg-blue-700",
+    twitter: "bg-blue-400 hover:bg-blue-500",
+    instagram: "bg-pink-600 hover:bg-pink-700",
+    linkedin: "bg-blue-700 hover:bg-blue-800",
+    // Add more platforms as needed
+  };
+
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+      className={`${baseStyle} ${platformStyles[platform] || 'bg-gray-600 hover:bg-gray-700'} ${itemClassName}`}
+    >
+      {icon}
+    </a>
+  );
+};
+
+const SocialButtonList = ({ buttons, itemClassName = '', className = '', orientation = 'horizontal' }) => {
+  const flexDirection = orientation === 'vertical' ? 'flex-col' : 'flex-row';
+
+  return (
+    <div className={`flex ${flexDirection} space-x-4 ${className}`}>
+      {buttons.map((button, index) => (
+        <SocialButton
+          key={index}
+          platform={button.platform}
+          icon={button.icon}
+          url={button.url}
+          itemClassName={itemClassName}
+          onClick={button.onClick}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default SocialButtonList;

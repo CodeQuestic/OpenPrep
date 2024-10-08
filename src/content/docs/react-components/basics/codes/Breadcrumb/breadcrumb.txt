@@ -1,0 +1,37 @@
+// Breadcrumb.jsx
+import React from 'react';
+import { Link } from 'react-router-dom'; // Assuming you are using React Router
+import { ChevronRight } from 'lucide-react'; // Default icon
+
+const Breadcrumb = ({
+  items,
+  separator = <ChevronRight className="w-4 h-4 text-gray-500" />,
+  className = '',
+  itemClassName = '',
+  padding = 'p-2',
+}) => {
+  return (
+    <nav className={`flex items-center space-x-2 h-fit ${className}`} aria-label="Breadcrumb">
+      {items.map((item, index) => (
+        <div key={index} className="flex items-center">
+          {index > 0 && <span className="flex items-center">{separator}</span>}
+
+          <div className={`${itemClassName} ${padding} flex min-h-min !items-center gap-x-1`}>
+            {item.icon && (
+              <item.icon className="w-5 aspect-square text-gray-500 mr-1 leading-1" />
+            )}
+            {item.link ? (
+              <Link to={item.link} className="text-blue-600 hover:underline leading-1">
+                {item.label}
+              </Link>
+            ) : (
+              <span className="text-gray-700 block leading-1">{item.label}</span>
+            )}
+          </div>
+        </div>
+      ))}
+    </nav>
+  );
+};
+
+export default Breadcrumb;

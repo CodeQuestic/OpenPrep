@@ -1,0 +1,25 @@
+---
+title: Testimonials
+---
+
+The following testimonials component is used for showing testimonials from clients or customers. You can use it as a single component and style it extensively by yourself if you desire. You have to pass in an array of data which can also be from an API.
+
+import { Card } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+import testimonialsApp from "./codes/Testimonials/testimonialsApp.txt?raw";
+import testimonials from "./codes/Testimonials/testimonials.txt?raw";
+
+<Tabs>
+  <TabItem label="Dependencies">
+    No extra libraries required. Assuming you have [Tailwind
+    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={testimonialsApp} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={testimonials} lang="jsx" title="testimonials.jsx" />
+  </TabItem>
+</Tabs>
