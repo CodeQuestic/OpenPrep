@@ -1,0 +1,40 @@
+// App.jsx
+import React, { useState } from 'react';
+import Testimonials from './components/testimonials';
+
+const App = () => {
+  const testimonialsData = [
+    {
+      testimonial: "This product has changed my life for the better!",
+      author: "Jane Doe",
+      role: "Customer",
+      image: "https://via.placeholder.com/64",
+    },
+    {
+      testimonial: "Amazing service and fantastic support.",
+      author: "John Smith",
+      role: "Business Owner",
+      image: "https://via.placeholder.com/64",
+    },
+    {
+      testimonial: "I would highly recommend this to anyone.",
+      author: "Emily Johnson",
+      role: "Influencer",
+      image: "https://via.placeholder.com/64",
+    },
+  ];
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">What Our Customers Say</h1>
+      <Testimonials
+        testimonials={testimonialsData}
+        className="my-4" // Additional class for the container
+        layout="grid" // Change to "flex" for a vertical layout
+        cardClassName="bg-white border-gray-300" // Class for each card
+      />
+    </div>
+  );
+};
+
+export default App;

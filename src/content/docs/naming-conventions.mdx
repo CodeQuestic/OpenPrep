@@ -1,0 +1,88 @@
+---
+title: "Naming Conventions"
+---
+
+import { Steps } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+### Branch Naming Convention
+
+When creating a new branch for documentation or bug fixes, use the following format:
+
+<Steps>
+
+1. **Documentation Branches** <br/>
+   Format: `docs-<short-description>`<br/>
+   Example: `docs-update-api-reference`
+
+2. **Bug Fix Branches** <br/>
+   Format: `bug-<short-description>`<br/>
+   Example: `bug-header-overflow`
+
+</Steps>
+
+<Aside>
+  Use hyphens (`-`) to separate words in branch names. Avoid using spaces or
+  underscores.
+</Aside>
+
+### Pull Request Naming Convention
+
+When submitting a pull request, follow the format below, depending on the type of PR:
+
+<Steps>
+
+1. **Documentation Pull Requests** <br/>
+   Format: `[docs](<label>): <description>`<br/>
+   Example: `[docs](React): Updated React theory concept`
+
+2. **Bug Fix Pull Requests** <br/>
+   Format: `[bug](<label>): <description>`<br/>
+   Example: `[bug](ui): Fixed button hover issue in the header`
+
+</Steps>
+
+<Aside>
+  Here `<label>` refers to the main section, such as the technology or page you're
+  working on (e.g., `React`, `React Component`, `Nodejs`). <br />
+  <br />
+  Always include a label to indicate the section or main page you
+  are addressing in the Pull Request. Make the description short and informative.
+</Aside>
+
+### Issue Naming Convention
+
+When reporting issues, use concise titles that clearly describe the problem or suggestion:
+
+<Steps>
+
+1. **Bug Reports** <br/>
+   Format: `[bug]: <description>`<br/>
+   Example: `[bug]: Dropdown menu not closing on click outside`
+
+2. **Feature Requests** <br/>
+   Format: `[feature]: <description>`<br/>
+   Example: `[feature]: Add dark mode toggle`
+
+3. **Documentation Issues** <br/>
+   Format: `[docs]: <description>`<br/>
+   Example: `[docs]: Incorrect code example in React tutorial`
+
+</Steps>
+
+### Summary of Naming Conventions
+
+| **Type**                | **Format**                       | **Example**                              |
+| ----------------------- | -------------------------------- | ---------------------------------------- |
+| Branch (Docs)           | `docs-<short-description>`       | `docs-update-api-reference`              |
+| Branch (Bug Fix)        | `bug-<short-description>`        | `bug-header-overflow`                    |
+| Pull Request (Docs)     | `[docs](<label>): <description>` | `[docs](React): Updated React component` |
+| Pull Request (Bug Fix)  | `[bug](<label>): <description>`  | `[bug](ui): Fixed button hover issue`    |
+| Issue (Bug Report)      | `[bug]: <short-description>`     | `[bug]: Dropdown menu not closing`       |
+| Issue (Feature Request) | `[feature]: <short-description>` | `[feature]: Add dark mode toggle`        |
+| Issue (Docs)            | `[docs]: <short-description>`    | `[docs]: Incorrect code example in docs` |
+
+<Aside type="caution">
+  Remember, following these naming conventions helps in better collaboration and
+  understanding across the team.
+</Aside>

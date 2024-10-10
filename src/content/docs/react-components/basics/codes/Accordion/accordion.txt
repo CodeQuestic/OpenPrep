@@ -1,0 +1,55 @@
+// Accordion.jsx
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+
+const AccordionItem = ({ title, content, isOpen, onToggle, titleClass, contentClass }) => (
+  <div className="border-b">
+    <button
+      className={`flex justify-between w-full p-4 text-left focus:outline-none ${titleClass} ${isOpen ? 'bg-gray-200' : 'bg-white'}`}
+      onClick={onToggle}
+    >
+      <span>{title}</span>
+      <span>{isOpen ? '-' : '+'}</span>
+    </button>
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0, height: 0 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 0 }}
+          transition={{ duration: 0.3, ease: [0.4, 0, 0.6, 1] }}
+          style={{ overflow: 'hidden' }}
+          className={`bg-gray-100 ${contentClass}`}
+        >
+          <div className="p-4">{content}</div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+  </div>
+);
+
+const Accordion = ({ items, titleClass, contentClass, className }) => {
+  const [openIndex, setOpenIndex] = useState(null);
+
+  const handleToggle = (index) => {
+    setOpenIndex(openIndex === index ? null : index);
+  };
+
+  return (
+    <div className={`rounded-lg shadow-md ${className}`}>
+      {items.map((item, index) => (
+        <AccordionItem
+          key={index}
+          title={item.title}
+          content={item.content}
+          isOpen={openIndex === index}
+          onToggle={() => handleToggle(index)}
+          titleClass={titleClass}
+          contentClass={contentClass}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default Accordion;

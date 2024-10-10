@@ -1,5 +1,188 @@
 ---
-title: "Getting Started"
+title: "Welcome to OpenPrep 🚀"
 ---
 
-This is the content of the Getting Started page.
+import { LinkButton } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Aside } from "@astrojs/starlight/components";
+
+This repository is a comprehensive collection of resources for various programming languages. It includes tutorials, code samples, best practices, and reference materials to help developers of all levels enhance their skills and knowledge in multiple languages.
+
+## Start Learning Instantly
+
+You don’t need to install anything! Simply browse through the available languages, and under each one, you’ll find a collection of tutorials, code samples, and resources to help you learn and grow. Just pick a topic and dive right in!
+
+## Interested in contributing to OpenPrep?
+
+First of all, thank you for taking the time to contribute! 🤙<br />
+The following is a set of guidelines for contributing to this repository. Before contributing, we encourage you to read our Code of Conduct.
+
+<LinkButton href="/code-of-conduct" variant="secondary">
+  Code Of Conduct
+</LinkButton>
+
+## Contributing Guide ✨
+
+<Steps>
+
+1. ### Forking the OpenPrep Repository
+
+   Click the **Fork** button at the top right of the **OpenPrep** repository's <a href="https://github.com/CodeQuestic/OpenPrep" target="_blank" rel="nopener noreferrer"> GitHub Page </a> to create a copy in your account, or go directly to the <a href="https://github.com/CodeQuestic/OpenPrep/fork" target="_blank" rel="nopener noreferrer"> Fork Page </a> & click on **Create Fork** button. After successfully forking the repo, you'll be redirected to your copy of the OpenPrep repository.
+
+2. ### Cloning the OpenPrep Repository
+
+   On your forked repo, click the button that says `<> Code`. Under `Local` tab, it will open a dropdown menu. Copy the link in the input with the label `HTTPS` or `GitHub CLI` depending on your preferred cloning mode.
+
+   For cloning via `HTTPS`, first create a folder on your system and open it in `VS Code` or any other code editor. Then, open the terminal inside this folder and run the following command to clone or have a local copy of the forked repository in this folder:
+
+   ```bash
+   git clone https://github.com/<your-username>/OpenPrep.git
+   ```
+
+   Here, replace `<your-username>` with your GitHub username.
+
+   You can also clone the forked repo using the `GitHub CLI`. <br/> To do this, run the following command:
+
+   ```bash
+   gh repo clone <your-username>/OpenPrep
+   ```
+
+3. ### Setup the Development Environment
+
+   Ensure you have the following installed:
+
+   | **Dependency** | **Version Requirement**                                      |
+   | -------------- | ------------------------------------------------------------ |
+   | **Node.js**    | Version 20 or higher (recommended to use the latest version) |
+   | **npm**        | Latest version (ensure you're using the most recent release) |
+
+   Now, navigate to the root directory of the project and run:
+
+   ```bash
+   npm install
+   ```
+
+   Once installation done, Run the development server:
+
+   ```bash
+   npm start
+   ```
+
+   or
+
+   ```bash
+   npm run dev
+   ```
+
+   Now open your browser and navigate to `http://localhost:4321` to view the website.
+
+   To create a production build of the website, run:
+
+   ```bash
+   npm run build
+   ```
+
+   To preview the production build of the website, run:
+
+   ```bash
+   npm run preview
+   ```
+
+4. ### Making your Changes
+
+   Before you can make any changes to the code base please go through the <br/> <br/> <LinkButton variant="secondary" href="/naming-conventions" icon="information" iconPlacement="end">Naming Conventions</LinkButton>
+
+   <Aside title="IMPORTANT" type="tip">
+
+   If there is an existing issue that you'd like to contribute to, request to be assigned to it before proceeding with any changes.
+
+   If there isn't an existing issue for the docs or bug you wish to work on, you can create a <a href="https://github.com/CodeQuestic/OpenPrep/issues" target="_blank" rel="nopener noreferrer">new issue</a> detailing the docs/bug and request to be assigned to it.
+
+   Follow the naming conventions while creating the issue (e.g., `[bug]: <description>`,`[feature]: <description>` or `[docs]: <description>`).
+
+   </Aside>
+
+   #### Steps to Create a New Branch
+
+   **Ensure you are on the correct base branch**  
+    First, check that you're on the correct base branch (`main`) before creating a new branch.
+
+   ```bash
+   git checkout main
+   ```
+
+   **Pull the latest changes**  
+    Always pull the latest changes from the remote branch to ensure your branch is up to date.
+
+   ```bash
+   git pull origin main
+   ```
+
+   **Create a new branch**  
+    Use the `git checkout` command to create and switch to a new branch following the naming conventions.
+
+   ```bash
+   git checkout -b <your-branch-name>
+   ```
+
+   **Make your changes**  
+    Now that you're on your new branch, you can make the necessary code changes. After completing your changes, stage them for commit.
+
+   ```bash
+   git add .
+   ```
+
+   **Commit your changes**  
+    Write a meaningful commit message that summarizes your changes.
+
+   ```bash
+   git commit -m "Your commit message"
+   ```
+
+   **Push your changes to the remote repo**  
+    Once you've committed your changes, push your branch to the remote repository.
+
+   ```bash
+   git push origin <your-branch-name>
+   ```
+
+5. ### Opening a Pull Request
+
+   <Aside>
+     You are to make only `one contribution` per `pull request`. It makes it
+     easier to review and merge. If you want to add `multiple contributions` or
+     if you have solved `multiple issues`, create `separate pull requests` for
+     each.
+   </Aside>
+
+   **Steps to Open a Pull Request**
+
+   - Go to the <a href="https://github.com/CodeQuestic/OpenPrep" target="_blank" rel="nopener noreferrer">repository</a> on GitHub.
+   - Click on the <a href="https://github.com/CodeQuestic/OpenPrep/pulls" target="_blank" rel="nopener noreferrer">Pull requests</a> tab.
+   - Click on <a href="https://github.com/CodeQuestic/OpenPrep/compare" target="_blank" rel="nopener noreferrer">New Pull Request</a>.
+   - Select the branch that contains your changes targetting the OpenPrep's `main` branch.
+   - Ensure the `title` follows the naming convention.
+
+   **Add a Detailed Description**
+
+   - In the description field of the pull request, provide a detailed explanation of the changes.
+   - Describe what was changed, why it was changed, and any other relevant details.
+   - Use the correct way to `link issues` in the description of the PR by updating the `XXXXXX`. Do not just add issue numbers everywhere and anywhere you feel like.
+
+   **Submit the Pull Request**:
+
+   - After filling out the title and description, click on "Create pull request".
+
+   <Aside title="Don't forget" type="danger">
+     Ensure your pull request complies with the repository's contribution
+     guidelines before submission.
+   </Aside>
+
+6. ### Congratulations! 🎉
+
+   You have successfully contributed to the OpenPrep repository. <br/> Your pull request will be reviewed by the maintainers, and if everything is in order, it will be merged into the main branch.
+   If any reviews or changes are requested by the reviewers then please feel free to resolve them so that maintainers can merge your PR.
+
+   Thank you for your contribution! 🙌
+
+</Steps>

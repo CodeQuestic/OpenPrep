@@ -1,0 +1,25 @@
+// App.jsx
+import React from 'react';
+import Tooltip from './components/tooltip';
+
+const App = () => {
+  return (
+    <div className="flex justify-center items-center h-screen space-x-4">
+      <Tooltip content="This is a default tooltip!" variant="default" position="top" trigger="hover" delay={200}>
+        <button className="px-4 py-2 bg-gray-800 text-white rounded">Hover me (Default)</button>
+      </Tooltip>
+      <Tooltip content="Click for success tooltip!" variant="success" position="bottom" trigger="click" delay={100}>
+        <button className="px-4 py-2 bg-gray-800 text-white rounded">Click me (Success)</button>
+      </Tooltip>
+      <Tooltip content="This is an error tooltip!" variant="error" position="left" trigger="hover" delay={300}>
+        <button className="px-4 py-2 bg-red-800 text-white rounded">Hover me (Error)</button>
+      </Tooltip>
+      <Tooltip content="This is an info tooltip!" variant="info" position="right" trigger="click" delay={150}>
+        <button className="px-4 py-2 bg-gray-800 text-white rounded">Click me (Info)</button>
+      </Tooltip>
+    </div>
+  );
+};
+
+export default App;
+

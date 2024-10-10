@@ -1,0 +1,30 @@
+// Input.jsx
+import React from 'react';
+
+const Input = ({
+  type = 'text',
+  placeholder = '',
+  value,
+  onChange,
+  className = '',
+  label = '',
+  error = '',
+}) => {
+  return (
+    <div className={`flex flex-col mb-4 ${className}`}>
+      {label && <label className="mb-1 text-gray-700">{label}</label>}
+      <input
+        type={type}
+        placeholder={placeholder}
+        value={value}
+        onChange={onChange}
+        className={`border border-gray-300 rounded px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 ${
+          error ? 'border-red-500' : ''
+        }`}
+      />
+      {error && <span className="text-red-500 text-sm mt-1">{error}</span>}
+    </div>
+  );
+};
+
+export default Input;

@@ -1,0 +1,65 @@
+// Lightbox.jsx
+import React, { useEffect } from 'react';
+
+const Lightbox = ({ isOpen, onClose, images, currentIndex, setCurrentIndex }) => {
+  if (!isOpen || !images.length) return null;
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  const handleNext = () => {
+    if (currentIndex < images.length - 1) {
+      setCurrentIndex((prevIndex) => prevIndex + 1);
+    }
+  };
+
+  const handlePrev = () => {
+    if (currentIndex > 0) {
+      setCurrentIndex((prevIndex) => prevIndex - 1);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
+
+  return (
+    <div className="fixed inset-0 z-50 bg-black bg-opacity-75 flex justify-center items-center">
+      <div className="relative">
+        <button
+          className="absolute top-2 right-2 text-white text-2xl"
+          onClick={onClose}
+        >
+          &times;
+        </button>
+        <button
+          className="absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-2xl"
+          onClick={handlePrev}
+          disabled={currentIndex === 0}
+        >
+          &lt;
+        </button>
+        <button
+          className="absolute right-2 top-1/2 transform -translate-y-1/2 text-white text-2xl"
+          onClick={handleNext}
+          disabled={currentIndex === images.length - 1}
+        >
+          &gt;
+        </button>
+        <img
+          src={images[currentIndex]}
+          alt=""
+          className="max-w-full max-h-screen"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Lightbox;
