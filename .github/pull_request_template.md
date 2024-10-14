@@ -1,3 +1,6 @@
+<!-- Please make sure you follow the naming conventions for Pull Request! -->
+<!-- Naming conventions: https://openprep.pages.dev/naming-conventions/ -->
+
 ## 📑 Description
 
 <!-- Please include a summary of this pull request. -->
