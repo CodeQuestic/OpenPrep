@@ -25,7 +25,6 @@ Fixes #<issue_number>
 
 <!-- - [x] Bug fix (non-breaking change which fixes an issue) -->
 <!-- - [x] Documentation update (docs for this project) -->
-<!-- - [x] New feature (non-breaking change which adds functionality) -->
 
 ## 📸 Screenshots (if applicable)
 
