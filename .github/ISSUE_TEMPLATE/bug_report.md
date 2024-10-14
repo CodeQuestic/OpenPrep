@@ -1,9 +1,9 @@
 ---
 name: Bug Report
 about: Report a bug or an issue to help us improve
-title: "[BUG]:<Enter your Bug Title>"
+title: "[Bug]: <Short Description>"
 labels: bug
-assignees: ''
+assignees: ""
 ---
 
 ## 🐛 Describe the bug
@@ -13,6 +13,7 @@ assignees: ''
 ## 🔍 To Reproduce
 
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
@@ -22,7 +23,7 @@ Steps to reproduce the behavior:
 
 <!-- A clear and concise description of what you expected to happen. -->
 
-## 📸 Screenshots
+## 📸 Screenshots (If applicable)
 
 <!-- If applicable, add screenshots to help explain your problem. -->
 

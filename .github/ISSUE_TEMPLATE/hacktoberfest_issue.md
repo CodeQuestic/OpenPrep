@@ -1,9 +1,9 @@
 ---
 name: Hacktoberfest Contribution
 about: Help contribute to this project for Hacktoberfest!
-title: "[Hacktoberfest]:<Short Description>"
+title: "[Hacktoberfest]: <Short Description>"
 labels: hacktoberfest, help wanted, good first issue
-assignees: ''
+assignees: ""
 ---
 
 ## 📝 Issue Description
@@ -38,7 +38,7 @@ assignees: ''
 ## 👥 Contributors
 
 If you are working on this issue, please comment below to let us know. Feel free to ask any questions!
-Don't forget to go through the [CODE_OF_CONDUCT](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md) and follow the [CONTRIBUTING](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) guidelines. 
+Don't forget to go through the [CODE_OF_CONDUCT](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md) and follow the [CONTRIBUTING](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) guidelines.
 
 ---
 
