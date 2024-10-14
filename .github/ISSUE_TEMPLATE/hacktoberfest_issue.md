@@ -52,7 +52,7 @@ The content should be written clearly, with examples where necessary, and provid
 ## 👥 Contributors
 
 If you are working on this issue, please comment below to let us know. Feel free to ask any questions!
-Don't forget to go through the [CODE_OF_CONDUCT](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md) and follow the [CONTRIBUTING](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) guidelines.
+Don't forget to go through the [CODE OF CONDUCT](https://openprep.pages.dev/code-of-conduct/) and follow the [CONTRIBUTING](https://openprep.pages.dev/get-started/) guidelines.
 
 ---
 
