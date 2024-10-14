@@ -23,7 +23,15 @@ export default defineConfig({
         },
         {
           label: "React",
-          items: [{ label: "Introduction", slug: "react/introduction" }],
+          items: [
+            { label: "Introduction", slug: "react/introduction" },
+            { label: "JSX (Javascript XML)", slug: "react/jsx" },
+            { label: "Components in React", slug: "react/components" },
+            { label: "Hooks in React", slug: "react/hooks" },
+            { label: "State & Props", slug: "react/state-and-props" },
+            { label: "Component Lifecycle", slug: "react/component-lifecycle" },
+            { label: "Event Handling", slug: "react/event-handling" },
+          ],
         },
         {
           label: "React Components",
