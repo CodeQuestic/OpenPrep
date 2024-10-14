@@ -3,28 +3,42 @@ name: Hacktoberfest Contribution
 about: Help contribute to this project for Hacktoberfest!
 title: "[Hacktoberfest]:<Short Description>"
 labels: hacktoberfest, help wanted, good first issue
-assignees: ''
+assignees: ""
 ---
 
 ## 📝 Issue Description
 
-<!-- Describe the issue in detail. Include any background or context that might help the contributor understand the task. -->
+<!-- Add the following content for **JSX (JavaScript XML)** under **REACT**
+
+1. What is JSX?
+2. Embedding Expressions in JSX
+3. JSX Syntax Rules (Single Parent Element, Self-Closing Tags)
+4. JSX vs HTML
+5. Conditional JSX Rendering
+
+**File you will be working on:** `src\content\docs\react\jsx.mdx` -->
 
 ## 🎯 Expected Outcome
 
-<!-- Outline the expected result or goal for this issue. What should be done or achieved? -->
+<!-- The expected outcome is to add a well-documented and informative section under React that covers the following topics:
+
+- **What is JSX?**: Explanation of JSX and how it works in React.
+- **Embedding Expressions in JSX**: Instructions on embedding JavaScript expressions within JSX.
+- **JSX Syntax Rules**: Key rules like wrapping JSX in a single parent element and using self-closing tags.
+- **JSX vs HTML**: Comparison between JSX and standard HTML, focusing on their differences.
+- **Conditional JSX Rendering**: Explanation and examples of rendering elements conditionally in JSX.
+
+The content should be written clearly, with examples where necessary, and provide value for developers who are either new to JSX or need a refresher. Please don't make use of the AIs. -->
 
 ## 🔧 Solution Guidance (Optional)
 
-<!-- If applicable, provide hints or tips that might help the contributor. You can point to documentation, code files, or similar issues. -->
+<!-- - Make use of [Astro Star Light Components](https://starlight.astro.build/components/using-components/) -->
 
 ## 📋 Steps to Reproduce
 
-<!-- List detailed steps for reproducing the issue (if applicable). -->
-
-1. Step 1
-2. Step 2
-3. ...
+<!-- - Navigate to `src\content\docs\react\jsx.mdx` file in the repository.
+- Add content for each of the 5 sections mentioned above.
+- Ensure the content is formatted properly using `MDX` -->
 
 ## 💡 Additional Context (Optional)
 
@@ -38,7 +52,7 @@ assignees: ''
 ## 👥 Contributors
 
 If you are working on this issue, please comment below to let us know. Feel free to ask any questions!
-Don't forget to go through the [CODE_OF_CONDUCT](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md) and follow the [CONTRIBUTING](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) guidelines. 
+Don't forget to go through the [CODE_OF_CONDUCT](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CODE_OF_CONDUCT.md) and follow the [CONTRIBUTING](https://github.com/CodeQuestic/OpenPrep/blob/main/.github/CONTRIBUTING.md) guidelines.
 
 ---
 
