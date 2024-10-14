@@ -9,7 +9,7 @@
 
 <!-- Mark with [x] the checklist that applies, and ensure all items are completed before submitting your PR. -->
 
-- [ ] I have made corresponding changes that follows the style of this project.
+- [ ] I have made corresponding changes that follow the style of this project.
 
 ## 🔗 Related Issue(s)
 
@@ -20,17 +20,17 @@ Fixes #<issue_number>
 
 ## 🚀 Types of changes
 
-<!-- What types of changes this pull request introduce? Select the relevant ones. -->
+<!-- What types of changes does this pull request introduce? You can select the relevant ones. -->
 <!-- Please uncomment the relevant ones -->
 
-<!-- - [ ] Bug fix (non-breaking change which fixes an issue) -->
-<!-- - [ ] New feature (non-breaking change which adds functionality) -->
-<!-- - [ ] Documentation update (docs for this project) -->
+<!-- - [x] Bug fix (non-breaking change which fixes an issue) -->
+<!-- - [x] Documentation update (docs for this project) -->
+<!-- - [x] New feature (non-breaking change which adds functionality) -->
 
 ## 📸 Screenshots (if applicable)
 
-<!-- If applicable, add screenshots or screen recording to explain the visual or functional changes. -->
+<!-- If applicable, add screenshots or screen recordings to explain the visual or functional changes. -->
 
-## 💬 Additional Comments
+## 💬 Additional Comments (if applicable)
 
 <!-- Add any additional comments or explanations here. -->
