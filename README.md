@@ -30,8 +30,8 @@ We welcome contributions from developers at all levels! As an open-source projec
 - Familiarize yourself with the project's [naming conventions](https://openprep.pages.dev/naming-conventions/).
 - Follow all steps in the ["Get Started"](https://openprep.pages.dev/get-started/) guide to contribute properly.
 
-> [!NOTE]
-> Adhering to these steps is crucial for ensuring your pull request (PR) gets merged.
+> [!IMPORTANT]
+> **Adhering to these steps is crucial for ensuring your pull request (PR) gets merged.**
 
 Your contributions are vital to the growth and improvement of OpenPrep. Thank you for being part of this journey! We hope you find these resources helpful as you continue to learn and master programming languages.
 
