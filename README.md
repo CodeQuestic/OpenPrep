@@ -23,7 +23,12 @@ We welcome contributions from developers at all levels! As an open-source projec
 - Fixing bugs or improving existing content.
 - Contributing resources for new programming languages.
 
-To get started, please read our contribution guidelines to ensure a smooth process. You can find the guidelines by following this link <a href="https://openprep.pages.dev/get-started/" target="_blank" rel="nopener noreferrer">https://openprep.pages.dev/get-started/</a>
+#### Follow these steps
+
+- Fully read the [README.md](https://github.com/CodeQuestic/OpenPrep/blob/main/README.md) for project guidelines.
+- Review the [Code of Conduct](https://openprep.pages.dev/code-of-conduct/) to understand expected behavior.
+- Familiarize yourself with the project's [naming conventions](https://openprep.pages.dev/naming-conventions/).
+- Follow all steps in the ["Get Started"](https://openprep.pages.dev/get-started/) guide to contribute properly.
 
 Your contributions are vital to the growth and improvement of OpenPrep. Thank you for being part of this journey! We hope you find these resources helpful as you continue to learn and master programming languages.
 
