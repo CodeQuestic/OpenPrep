@@ -1,3 +1,63 @@
----
-title: Component Lifecycle
----
+# Component Lifecycle in React
+Understanding the component lifecycle is crucial for managing state and side effects in React applications. This section covers lifecycle methods in class components, the use of the useEffect hook in functional components, and best practices for cleanup.
+Lifecycle Methods in Class Components
+
+React class components have a defined lifecycle that can be divided into three main phases: Mounting, Updating, and Unmounting. Each phase has specific lifecycle methods that allow developers to hook into the component's lifecycle.
+## Mounting
+The mounting phase occurs when a component is being created and inserted into the DOM. The key lifecycle method in this phase is:
+componentDidMount: This method is invoked immediately after a component is mounted. It is commonly used for initializing data, making API calls, or setting up subscriptions. For example:
+
+componentDidMount() {
+fetchData().then(data => this.setState({ data }));
+}
+
+## Updating
+The updating phase happens when a component's state or props change, causing it to re-render. The main lifecycle method in this phase is:
+componentDidUpdate: This method is called after the component has updated and re-rendered. It receives previous props and state as arguments, allowing developers to compare them and perform actions based on changes. For example:
+javascript
+componentDidUpdate(prevProps, prevState) {
+if (this.props.id !== prevProps.id) {
+this.fetchData(this.props.id);
+}
+}
+
+## Unmounting
+The unmounting phase occurs when a component is being removed from the DOM. The relevant lifecycle method here is:
+componentWillUnmount: This method is called just before a component is unmounted and destroyed. It’s typically used for cleanup tasks such as invalidating timers or canceling network requests. For example:
+
+componentWillUnmount() {
+clearTimeout(this.timer);
+}
+
+## Using useEffect as a Lifecycle Method in Functional Components
+With the introduction of functional components and hooks, React provides the useEffect hook to manage side effects similarly to lifecycle methods in class components.
+useEffect: This hook can mimic the behavior of componentDidMount, componentDidUpdate, and componentWillUnmount based on how it is used. By default, it runs after every render, but you can control when it runs by passing dependencies.
+
+Example of using useEffect:
+
+import { useEffect } from 'react';
+
+function ExampleComponent({ id }) {
+useEffect(() => { 
+
+return () => {// Cleanup function (similar to componentWillUnmount)
+      cleanup();
+    };
+
+}, [id]); // Runs when 'id' changes
+}
+
+Handling Cleanup with useEffect
+
+To prevent memory leaks and ensure proper resource management, it’s essential to implement cleanup functions within useEffect. The cleanup function runs before the component unmounts or before the effect runs again if dependencies change.
+Example of implementing cleanup:
+javascript
+useEffect(() => {
+const timer = setTimeout(() => {
+console.log('Timer executed');
+}, 1000);
+
+return () => {
+clearTimeout(timer); // Cleanup timer on unmount or before next effect run
+};
+}, []);
