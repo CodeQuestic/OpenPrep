@@ -323,4 +323,94 @@ function Counter() {
 
 In this example, useReducer manages simple increment and decrement actions for a counter.
 
-### 
+### `useMemo` : Memoizing Expensive Calculations
+
+The `useMemo` hook in React is used to memoize expensive calculations, so they are only recomputed when their dependencies change, rather than on every render. This can help improve performance by avoiding unnecessary re-calculations, especially in cases where the calculation is resource-intensive or when working with large data sets. It actually takes two arguments:
+ - A function that returns the computed value.
+ - An array of dependencies.
+
+**Syntax of `useMemo`**
+
+```jsx
+const memoizedValue = useMemo(() => {
+    return computeExpensiveValue(a, b);
+}, [a, b]);
+```
+ - memoizedValue : The result of the computation.
+ - computeExpensiveValue : The expensive function that only runs when dependencies (a, b) change.
+
+### Example of `useMemo`
+
+```jsx
+import React, { useState, useMemo } from 'react';
+
+function ExpensiveComponent({ a, b }) {
+    // Memoize the expensive calculation
+    const expensiveCalculation = useMemo(() => {
+        console.log('Calculating...');
+        return a * b;
+    }, [a, b]);
+
+    return <p>Result: {expensiveCalculation}</p>;
+}
+
+function App() {
+    const [a, setA] = useState(2);
+    const [b, setB] = useState(3);
+
+    return (
+        <div>
+            <ExpensiveComponent a={a} b={b} />
+            <button onClick={() => setA(a + 1)}>Increment A</button>
+            <button onClick={() => setB(b + 1)}>Increment B</button>
+        </div>
+    );
+}
+```
+In this example, `expensiveCalculation` is only re-calculated when either `a` or `b` changes. If other parts of the component re-render without changing `a` or `b`, the expensive calculation won't re-run. This reduces unnecessary computation and improves performance.
+
+### `useCallback` : Memoizing Functions for Performance
+
+The `useCallback` hook is used to memoize functions so that they are not recreated on every render. This is particularly useful when passing functions as props to child components or as dependencies to other hooks (like `useEffect`), as it prevents unnecessary re-renders. This actually takes two arguments.
+ - The function to memoize.
+ - An array of dependencies.
+
+**Syntax of `useCallback`
+
+```jsx
+const memoizedFunction = useCallback(() => {
+    // Function logic
+}, [dependencies]);
+```
+
+- `memoizedFunction` : A memoized version of the function.
+- Dependencies: If any of the values in the array change, the function is recreated.
+
+### Example of `useCallback`
+
+```jsx
+import React, { useState, useCallback } from 'react';
+
+function ChildComponent({ onClick }) {
+    console.log('Child component rendered');
+    return <button onClick={onClick}>Click Me</button>;
+}
+
+function ParentComponent() {
+    const [count, setCount] = useState(0);
+
+    const handleClick = useCallback(() => {
+        setCount((prevCount) => prevCount + 1);
+    }, []);
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <ChildComponent onClick={handleClick} />
+        </div>
+    );
+}
+```
+
+In this example, the `handleClick` function is memoized using `useCallback`. This means it will only be recreated if its dependencies change. As a result, `ChildComponent` will not re-render unnecessarily when the parent component re-renders, because onClick doesn't change. Without `useCallback`, the `handleClick` function would be recreated on every render, causing `ChildComponent` to re-render even if there was no need.
+
