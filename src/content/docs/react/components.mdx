@@ -1,3 +1,162 @@
 ---
 title: Components in React
 ---
+
+## What are Components?
+
+Components are the building blocks of any React application. They encapsulate logic and UI, allowing developers to create reusable, modular pieces of an application. Each component can maintain its own state, receive data via props, and manage its rendering, making it easy to compose complex UIs from simple building blocks. By breaking down the UI into smaller components, React promotes reusability and better maintainability.
+
+## Functional Components vs. Class Components
+
+React supports two types of components: **functional components** and **class components**.
+
+### Functional Components
+
+Functional components are JavaScript functions that return JSX. They are simpler and easier to read, especially when using React Hooks for state management and side effects.
+
+**Example:**
+
+```javascript
+function Greeting(props) {
+  return <h1>Hello, {props.name}!</h1>;
+}
+```
+
+### Class Components
+
+Class components are ES6 classes that extend `React.Component`. They can hold and manage their own state and lifecycle methods.
+
+**Example:**
+
+```javascript
+import React from 'react';
+
+class Greeting extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+```
+
+### When to Use Each
+
+- **Functional Components**: Use when you don't need lifecycle methods or local state, especially with Hooks available.
+- **Class Components**: Use when you require access to lifecycle methods or when managing state prior to React 16.8.
+
+## Creating a Component
+
+### Functional Component
+
+1. Define a function that returns JSX.
+2. Use props to pass data.
+
+**Example:**
+
+```javascript
+function MyComponent(props) {
+  return <div>{props.content}</div>;
+}
+```
+
+### Class Component
+
+1. Create a class that extends `React.Component`.
+2. Implement the `render()` method.
+
+**Example:**
+
+```javascript
+class MyComponent extends React.Component {
+  render() {
+    return <div>{this.props.content}</div>;
+  }
+}
+```
+
+## Component Props
+
+Props (short for properties) are used to pass data to components. They allow components to be dynamic and reusable.
+
+### Accessing Props
+
+Props can be accessed in both functional and class components.
+
+**Example of Destructuring Props:**
+
+```javascript
+function MyComponent({ title, content }) {
+  return (
+    <div>
+      <h2>{title}</h2>
+      <p>{content}</p>
+    </div>
+  );
+}
+```
+
+In class components:
+
+```javascript
+class MyComponent extends React.Component {
+  render() {
+    const { title, content } = this.props;
+    return (
+      <div>
+        <h2>{title}</h2>
+        <p>{content}</p>
+      </div>
+    );
+  }
+}
+```
+
+## Component Composition (Nesting Components)
+
+Component composition allows you to build complex UIs by nesting components within one another.
+
+### Example of Nesting Components
+
+```javascript
+function App() {
+  return (
+    <div>
+      <Header />
+      <MainContent>
+        <Sidebar />
+        <Content />
+      </MainContent>
+      <Footer />
+    </div>
+  );
+}
+```
+
+In this example, `App` is the parent component that nests `Header`, `MainContent`, `Sidebar`, `Content`, and `Footer` components.
+
+## Default Props and Prop Types (Type Checking in React)
+
+Using **default props** ensures that components have default values for props if they are not provided. **Prop types** help validate the data type of props passed to components.
+
+### Default Props Example
+
+```javascript
+MyComponent.defaultProps = {
+  title: 'Default Title',
+};
+```
+
+### Prop Types Example
+
+To use prop types, you first need to import `PropTypes`.
+
+```javascript
+import PropTypes from 'prop-types';
+
+MyComponent.propTypes = {
+  title: PropTypes.string,
+  content: PropTypes.string.isRequired,
+};
+```
+
+This setup ensures that if the `content` prop is not provided, a warning will be issued in the console.
+
