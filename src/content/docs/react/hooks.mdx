@@ -54,6 +54,7 @@ React Hooks fundamentally changed how developers write and manage functional com
 
 React provides several hooks that allow you to handle common tasks like managing state and handling side effects in functional components. Two of the most important and widely used hooks are useState and useEffect.
 
+
 ### `useState` : Managing State in Functional components
 
 The useState hook is used to add state to functional components. Before hooks, only class components could have state. Now, with useState, any functional component can manage its own state.
@@ -186,3 +187,140 @@ useEffect(() => {
     };
 }, []);
 ```
+
+### Additional Hooks
+
+### `useContext` : Accessing Global State with React’s Context API
+
+The useContext hook is used to access values provided by the Context API in React. The Context API allows you to create and manage global state, which can be shared across different components without passing props down through every level of the component tree. This is particularly useful for managing themes, authentication status, or user settings that are needed by many components
+
+useContext allows a component to consume the nearest Context Provider’s value without needing to pass props through intermediate components. This helps reduce "prop drilling" (passing props down multiple levels) and makes the code more readable.
+
+**Steps to use `useContext`**
+
+ - First, create a context using React.createContext(). This provides a default value for the context.
+
+ ```jsx
+ const MyContext = React.createContext(defaultValue);
+```
+
+ - Wrap your component tree with a Context Provider to supply a value that child components can consume.
+
+```jsx
+<MyContext.Provider value={someValue}>
+    <ChildComponent />
+</MyContext.Provider>
+```
+
+ - Use the useContext hook inside any component that needs the context value.
+
+ ```jsx
+ const value = useContext(MyContext);
+```
+
+### Example of `useContext`
+
+```jsx
+import React, { createContext, useContext } from 'react';
+
+const MyContext = createContext('default value');
+
+function DisplayComponent() {
+    const value = useContext(MyContext);  // Access the context value
+    return <p>Context Value: {value}</p>;
+}
+
+function App() {
+    return (
+        <MyContext.Provider value="Hello, World!">
+            <DisplayComponent />
+        </MyContext.Provider>
+    );
+}
+```
+
+In this example, `DisplayComponent` accesses the value "Hello, World!" from `MyContext` using `useContext`.
+
+### `useRef` : Referencing DOM Elements and Persisting Values
+
+The `useRef` hook is used to reference DOM elements or persist values across renders without causing the component to re-render. Unlike state variables, changing a `useRef` value does not trigger a re-render.
+
+You can use `useRef` to directly access a DOM element, such as focusing an input field or scrolling to a specific section. `useRef` can store a mutable value that persists between renders, without triggering re-renders when the value changes.
+
+```jsx
+const refContainer = useRef(initialValue);
+```
+
+`useRef` returns a mutable object that has a single property called current. The current property of the object can hold any value (similar to an instance variable in class components) and is preserved across renders.
+
+### Example of `useRef`
+
+```jsx
+import React, { useRef } from 'react';
+
+function FocusInput() {
+    const inputRef = useRef(null); // Create a ref
+    const focusInputField = () => {
+        inputRef.current.focus(); // Access the input element and focus it
+    };
+    return (
+        <div>
+            <input ref={inputRef} type="text" />
+            <button onClick={focusInputField}>Focus the input</button>
+        </div>
+    );
+}
+
+export default FocusInput;
+```
+
+### `useReducer` : Managing Complex State
+
+The `useReducer` hook is an alternative to `useState` for managing state, particularly when the state logic is complex or the state has multiple sub-values that need updating in various ways. It is often used in large-scale applications or for cases where `useState` would result in messy, hard-to-maintain code.
+
+`useReducer` is similar to the `reduce` function in JavaScript. It takes a reducer function and an initial state as arguments and returns:
+ - The current state.
+ - A dispatch function to send actions to the reducer.
+
+**Syntax of `useReducer`
+
+```jsx
+const [state, dispatch] = useReducer(reducerFunction, initialState);
+```
+
+ - `reducerFunction` : This is a function that takes the current state and an action, then returns the new state.
+ - `initialState` : This is the initial value of the state.
+ - `dispatch` : This function is used to send actions that update the state.
+
+### Example of `useReducer`
+
+```jsx
+import React, { useReducer } from 'react';
+
+function counterReducer(state, action) {
+    switch (action.type) {
+        case 'increment':
+            return { count: state.count + 1 };
+        case 'decrement':
+            return { count: state.count - 1 };
+        default:
+            return state;
+    }
+}
+
+function Counter() {
+    const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+    return (
+        <div>
+            <p>Count: {state.count}</p>
+            <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+            <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+        </div>
+    );
+}
+```
+
+In this example, useReducer manages simple increment and decrement actions for a counter.
+
+### 
