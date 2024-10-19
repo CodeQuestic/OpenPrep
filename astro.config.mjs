@@ -96,11 +96,18 @@ export default defineConfig({
         },
         {
           label: "Node",
-          items: [{ label: "Introduction", slug: "node/introduction" }],
+          items: [
+            { label: "Introduction", slug: "node/introduction", }],
         },
         {
           label: "Mongo DB",
-          items: [{ label: "Introduction", slug: "mongodb/introduction" }],
+          items: [
+            { label: "Introduction", slug: "mongodb/introduction" },
+            { label: "Indexing Strategies", slug: "mongodb/indexing-strategies" },
+            { label: "Replication and Sharding", slug: "mongodb/replication-and-sharding" },
+            { label: "Schema Design Best Practices", slug: "mongodb/schema-design-best-practices" },
+            { label: "Advanced Aggregation Pipelines", slug: "mongodb/advanced-aggregation-pipelines" }
+          ],
         },
       ],
     }),
