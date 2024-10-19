@@ -1,3 +1,188 @@
 ---
 title: Hooks in React
 ---
+
+### Introduction to Hooks
+
+React Hooks were introduced in React 16.8 to simplify how developers manage state and side effects in functional components. Before Hooks, functional components were stateless, and only class components could hold state or use lifecycle methods. This often led to complex class structures and repetitive code. Hooks solve this by allowing developers to use state and other React features directly in functional components, making the code cleaner and easier to manage.
+
+### Pros of React Hooks
+
+ - **Simplify Code** : With class components, developers had to deal with this, binding methods, and complex lifecycle methods. Hooks eliminate these issues by keeping everything in functional components, which are easier to write and maintain.
+ - **Reuse Logic** : Before Hooks, reusing logic across components was challenging. Developers had to rely on patterns like higher-order components (HOCs) or render props, which made the code harder to follow. Hooks, especially custom hooks, enable the reuse of logic more naturally, without modifying the component tree structure.
+ - **Clean Code** : Class components often resulted in code that mixed stateful logic with UI concerns. Hooks let developers separate different pieces of logic (e.g., managing form state, fetching data) into smaller, isolated functions, leading to better-organized code.
+
+### Rules of Hooks
+
+1. **Call Hooks Only at the Top Level**
+
+Hooks should only be called at the top level of your component, not inside loops, conditions, or nested functions. This ensures that Hooks are called in the same order on every render, which is crucial for React to correctly preserve the component’s state between renders.
+
+```jsx
+// Correct usage
+function MyComponent() {
+    const [count, setCount] = useState(0); // Hook at the top level
+}
+
+// Incorrect usage
+function MyComponent() {
+    if (someCondition) {
+        useState(0); // Hook inside a condition – this will cause issues
+    }
+}
+```
+
+2. **Call Hooks Only in React Functions**
+
+Hooks should only be called inside functional components or custom hooks, not in regular JavaScript functions or class components. This is to ensure that React can properly manage the component's state.
+
+```jsx
+// Correct usage
+function MyComponent() {
+    const [count, setCount] = useState(0);
+}
+
+// Incorrect usage
+function regularFunction() {
+    useState(0); // Can't call a Hook here
+}
+```
+
+React Hooks fundamentally changed how developers write and manage functional components, making them more powerful and easier to understand. By adhering to the rules of hooks and leveraging them for state management, side effects, and reusable logic, developers can create cleaner, more maintainable code.
+
+### Basic Hooks
+
+React provides several hooks that allow you to handle common tasks like managing state and handling side effects in functional components. Two of the most important and widely used hooks are useState and useEffect.
+
+### `useState` : Managing State in Functional components
+
+The useState hook is used to add state to functional components. Before hooks, only class components could have state. Now, with useState, any functional component can manage its own state.
+
+The useState hook allows you to declare a state variable and a function to update that state. When you call useState, you pass the initial state as an argument, and it returns an array with two elements:
+ - The current state
+ - A function that updates the state
+
+**Syntax of `useState`**
+
+```jsx
+const [stateVariable, setStateVariable] = useState(initialValue);
+```
+ - `stateVariable` : This is the current value of the state.
+ - `setStateVariable` : This is a function used to update the value of stateVariable.
+ - `initialValue` : This is the starting value for the state.
+
+### Example of `useState`
+
+```jsx
+import React, { useState } from 'react';
+
+function Counter() {
+    // Declare a state variable 'count' initialized to 0
+    const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <p>You clicked {count} times</p>
+            <button onClick={() => setCount(count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+}
+```
+
+In this example:
+
+We declare a state variable `count` and a function `setCount` to update it. `useState(0)` initializes count to 0. When the button is clicked, `setCount` is called with the new value (count + 1), which re-renders the component with the updated state.
+
+### Initializing state with Function
+
+Sometimes, initializing state might involve a heavy calculation. You can pass a function to useState to compute the initial state only once when the component first renders.
+
+```jsx
+const [state, setState] = useState(() => {
+    // Complex calculation to determine the initial state
+    return someExpensiveCalculation();
+});
+```
+
+### State Updation
+
+When updating state based on the current state (e.g., incrementing or toggling values), you can pass a function to setState. This ensures you’re working with the latest state value.
+
+```jsx
+<button onClick={() => setCount(prevCount => prevCount + 1)}>
+    Increment
+</button>
+```
+
+### `useEffect` : Handling Side effects
+
+The `useEffect` hook is used to handle side effects in functional components. Common side effects include data fetching, subscriptions, and directly interacting with the DOM. Before hooks, these kinds of side effects were managed using lifecycle methods like `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount` in class components. `useEffect` combines all of these into one unified API. Basically, it takes two arguments
+ - A function where you define the side effect.
+ - An optional dependency array that controls when the effect should run.
+
+**Syntax of `useEffect`**
+
+```jsx
+useEffect(() => {
+    // Code for the side effect
+}, [dependencies]);
+```
+
+Side effect function is the function that runs after each render, performing the desired effect (e.g., fetching data).
+Dependency is an optional array that specifies when the effect should re-run. If a value in the array changes, the effect will re-run.
+
+### Example of `useEffect`
+
+```jsx
+import React, { useState, useEffect } from 'react';
+
+function DataFetchingComponent() {
+    const [data, setData] = useState([]);
+
+    useEffect(() => {
+        // Fetch data from an API when the component mounts
+        fetch('https://api.example.com/data')
+            .then(response => response.json())
+            .then(data => setData(data));
+    }, []); // Empty array means this effect runs only once, when the component mounts
+
+    return (
+        <div>
+            {data.map(item => (
+                <p key={item.id}>{item.name}</p>
+            ))}
+        </div>
+    );
+}
+```
+
+In this example: The side effect is fetching data from an API when the component first renders. The [] (empty dependency array) ensures the effect only runs once, similar to `componentDidMount`.
+
+### Controlling using Dependency array
+
+You can control when an effect runs by adding dependencies. The effect will only run again if one of the dependencies changes.
+
+```jsx
+useEffect(() => {
+    // This effect runs when 'count' changes
+    console.log(`The count is now ${count}`);
+}, [count]); // Effect runs only when 'count' changes
+```
+
+### Cleaning up effects
+
+Sometimes, side effects like subscriptions or timers need to be cleaned up to prevent memory leaks. `useEffect` can return a cleanup function that runs when the component unmounts or before the effect re-runs.
+
+```jsx
+useEffect(() => {
+    const timer = setInterval(() => {
+        console.log('This runs every second');
+    }, 1000);
+    // Cleanup the timer when the component unmounts
+    return () => {
+        clearInterval(timer);
+    };
+}, []);
+```
