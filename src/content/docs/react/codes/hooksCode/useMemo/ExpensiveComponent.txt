@@ -1,0 +1,11 @@
+import React, { useState, useMemo } from 'react';
+
+function ExpensiveComponent({ a, b }) {
+    // Memoize the expensive calculation
+    const expensiveCalculation = useMemo(() => {
+        console.log('Calculating...');
+        return a * b;
+    }, [a, b]);
+
+    return <p>Result: {expensiveCalculation}</p>;
+}

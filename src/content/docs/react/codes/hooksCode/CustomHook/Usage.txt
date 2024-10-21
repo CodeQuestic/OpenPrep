@@ -1,0 +1,17 @@
+import { useState, useEffect } from 'react';
+
+function useCustomHook(/* parameters */) {
+    // State and other hooks
+    const [state, setState] = useState(initialValue);
+
+    useEffect(() => {
+        // Logic here
+
+        return () => {
+            // Cleanup if necessary
+        };
+    }, [dependencies]);
+
+    // Return state and functions to be used in components
+    return [state, setState];
+}

@@ -1,0 +1,9 @@
+// Correct usage
+function MyComponent() {
+    const [count, setCount] = useState(0);
+}
+
+// Incorrect usage
+function regularFunction() {
+    useState(0); // Can't call a Hook here
+}
