@@ -456,10 +456,8 @@ A Custom Hook is essentially a function that:
 ### Example of Custom Hook
 
 ```astro
-import type { ComponentProps } from 'astro/types';
-import { Icon } from '@astrojs/starlight/icon';
-
-type IconProps = ComponentProps<typeof Icon>;
+import Counter from './codes/hooksCode/Counter.jsx'
+<Counter client:load />
 ```
 
  - `useFetch` : A simple custom React hook that fetches data from an API.
