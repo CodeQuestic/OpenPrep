@@ -456,10 +456,10 @@ A Custom Hook is essentially a function that:
 ### Example of Custom Hook
 
 ```astro
-
+---
 import hooks from './codes/hooksCode/hooks.txt'
-
-```
+---
+<Hooks client:load />
 
  - `useFetch` : A simple custom React hook that fetches data from an API.
  - `FetchComponent` : A React component that uses the `useFetch` hook to display fetched data.

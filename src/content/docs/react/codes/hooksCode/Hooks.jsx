@@ -41,7 +41,7 @@ const CustomCard = ({ children }) => (
     {children}
   </div>
 );
----
+
 
 <main>
   <h1>Welcome to the Astro + React Example</h1>
