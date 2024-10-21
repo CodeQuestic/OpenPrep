@@ -459,7 +459,15 @@ A Custom Hook is essentially a function that:
 import FetchComponent from './codes/hooksCode/FetchComponent.jsx';
 import CustomCard from './codes/hooksCode/CustomCard.astro';
 import { Icon } from '@astrojs/starlight/components';
-<main> <h1>Custom Hook Example in Astro</h1> <Icon name="open-book" /> <CustomCard> <h2>Latest Posts</h2> <FetchComponent client:load /> </CustomCard> </main> 
+
+<main>
+    <h1>Custom Hook Example in Astro</h1>
+    <Icon name="open-book" />
+    <CustomCard> 
+        <h2>Latest Posts</h2> 
+        <FetchComponent client:load />
+    </CustomCard>
+</main> 
 ```
 
  - `useFetch` : A simple custom React hook that fetches data from an API.
