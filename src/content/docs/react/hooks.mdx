@@ -2,6 +2,10 @@
 title: Hooks in React
 ---
 
+import { Card } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
 ### Introduction to Hooks
 
 React Hooks were introduced in React 16.8 to simplify how developers manage state and side effects in functional components. Before Hooks, functional components were stateless, and only class components could hold state or use lifecycle methods. This often led to complex class structures and repetitive code. Hooks solve this by allowing developers to use state and other React features directly in functional components, making the code cleaner and easier to manage.
@@ -190,6 +194,7 @@ useEffect(() => {
 
 ### Additional Hooks
 
+
 ### `useContext` : Accessing Global State with React’s Context API
 
 The useContext hook is used to access values provided by the Context API in React. The Context API allows you to create and manage global state, which can be shared across different components without passing props down through every level of the component tree. This is particularly useful for managing themes, authentication status, or user settings that are needed by many components
@@ -220,24 +225,21 @@ useContext allows a component to consume the nearest Context Provider’s value 
 
 ### Example of `useContext`
 
-```jsx
-import React, { createContext, useContext } from 'react';
+import useContextComponent from './codes/hooksCode/useContext/App.txt?raw';
+import useContextUsage from './codes/hooksCode/useContext/Usage.txt?raw';
 
-const MyContext = createContext('default value');
-
-function DisplayComponent() {
-    const value = useContext(MyContext);  // Access the context value
-    return <p>Context Value: {value}</p>;
-}
-
-function App() {
-    return (
-        <MyContext.Provider value="Hello, World!">
-            <DisplayComponent />
-        </MyContext.Provider>
-    );
-}
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useContextUsage} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useContextComponent} lang="jsx" title="App.jsx" />
+  </TabItem>
+</Tabs>
 
 In this example, `DisplayComponent` accesses the value "Hello, World!" from `MyContext` using `useContext`.
 
@@ -247,6 +249,8 @@ The `useRef` hook is used to reference DOM elements or persist values across ren
 
 You can use `useRef` to directly access a DOM element, such as focusing an input field or scrolling to a specific section. `useRef` can store a mutable value that persists between renders, without triggering re-renders when the value changes.
 
+**Syntax of `useRef`**
+
 ```jsx
 const refContainer = useRef(initialValue);
 ```
@@ -255,24 +259,21 @@ const refContainer = useRef(initialValue);
 
 ### Example of `useRef`
 
-```jsx
-import React, { useRef } from 'react';
+import useRefComponent from './codes/hooksCode/useRef/FocusInput.txt?raw';
+import useRefUsage from './codes/hooksCode/useRef/Usage.txt?raw';
 
-function FocusInput() {
-    const inputRef = useRef(null); // Create a ref
-    const focusInputField = () => {
-        inputRef.current.focus(); // Access the input element and focus it
-    };
-    return (
-        <div>
-            <input ref={inputRef} type="text" />
-            <button onClick={focusInputField}>Focus the input</button>
-        </div>
-    );
-}
-
-export default FocusInput;
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useRefUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useRefComponent} lang="jsx" title="FocusInput.jsx" />
+  </TabItem>
+</Tabs>
 
 ### `useReducer` : Managing Complex State
 
@@ -282,7 +283,7 @@ The `useReducer` hook is an alternative to `useState` for managing state, partic
  - The current state.
  - A dispatch function to send actions to the reducer.
 
-**Syntax of `useReducer`
+**Syntax of `useReducer`**
 
 ```jsx
 const [state, dispatch] = useReducer(reducerFunction, initialState);
@@ -294,32 +295,21 @@ const [state, dispatch] = useReducer(reducerFunction, initialState);
 
 ### Example of `useReducer`
 
-```jsx
-import React, { useReducer } from 'react';
+import useReducerComponent from './codes/hooksCode/useReducer/Counter.txt?raw';
+import useReducerUsage from './codes/hooksCode/useReducer/Usage.txt?raw';
 
-function counterReducer(state, action) {
-    switch (action.type) {
-        case 'increment':
-            return { count: state.count + 1 };
-        case 'decrement':
-            return { count: state.count - 1 };
-        default:
-            return state;
-    }
-}
-
-function Counter() {
-    const [state, dispatch] = useReducer(counterReducer, { count: 0 });
-
-    return (
-        <div>
-            <p>Count: {state.count}</p>
-            <button onClick={() => dispatch({ type: 'increment' })}>+</button>
-            <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
-        </div>
-    );
-}
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useReducerUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useReducerComponent} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
 
 In this example, useReducer manages simple increment and decrement actions for a counter.
 
@@ -341,32 +331,26 @@ const memoizedValue = useMemo(() => {
 
 ### Example of `useMemo`
 
-```jsx
-import React, { useState, useMemo } from 'react';
+import ExpensiveComponent from './codes/hooksCode/useMemo/ExpensiveComponent.txt?raw';
+import useMemoUsage from './codes/hooksCode/useMemo/Usage.txt?raw';
+import useMemoApp from './codes/hooksCode/useMemo/App.txt?raw';
 
-function ExpensiveComponent({ a, b }) {
-    // Memoize the expensive calculation
-    const expensiveCalculation = useMemo(() => {
-        console.log('Calculating...');
-        return a * b;
-    }, [a, b]);
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useMemoUsage} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+  <TabItem label="App">
+    <Code code={useMemoApp} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={ExpensiveComponent} lang="jsx" title="ExpensiveComponent.jsx" />
+  </TabItem>
+</Tabs>
 
-    return <p>Result: {expensiveCalculation}</p>;
-}
-
-function App() {
-    const [a, setA] = useState(2);
-    const [b, setB] = useState(3);
-
-    return (
-        <div>
-            <ExpensiveComponent a={a} b={b} />
-            <button onClick={() => setA(a + 1)}>Increment A</button>
-            <button onClick={() => setB(b + 1)}>Increment B</button>
-        </div>
-    );
-}
-```
 In this example, `expensiveCalculation` is only re-calculated when either `a` or `b` changes. If other parts of the component re-render without changing `a` or `b`, the expensive calculation won't re-run. This reduces unnecessary computation and improves performance.
 
 ### `useCallback` : Memoizing Functions for Performance
@@ -375,7 +359,7 @@ The `useCallback` hook is used to memoize functions so that they are not recreat
  - The function to memoize.
  - An array of dependencies.
 
-**Syntax of `useCallback`
+**Syntax of `useCallback`**
 
 ```jsx
 const memoizedFunction = useCallback(() => {
@@ -388,50 +372,27 @@ const memoizedFunction = useCallback(() => {
 
 ### Example of `useCallback`
 
-```jsx
-// src/pages/index.astro
+import Counter from './codes/hooksCode/useCallBack/Counter.txt?raw';
+import useCallBackUsage from './codes/hooksCode/useCallBack/Usage.txt?raw';
 
-import { Icon } from '@astrojs/starlight/components';
-import React, { useState, useCallback } from 'react';
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useCallBackUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={Counter} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
 
-// React component using useCallback
-function CounterComponent() {
-  const [count, setCount] = useState(0);
-
-  // Memoize the click handler using useCallback
-  const handleClick = useCallback(() => {
-    setCount(prevCount => prevCount + 1);
-  }, []);
-
-  return (
-    <div>
-      <p>Current Count: {count}</p>
-      <button onClick={handleClick}>Increase Count</button>
-    </div>
-  );
-}
-
-// Simple card wrapper
-const CustomCard = ({ children }) => (
-  <div style="padding: 1.5rem; border: 1px solid #ddd; border-radius: 8px;">
-    {children}
-  </div>
-);
-```
-
-```jsx
-<main>
-  <h1>useCallback Example in Astro + React</h1>
-  <Icon name="refresh" />
-  
-  <CustomCard>
-    <h2>Counter Example</h2>
-    <CounterComponent />
-  </CustomCard>
-</main>
-```
-
-In this example, the `handleClick` function is memoized using `useCallback`. This means it will only be recreated if its dependencies change. As a result, `ChildComponent` will not re-render unnecessarily when the parent component re-renders, because onClick doesn't change. Without `useCallback`, the `handleClick` function would be recreated on every render, causing `ChildComponent` to re-render even if there was no need.
+In this example,
+ - The Counter component manages a count state using `useState`, and it includes a child component `ChildComponent` that takes an `onClick` handler as a prop.
+ - The `ChildComponent` renders a button and logs to the console every time it re-renders.
+ - The `handleClick` function inside `Counter` is wrapped with `useCallback`. This ensures that the function is memoized and won't be recreated on every render unless its dependencies change (in this case, the dependency array is empty, so it won't change).
+ - Without `useCallback`, every render of Counter would create a new version of `handleClick`, which would cause `ChildComponent` to re-render unnecessarily. Using `useCallback` prevents this, as `handleClick` stays the same between renders.
 
 ### Custom Hooks
 
@@ -455,22 +416,20 @@ A Custom Hook is essentially a function that:
 
 ### Example of Custom Hook
 
-```astro
-import FetchComponent from './codes/hooksCode/FetchComponent.jsx';
-import CustomCard from './codes/hooksCode/CustomCard.astro';
-import { Icon } from '@astrojs/starlight/components';
+import CounterComponent from './codes/hooksCode/CustomHook/CounterComponent.txt?raw';
+import CustomHookUsage from './codes/hooksCode/CustomHook/Usage.txt?raw';
 
-<main>
-    <h1>Custom Hook Example in Astro</h1>
-    <Icon name="open-book" />
-    <CustomCard> 
-        <h2>Latest Posts</h2> 
-        <FetchComponent client:load />
-    </CustomCard>
-</main> 
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install @astrojs/react react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={CustomHookUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={CounterComponent} lang="jsx" title="CounterComponent.jsx" />
+  </TabItem>
+</Tabs>
 
- - `useFetch` : A simple custom React hook that fetches data from an API.
- - `FetchComponent` : A React component that uses the `useFetch` hook to display fetched data.
- - `CustomCard` : A custom Astro component that provides a styled card layout.
- - Astro's `Icon` component: Displays an icon inside the Astro page.
+In this example, `useCounter` manages the counter logic using `useState`, providing three functions to manipulate the count: `increment`, `decrement`, and `reset`. The hook returns the current `count` and the functions, allowing easy access in any component that uses it. `CounterComponent` uses the `useCounter` hook to access the counter state and functions, keeping the component focused on rendering. Buttons in the component trigger the respective functions, allowing users to interact with the counter, with automatic UI updates reflecting the changes.

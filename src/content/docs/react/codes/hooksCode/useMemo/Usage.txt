@@ -1,0 +1,4 @@
+const memoizedValue = useMemo(() => {
+    // computation
+    return value; // result of the computation
+}, [dependencies]);
