@@ -1,0 +1,9 @@
+useEffect(() => {
+    const timer = setInterval(() => {
+        console.log('This runs every second');
+    }, 1000);
+    // Cleanup the timer when the component unmounts
+    return () => {
+        clearInterval(timer);
+    };
+}, []);

@@ -22,35 +22,25 @@ React Hooks were introduced in React 16.8 to simplify how developers manage stat
 
 Hooks should only be called at the top level of your component, not inside loops, conditions, or nested functions. This ensures that Hooks are called in the same order on every render, which is crucial for React to correctly preserve the component’s state between renders.
 
-```jsx
-// Correct usage
-function MyComponent() {
-    const [count, setCount] = useState(0); // Hook at the top level
-}
+import UsageOne from './codes/hooksCode/Others/UsageOne.txt?raw';
 
-// Incorrect usage
-function MyComponent() {
-    if (someCondition) {
-        useState(0); // Hook inside a condition – this will cause issues
-    }
-}
-```
+<Tabs>
+  <TabItem label="Usage">
+    <Code code={UsageOne} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+</Tabs>
 
 2. **Call Hooks Only in React Functions**
 
 Hooks should only be called inside functional components or custom hooks, not in regular JavaScript functions or class components. This is to ensure that React can properly manage the component's state.
 
-```jsx
-// Correct usage
-function MyComponent() {
-    const [count, setCount] = useState(0);
-}
+import UsageTwo from './codes/hooksCode/Others/UsageTwo.txt?raw';
 
-// Incorrect usage
-function regularFunction() {
-    useState(0); // Can't call a Hook here
-}
-```
+<Tabs>
+  <TabItem label="Usage">
+    <Code code={UsageTwo} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+</Tabs>
 
 React Hooks fundamentally changed how developers write and manage functional components, making them more powerful and easier to understand. By adhering to the rules of hooks and leveraging them for state management, side effects, and reusable logic, developers can create cleaner, more maintainable code.
 
@@ -78,23 +68,21 @@ const [stateVariable, setStateVariable] = useState(initialValue);
 
 ### Example of `useState`
 
-```jsx
-import React, { useState } from 'react';
+import useStateCounter from './codes/hooksCode/useState/Counter.txt?raw';
+import useStateUsage from './codes/hooksCode/useState/Usage.txt?raw';
 
-function Counter() {
-    // Declare a state variable 'count' initialized to 0
-    const [count, setCount] = useState(0);
-
-    return (
-        <div>
-            <p>You clicked {count} times</p>
-            <button onClick={() => setCount(count + 1)}>
-                Click me
-            </button>
-        </div>
-    );
-}
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useStateUsage} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useStateCounter} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
 
 In this example:
 
@@ -140,28 +128,21 @@ Dependency is an optional array that specifies when the effect should re-run. If
 
 ### Example of `useEffect`
 
-```jsx
-import React, { useState, useEffect } from 'react';
+import DataFetchingComponent from './codes/hooksCode/useEffect/DataFetchingComponent.txt?raw';
+import useEffectUsage from './codes/hooksCode/useEffect/Usage.txt?raw';
 
-function DataFetchingComponent() {
-    const [data, setData] = useState([]);
-
-    useEffect(() => {
-        // Fetch data from an API when the component mounts
-        fetch('https://api.example.com/data')
-            .then(response => response.json())
-            .then(data => setData(data));
-    }, []); // Empty array means this effect runs only once, when the component mounts
-
-    return (
-        <div>
-            {data.map(item => (
-                <p key={item.id}>{item.name}</p>
-            ))}
-        </div>
-    );
-}
-```
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useEffectUsage} lang="jsx" title="Usage.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={DataFetchingComponent} lang="jsx" title="DataFetchingComponent.jsx" />
+  </TabItem>
+</Tabs>
 
 In this example: The side effect is fetching data from an API when the component first renders. The [] (empty dependency array) ensures the effect only runs once, similar to `componentDidMount`.
 
@@ -180,17 +161,13 @@ useEffect(() => {
 
 Sometimes, side effects like subscriptions or timers need to be cleaned up to prevent memory leaks. `useEffect` can return a cleanup function that runs when the component unmounts or before the effect re-runs.
 
-```jsx
-useEffect(() => {
-    const timer = setInterval(() => {
-        console.log('This runs every second');
-    }, 1000);
-    // Cleanup the timer when the component unmounts
-    return () => {
-        clearInterval(timer);
-    };
-}, []);
-```
+import Cleanup from './codes/hooksCode/Others/Cleanup.txt?raw';
+
+<Tabs>
+  <TabItem label="Usage">
+    <Code code={Cleanup} lang="jsx" title="CleanUp.jsx" />
+  </TabItem>
+</Tabs>
 
 ### Additional Hooks
 
