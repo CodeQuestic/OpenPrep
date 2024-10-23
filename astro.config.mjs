@@ -31,6 +31,7 @@ export default defineConfig({
             { label: "State & Props", slug: "react/state-and-props" },
             { label: "Component Lifecycle", slug: "react/component-lifecycle" },
             { label: "Event Handling", slug: "react/event-handling" },
+            { label: "Forms in React", slug: "react/forms" },
           ],
         },
         {
