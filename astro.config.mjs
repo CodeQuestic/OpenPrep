@@ -38,50 +38,89 @@ export default defineConfig({
           label: "React Components",
           items: [
             {
-              label: "Basic Components",
+              label: "Using Tailwind",
               items: [
                 {
                   label: "Accordion",
-                  slug: "react-components/basics/accordion",
+                  slug: "react-components/tailwind/accordion",
                 },
-                { label: "Alerts", slug: "react-components/basics/alert" },
+                {
+                  label: "Alerts",
+                  slug: "react-components/tailwind/alert",
+                },
                 {
                   label: "Breadcrumb",
-                  slug: "react-components/basics/breadcrumb",
+                  slug: "react-components/tailwind/breadcrumb",
                 },
                 {
                   label: "Button Group",
-                  slug: "react-components/basics/button-group",
+                  slug: "react-components/tailwind/button-group",
                 },
-                { label: "Buttons", slug: "react-components/basics/buttons" },
-                { label: "Chips", slug: "react-components/basics/chips" },
+                {
+                  label: "Buttons",
+                  slug: "react-components/tailwind/buttons",
+                },
+                {
+                  label: "Chips",
+                  slug: "react-components/tailwind/chips",
+                },
                 {
                   label: "Dropdowns",
-                  slug: "react-components/basics/dropdown",
+                  slug: "react-components/tailwind/dropdown",
                 },
-                { label: "Input", slug: "react-components/basics/input" },
-                { label: "Lightbox", slug: "react-components/basics/lightbox" },
-                { label: "Modal", slug: "react-components/basics/modal" },
+                {
+                  label: "Input",
+                  slug: "react-components/tailwind/input",
+                },
+                {
+                  label: "Lightbox",
+                  slug: "react-components/tailwind/lightbox",
+                },
+                {
+                  label: "Modal",
+                  slug: "react-components/tailwind/modal",
+                },
                 {
                   label: "Navigation Bar",
-                  slug: "react-components/basics/navbar",
+                  slug: "react-components/tailwind/navbar",
                 },
-                { label: "Popovers", slug: "react-components/basics/popover" },
+                {
+                  label: "Popovers",
+                  slug: "react-components/tailwind/popover",
+                },
                 {
                   label: "Social Buttons",
-                  slug: "react-components/basics/social-buttons",
+                  slug: "react-components/tailwind/social-buttons",
                 },
                 {
                   label: "Star Rating",
-                  slug: "react-components/basics/star-rating",
+                  slug: "react-components/tailwind/star-rating",
                 },
-                { label: "Tabs", slug: "react-components/basics/tabs" },
+                {
+                  label: "Tabs",
+                  slug: "react-components/tailwind/tabs",
+                },
                 {
                   label: "Testimonials",
-                  slug: "react-components/basics/testimonials",
+                  slug: "react-components/tailwind/testimonials",
                 },
-                { label: "Toast", slug: "react-components/basics/toast" },
-                { label: "Tooltip", slug: "react-components/basics/tooltip" },
+                {
+                  label: "Toast",
+                  slug: "react-components/tailwind/toast",
+                },
+                {
+                  label: "Tooltip",
+                  slug: "react-components/tailwind/tooltip",
+                },
+              ],
+            },
+            {
+              label: "Using CSS Modules",
+              items: [
+                {
+                  label: "CSS Modules",
+                  slug: "react-components/css-modules/css-module",
+                },
               ],
             },
             {
@@ -97,17 +136,28 @@ export default defineConfig({
         },
         {
           label: "Node",
-          items: [
-            { label: "Introduction", slug: "node/introduction", }],
+          items: [{ label: "Introduction", slug: "node/introduction" }],
         },
         {
           label: "Mongo DB",
           items: [
             { label: "Introduction", slug: "mongodb/introduction" },
-            { label: "Indexing Strategies", slug: "mongodb/indexing-strategies" },
-            { label: "Replication and Sharding", slug: "mongodb/replication-and-sharding" },
-            { label: "Schema Design Best Practices", slug: "mongodb/schema-design-best-practices" },
-            { label: "Advanced Aggregation Pipelines", slug: "mongodb/advanced-aggregation-pipelines" }
+            {
+              label: "Indexing Strategies",
+              slug: "mongodb/indexing-strategies",
+            },
+            {
+              label: "Replication and Sharding",
+              slug: "mongodb/replication-and-sharding",
+            },
+            {
+              label: "Schema Design Best Practices",
+              slug: "mongodb/schema-design-best-practices",
+            },
+            {
+              label: "Advanced Aggregation Pipelines",
+              slug: "mongodb/advanced-aggregation-pipelines",
+            },
           ],
         },
       ],
