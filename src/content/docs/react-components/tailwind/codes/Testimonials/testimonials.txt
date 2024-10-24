@@ -1,0 +1,38 @@
+// Testimonials.jsx
+import React from 'react';
+
+const TestimonialCard = ({ testimonial, author, role, image, className }) => {
+  return (
+    <div className={`p-4 border rounded-lg shadow-md ${className}`}>
+      {image && (
+        <div className="mb-2">
+          <img src={image} alt={author} className="w-16 h-16 rounded-full" />
+        </div>
+      )}
+      <p className="text-gray-700 italic">"{testimonial}"</p>
+      <p className="mt-2 font-semibold">{author}</p>
+      {role && <p className="text-sm text-gray-500">{role}</p>}
+    </div>
+  );
+};
+
+const Testimonials = ({ testimonials, className = '', layout = 'grid', cardClassName = '' }) => {
+  const layoutClass = layout === 'grid' ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4' : 'flex flex-col space-y-4';
+
+  return (
+    <div className={`${layoutClass} ${className}`}>
+      {testimonials.map((item, index) => (
+        <TestimonialCard
+          key={index}
+          testimonial={item.testimonial}
+          author={item.author}
+          role={item.role}
+          image={item.image}
+          className={cardClassName}
+        />
+      ))}
+    </div>
+  );
+};
+
+export default Testimonials;
