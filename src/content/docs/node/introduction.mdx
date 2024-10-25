@@ -7,7 +7,6 @@ import { Code } from "@astrojs/starlight/components";
 import { FileTree } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import snippet from "./codes/introductionCode/introduction.txt?raw";
-import snippet2 from "./codes/introductionCode/eventloop.txt?raw";
 
 ## What is Node.js?
 
@@ -303,16 +302,9 @@ The event loop is what allows Node.js to perform efficiently. It can handle thou
         - **Timers**: Executes callbacks scheduled by setTimeout() or setInterval().
         - **Pending Callbacks**: Handles I/O operations like network requests.
         - **Idle/Prepare**: Internal Node.js operations.
-        - **Idle/Prepare**: Internal Node.js operations.
         - **Poll**: Retrieves new I/O events and executes I/O-related callbacks.
         - **Check**: Executes callbacks from setImmediate()..
         - **Close Callbacks**: Closes operations like file descriptors or sockets.
-
-4.  **Callbacks**: When an asynchronous operation completes, a callback is queued to be executed. The event loop picks up these callbacks and executes them one by one, ensuring that the program doesn't block while waiting for long-running tasks.
-
-    **Example**
-
-    <Code code={snippet2} lang="js" title="js" />
 
 ## Callbacks, Promises, and Async/Await
 
