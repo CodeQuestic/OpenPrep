@@ -1,3 +1,425 @@
 ---
 title: Hooks in React
 ---
+
+import { Card } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+
+import DataFetchingComponent from './codes/hooksCode/useEffect/DataFetchingComponent.txt?raw';
+import useEffectUsage from './codes/hooksCode/useEffect/Usage.txt?raw';
+import useStateCounter from './codes/hooksCode/useState/Counter.txt?raw';
+import useStateUsage from './codes/hooksCode/useState/Usage.txt?raw';
+import UsageOne from './codes/hooksCode/Others/UsageOne.txt?raw';
+import UsageTwo from './codes/hooksCode/Others/UsageTwo.txt?raw';
+import Cleanup from './codes/hooksCode/Others/Cleanup.txt?raw';
+import useContextComponent from './codes/hooksCode/useContext/App.txt?raw';
+import useContextUsage from './codes/hooksCode/useContext/Usage.txt?raw';
+import useRefComponent from './codes/hooksCode/useRef/FocusInput.txt?raw';
+import useRefUsage from './codes/hooksCode/useRef/Usage.txt?raw';
+import useReducerComponent from './codes/hooksCode/useReducer/Counter.txt?raw';
+import useReducerUsage from './codes/hooksCode/useReducer/Usage.txt?raw';
+import ExpensiveComponent from './codes/hooksCode/useMemo/ExpensiveComponent.txt?raw';
+import useMemoUsage from './codes/hooksCode/useMemo/Usage.txt?raw';
+import useMemoApp from './codes/hooksCode/useMemo/App.txt?raw';
+import Counter from './codes/hooksCode/useCallBack/Counter.txt?raw';
+import useCallBackUsage from './codes/hooksCode/useCallBack/Usage.txt?raw';
+import CounterComponent from './codes/hooksCode/CustomHook/CounterComponent.txt?raw';
+import CustomHookUsage from './codes/hooksCode/CustomHook/Usage.txt?raw';
+import { Steps } from '@astrojs/starlight/components';
+
+## Introduction to Hooks
+
+React Hooks were introduced in React 16.8 to simplify how developers manage state and side effects in functional components. Before Hooks, functional components were stateless, and only class components could hold state or use lifecycle methods. This often led to complex class structures and repetitive code. Hooks solve this by allowing developers to use state and other React features directly in functional components, making the code cleaner and easier to manage.
+
+### Pros of React Hooks
+
+ - **Simplify Code** : With class components, developers had to deal with this, binding methods, and complex lifecycle methods. Hooks eliminate these issues by keeping everything in functional components, which are easier to write and maintain.
+ - **Reuse Logic** : Before Hooks, reusing logic across components was challenging. Developers had to rely on patterns like higher-order components (HOCs) or render props, which made the code harder to follow. Hooks, especially custom hooks, enable the reuse of logic more naturally, without modifying the component tree structure.
+ - **Clean Code** : Class components often resulted in code that mixed stateful logic with UI concerns. Hooks let developers separate different pieces of logic (e.g., managing form state, fetching data) into smaller, isolated functions, leading to better-organized code.
+
+### Rules of Hooks
+
+#### Call Hooks Only at the Top Level
+
+Hooks should only be called at the top level of your component, not inside loops, conditions, or nested functions. This ensures that Hooks are called in the same order on every render, which is crucial for React to correctly preserve the component’s state between renders.
+
+```jsx
+// Correct usage
+function MyComponent() {
+    const [count, setCount] = useState(0); // Hook at the top level
+}
+
+// Incorrect usage
+function MyComponent() {
+    if (someCondition) {
+        useState(0); // Hook inside a condition – this will cause issues
+    }
+}
+```
+
+#### Call Hooks Only in React Functions
+
+Hooks should only be called inside functional components or custom hooks, not in regular JavaScript functions or class components. This is to ensure that React can properly manage the component's state.
+
+```jsx
+// Correct usage
+function MyComponent() {
+    const [count, setCount] = useState(0);
+}
+
+// Incorrect usage
+function regularFunction() {
+    useState(0); // Can't call a Hook here
+}
+```
+
+React Hooks fundamentally changed how developers write and manage functional components, making them more powerful and easier to understand. By adhering to the rules of hooks and leveraging them for state management, side effects, and reusable logic, developers can create cleaner, more maintainable code.
+
+## Basic Hooks
+
+React provides several hooks that allow you to handle common tasks like managing state and handling side effects in functional components. Two of the most important and widely used hooks are useState and useEffect.
+
+### `useState` : Managing State in Functional components
+
+The useState hook is used to add state to functional components. Before hooks, only class components could have state. Now, with useState, any functional component can manage its own state.
+
+The useState hook allows you to declare a state variable and a function to update that state. When you call useState, you pass the initial state as an argument, and it returns an array with two elements:
+ - The current state
+ - A function that updates the state
+
+**Syntax of `useState`**
+
+```jsx
+const [stateVariable, setStateVariable] = useState(initialValue);
+```
+ - `stateVariable` : This is the current value of the state.
+ - `setStateVariable` : This is a function used to update the value of stateVariable.
+ - `initialValue` : This is the starting value for the state.
+
+#### Example of `useState`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useStateUsage} lang="jsx" title="Syntax" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useStateCounter} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example:
+
+We declare a state variable `count` and a function `setCount` to update it. `useState(0)` initializes count to 0. When the button is clicked, `setCount` is called with the new value (count + 1), which re-renders the component with the updated state.
+
+#### Initializing state with Function
+
+Sometimes, initializing state might involve a heavy calculation. You can pass a function to useState to compute the initial state only once when the component first renders.
+
+```jsx
+const [state, setState] = useState(() => {
+    // Complex calculation to determine the initial state
+    return someExpensiveCalculation();
+});
+```
+
+#### State Updation
+
+When updating state based on the current state (e.g., incrementing or toggling values), you can pass a function to setState. This ensures you’re working with the latest state value.
+
+```jsx
+<button onClick={() => setCount(prevCount => prevCount + 1)}>
+    Increment
+</button>
+```
+
+### `useEffect` : Handling Side effects
+
+The `useEffect` hook is used to handle side effects in functional components. Common side effects include data fetching, subscriptions, and directly interacting with the DOM. Before hooks, these kinds of side effects were managed using lifecycle methods like `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount` in class components. `useEffect` combines all of these into one unified API. Basically, it takes two arguments
+ - A function where you define the side effect.
+ - An optional dependency array that controls when the effect should run.
+
+**Syntax of `useEffect`**
+
+```jsx
+useEffect(() => {
+    // Code for the side effect
+}, [dependencies]);
+```
+
+Side effect function is the function that runs after each render, performing the desired effect (e.g., fetching data).
+Dependency is an optional array that specifies when the effect should re-run. If a value in the array changes, the effect will re-run.
+
+#### Example of `useEffect`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useEffectUsage} lang="jsx" title="Syntax" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={DataFetchingComponent} lang="jsx" title="DataFetchingComponent.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example: The side effect is fetching data from an API when the component first renders. The [] (empty dependency array) ensures the effect only runs once, similar to `componentDidMount`.
+
+#### Controlling using Dependency array
+
+You can control when an effect runs by adding dependencies. The effect will only run again if one of the dependencies changes.
+
+```jsx
+useEffect(() => {
+    // This effect runs when 'count' changes
+    console.log(`The count is now ${count}`);
+}, [count]); // Effect runs only when 'count' changes
+```
+
+#### Cleaning up effects
+
+Sometimes, side effects like subscriptions or timers need to be cleaned up to prevent memory leaks. `useEffect` can return a cleanup function that runs when the component unmounts or before the effect re-runs.
+
+```jsx
+useEffect(() => {
+    const timer = setInterval(() => {
+        console.log('This runs every second');
+    }, 1000);
+    // Cleanup the timer when the component unmounts
+    return () => {
+        clearInterval(timer);
+    };
+}, []);
+```
+
+### `useContext` : Accessing Global State with React’s Context API
+
+The useContext hook is used to access values provided by the Context API in React. The Context API allows you to create and manage global state, which can be shared across different components without passing props down through every level of the component tree. This is particularly useful for managing themes, authentication status, or user settings that are needed by many components
+
+useContext allows a component to consume the nearest Context Provider’s value without needing to pass props through intermediate components. This helps reduce "prop drilling" (passing props down multiple levels) and makes the code more readable.
+
+**Steps to use `useContext`**
+
+<Steps>
+
+1. First, create a context using React.createContext(). This provides a default value for the context.
+
+   ```js
+   const MyContext = React.createContext(defaultValue);
+   ```
+
+2. Wrap your component tree with a Context Provider to supply a value that child components can consume.
+
+   ```js
+   <MyContext.Provider value={someValue}>
+        <ChildComponent />
+   </MyContext.Provider>
+   ```
+
+
+3. Use the useContext hook inside any component that needs the context value.
+
+   ```js
+   const value = useContext(MyContext);
+   ```
+  
+</Steps>
+
+#### Example of `useContext`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useContextUsage} lang="jsx" title="Syntax" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useContextComponent} lang="jsx" title="App.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example, `DisplayComponent` accesses the value "Hello, World!" from `MyContext` using `useContext`.
+
+### `useRef` : Referencing DOM Elements and Persisting Values
+
+The `useRef` hook is used to reference DOM elements or persist values across renders without causing the component to re-render. Unlike state variables, changing a `useRef` value does not trigger a re-render.
+
+You can use `useRef` to directly access a DOM element, such as focusing an input field or scrolling to a specific section. `useRef` can store a mutable value that persists between renders, without triggering re-renders when the value changes.
+
+**Syntax of `useRef`**
+
+```jsx
+const refContainer = useRef(initialValue);
+```
+
+`useRef` returns a mutable object that has a single property called current. The current property of the object can hold any value (similar to an instance variable in class components) and is preserved across renders.
+
+#### Example of `useRef`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useRefUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useRefComponent} lang="jsx" title="FocusInput.jsx" />
+  </TabItem>
+</Tabs>
+
+### `useReducer` : Managing Complex State
+
+The `useReducer` hook is an alternative to `useState` for managing state, particularly when the state logic is complex or the state has multiple sub-values that need updating in various ways. It is often used in large-scale applications or for cases where `useState` would result in messy, hard-to-maintain code.
+
+`useReducer` is similar to the `reduce` function in JavaScript. It takes a reducer function and an initial state as arguments and returns:
+ - The current state.
+ - A dispatch function to send actions to the reducer.
+
+**Syntax of `useReducer`**
+
+```jsx
+const [state, dispatch] = useReducer(reducerFunction, initialState);
+```
+
+ - `reducerFunction` : This is a function that takes the current state and an action, then returns the new state.
+ - `initialState` : This is the initial value of the state.
+ - `dispatch` : This function is used to send actions that update the state.
+
+#### Example of `useReducer`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useReducerUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={useReducerComponent} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example, useReducer manages simple increment and decrement actions for a counter.
+
+### `useMemo` : Memoizing Expensive Calculations
+
+The `useMemo` hook in React is used to memoize expensive calculations, so they are only recomputed when their dependencies change, rather than on every render. This can help improve performance by avoiding unnecessary re-calculations, especially in cases where the calculation is resource-intensive or when working with large data sets. It actually takes two arguments:
+ - A function that returns the computed value.
+ - An array of dependencies.
+
+**Syntax of `useMemo`**
+
+```jsx
+const memoizedValue = useMemo(() => {
+    return computeExpensiveValue(a, b);
+}, [a, b]);
+```
+ - memoizedValue : The result of the computation.
+ - computeExpensiveValue : The expensive function that only runs when dependencies (a, b) change.
+
+#### Example of `useMemo`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useMemoUsage} lang="jsx" title="Syntax" />
+  </TabItem>
+  <TabItem label="App">
+    <Code code={useMemoApp} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={ExpensiveComponent} lang="jsx" title="ExpensiveComponent.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example, `expensiveCalculation` is only re-calculated when either `a` or `b` changes. If other parts of the component re-render without changing `a` or `b`, the expensive calculation won't re-run. This reduces unnecessary computation and improves performance.
+
+### `useCallback` : Memoizing Functions for Performance
+
+The `useCallback` hook is used to memoize functions so that they are not recreated on every render. This is particularly useful when passing functions as props to child components or as dependencies to other hooks (like `useEffect`), as it prevents unnecessary re-renders. This actually takes two arguments.
+ - The function to memoize.
+ - An array of dependencies.
+
+**Syntax of `useCallback`**
+
+```jsx
+const memoizedFunction = useCallback(() => {
+    // Function logic
+}, [dependencies]);
+```
+
+- `memoizedFunction` : A memoized version of the function.
+- Dependencies: If any of the values in the array change, the function is recreated.
+
+#### Example of `useCallback`
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={useCallBackUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={Counter} lang="jsx" title="Counter.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example,
+ - The Counter component manages a count state using `useState`, and it includes a child component `ChildComponent` that takes an `onClick` handler as a prop.
+ - The `ChildComponent` renders a button and logs to the console every time it re-renders.
+ - The `handleClick` function inside `Counter` is wrapped with `useCallback`. This ensures that the function is memoized and won't be recreated on every render unless its dependencies change (in this case, the dependency array is empty, so it won't change).
+ - Without `useCallback`, every render of Counter would create a new version of `handleClick`, which would cause `ChildComponent` to re-render unnecessarily. Using `useCallback` prevents this, as `handleClick` stays the same between renders.
+
+## Custom Hooks
+
+In React, Custom Hooks allow you to extract and reuse logic across multiple components, making your code cleaner, more modular, and easier to maintain. Custom Hooks are JavaScript functions that can use any of React’s built-in hooks like `useState`, `useEffect`, `useContext`, etc., and can return values or functions that encapsulate the shared logic.
+
+**When and Why to Use Custom Hooks**
+
+You should consider creating a Custom Hook when:
+
+ - You have logic that is reused across multiple components. For example, fetching data, handling forms, managing local storage, or handling timers.
+ - You want to keep your components cleaner and less cluttered. By moving logic to a custom hook, components can focus on UI-related tasks.
+ - You need to separate concerns. Custom Hooks allow you to organize your code by concern, making it easier to test, modify, and maintain.
+
+#### Steps to create custom Hook
+
+A Custom Hook is essentially a function that:
+
+ - Starts with the word use (to follow React's convention and allow it to use hooks inside).
+ - Can call other hooks inside itself.
+ - Returns values (or functions) that the component can use.
+
+#### Example of Custom Hook
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install @astrojs/react react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={CustomHookUsage} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={CounterComponent} lang="jsx" title="CounterComponent.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example, `useCounter` manages the counter logic using `useState`, providing three functions to manipulate the count: `increment`, `decrement`, and `reset`. The hook returns the current `count` and the functions, allowing easy access in any component that uses it. `CounterComponent` uses the `useCounter` hook to access the counter state and functions, keeping the component focused on rendering. Buttons in the component trigger the respective functions, allowing users to interact with the counter, with automatic UI updates reflecting the changes.
