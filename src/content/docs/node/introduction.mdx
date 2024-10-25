@@ -5,6 +5,7 @@ title: Introduction to Node.js
 import { Steps } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
 import { FileTree } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
 import snippet from "./codes/introductionCode/introduction.txt?raw";
 import snippet2 from "./codes/introductionCode/eventloop.txt?raw";
 
@@ -117,7 +118,7 @@ When choosing a backend technology, it's important to consider the specific requ
 - **Performance**: Python's performance, especially when handling a large number of concurrent connections, is generally slower than Node.js due to Python's synchronous nature.
 - **Concurrency**: Python's **Global Interpreter Lock (GIL)** limits its ability to execute multiple threads at once, which can be a bottleneck for highly concurrent applications.
 
-### When to Choose Node.js Over Python?
+#### When to Choose Node.js Over Python?
 
 If you're building an I/O-bound, real-time application like a chat platform, gaming server, or API gateway, Node.js is often the better choice due to its event-driven, non-blocking architecture. However, for data-driven tasks, machine learning, or scientific computing, Python is a stronger contender.
 
@@ -143,9 +144,11 @@ If you're building an I/O-bound, real-time application like a chat platform, gam
 - **Synchronous nature**: PHP is traditionally synchronous, meaning each request blocks the next until it's finished. This can lead to scalability issues when handling large numbers of requests.
 - **Performance**: PHP generally performs slower than Node.js in applications that require high concurrency, such as real-time messaging apps or API servers.
 
-### When to Choose Node.js Over PHP?
+#### When to Choose Node.js Over PHP?
 
 If you’re developing an application that requires high concurrency, low-latency responses, and real-time updates—such as a live streaming service or a real-time collaboration tool—Node.js will outperform PHP due to its non-blocking, asynchronous architecture. However, PHP might be a better choice for simple websites or CMS-driven projects where ease of deployment and a mature ecosystem are priorities.
+
+### 3. Quick Comparison
 
 | Feature               | Node.js                             | Python                             | PHP                               |
 | --------------------- | ----------------------------------- | ---------------------------------- | --------------------------------- |
@@ -155,7 +158,7 @@ If you’re developing an application that requires high concurrency, low-latenc
 | **Ecosystem**         | Growing rapidly                     | Mature with extensive libraries    | Very mature, especially for web   |
 | **Development speed** | Fast with JavaScript across stack   | Fast, easy to learn                | Fast, easy to deploy              |
 
-## 1. Basic Installation Steps for Node.js
+## Basic Installation Steps for Node.js
 
     <Steps>
 
@@ -180,7 +183,7 @@ If you’re developing an application that requires high concurrency, low-latenc
 
     </Steps>
 
-## 2. Code Editor:
+## Code Editor:
 
         **Visual Studio Code (VS Code)**:
             - Lightweight and feature-rich.
@@ -191,7 +194,7 @@ If you’re developing an application that requires high concurrency, low-latenc
             - **ESLint**: Helps in identifying and fixing coding errors.
             - **Prettier**: Automatically formats your code.
 
-## 3. Version Control: Git
+## Version Control: Git
 
     Version control helps you manage code changes effectively.
         - Install Git from the official website.
@@ -202,7 +205,7 @@ If you’re developing an application that requires high concurrency, low-latenc
         git config --global user.email "your.email@example.com"
         ```
 
-## 4. Project Setup
+## Project Setup
 
     Start by creating a new Node.js project:
 
@@ -222,35 +225,40 @@ If you’re developing an application that requires high concurrency, low-latenc
 
     </Steps>
 
-## 5. Useful NPM Packages
+## Useful NPM Packages
 
     Some essential packages to install right away:
         - Express: A minimalist web framework to install use **npm install express**.
         - Nodemon: Automatically restarts the server when you make changes use **npm install --save-dev nodemon**.
         - dotenv: Manages environment variables **npm install dotenv**.
 
-## 6. Folder Structure
+## Folder Structure
 
-    A good folder structure keeps your code organized.
+A good folder structure keeps your code organized.
 
-        <FileTree>
+<FileTree>
 
-        - /my-node-project
-            - /config
-              - /db.js
-            - /controllers
-              - /userController.js
-            - /models
-              - /userModel.js
-            - /routes
-              - /route.js
-          - .env
-          - index.js
-          - package.json
+- my-node-project
+  - node_modules Contains all project dependencies.
+    - .bin
+    - ... Other dependencies.
+  - config
+    - db.js Configures and connects to the database.
+  - controllers
+    - userController.js Contains API logic & operations.
+  - models
+    - userModel.js Defines the schema and model for Database.
+  - routes
+    - route.js Defines and manages all application routes.
+  - .env Stores environment variables like API keys.
+  - index.js Main server entry point.
+  - .gitignore Lists files and folders to ignore.
+  - package-lock.json (if using npm)
+  - package.json Contains project metadata and dependency list.
 
-        </FileTree>
+</FileTree>
 
-## Creating Your First Node.js Application: A Step-by-Step Tutorial
+## Creating Your First Node.js Application
 
 ---
 
@@ -270,7 +278,15 @@ Inside your project folder, create a file called index.js, which will serve as y
 
 ### First Node.js Project with express
 
-<Code code={snippet} lang="js" title="app.js" />
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following library.
+    <Code code={`npm install express`} lang="shell" />
+  </TabItem>
+  <TabItem label="Snippet">
+    <Code code={snippet} lang="js" title="index.js" />
+  </TabItem>
+</Tabs>
 
 ## Event Looping
 
@@ -298,11 +314,11 @@ The event loop is what allows Node.js to perform efficiently. It can handle thou
 
     <Code code={snippet2} lang="js" title="js" />
 
-# Callbacks, Promises, and Async/Await in Node.js
+## Callbacks, Promises, and Async/Await
 
 In Node.js, asynchronous programming is essential for handling tasks that take time, like reading a file, making an API request, or accessing a database. Instead of waiting for these tasks to finish before moving on, Node.js allows you to continue working on other things. There are three main ways to handle asynchronous operations: **callbacks**, **promises**, and **async/await**.
 
-## 1. Callbacks
+### 1. Callbacks
 
 A **callback** is a function passed as an argument to another function. The callback gets executed once the asynchronous operation finishes. For example, when reading a file, the function to read the file takes a callback, which runs once the file data is available.
 
@@ -320,7 +336,7 @@ fs.readFile("file.txt", "utf8", (err, data) => {
 
 Here, the **readFile** function reads the file asynchronously, and the callback is executed when the file is read. If there’s an error, it's handled inside the callback.
 
-## 2. Promises
+### 2. Promises
 
 A **promise** is an object that represents the eventual completion (or failure) of an asynchronous operation and its resulting value. It provides a cleaner way to work with async code compared to callbacks.
 
@@ -338,7 +354,7 @@ readFilePromise
 
 Here, **readFilePromise** handles the asynchronous file read, and we use **.then()** to handle the success and **.catch()** to handle errors. Promises allow you to chain multiple async operations in a readable way.
 
-## 2. Async/Await
+### 3. Async/Await
 
 **Async/await** is a more modern and cleaner way to write asynchronous code in JavaScript. It is built on promises but allows you to write asynchronous code that looks synchronous.
 
@@ -359,11 +375,11 @@ readFileAsync();
 
 In this example, **await** pauses the execution of the function until the promise resolves, making the code easier to read. If an error occurs, it’s handled with **try/catch**.
 
-# Modules and the Module System in Node.js
+## Modules and the Module System in Node.js
 
 In Node.js, the module system allows developers to structure and reuse code efficiently. A module is essentially a file containing code (functions, objects, or variables) that can be exported and imported into other files. Node.js follows a modular architecture, enabling developers to divide code into smaller, maintainable parts.
 
-#### Creating and Exporting a Module
+### Creating and Exporting a Module
 
 To create a module, you define the logic you want to share in a JavaScript file. For example, let's create a module that exports a simple function:
 
@@ -395,9 +411,7 @@ console.log(math.add(2, 3)); // Output: 5
 
 Node.js supports two module systems: **CommonJS** (the older, default module system) and **ES Modules** (a more modern, standards-based approach). Let's compare their differences:
 
-#### Syntax Comparison
-
-CommonJS uses `module.exports` and `require` for exporting and importing modules, while ES Modules use `export` and `import`.
+#### Quick Comparison
 
 | Feature        | CommonJS                          | ES Modules                                                  |
 | -------------- | --------------------------------- | ----------------------------------------------------------- |
@@ -405,6 +419,8 @@ CommonJS uses `module.exports` and `require` for exporting and importing modules
 | File Extension | `.js`                             | `.mjs` (or `.js` with `"type": "module"` in `package.json`) |
 | Import Type    | Synchronous                       | Asynchronous                                                |
 | Default Usage  | Older Node.js apps, simpler setup | Modern apps, full browser support                           |
+
+The following code snippets demonstrate exporting and importing an `add` function to perform addition in CommonJS and ES modules, respectively.
 
 ##### Example: CommonJS
 
@@ -434,7 +450,7 @@ console.log(add(2, 3));
 
 Node.js provides several built-in modules that are essential for building applications. These modules cover common tasks like file handling, networking, and event handling. Here are a few important ones:
 
-##### 1. File System (`fs`)
+#### 1. File System (`fs`)
 
 The `fs` module allows you to interact with the file system, enabling you to read, write, update, and delete files.
 
@@ -448,25 +464,12 @@ fs.readFile("example.txt", "utf8", (err, data) => {
 });
 ```
 
-##### 1. File System (`fs`)
+The following above code snippet demonstrates using the fs module to read the contents of a file asynchronously.
 
-The `fs` module allows you to interact with the file system, enabling you to read, write, update, and delete files.
-
-**Example: Reading a file**
-
-```js
-// Import the 'fs' module
-const fs = require("fs");
-
-fs.readFile("example.txt", "utf8", (err, data) => {
-  if (err) throw err;
-  console.log(data);
-});
-```
-
-##### 2. HTTP
+#### 2. HTTP
 
 The `http` module enables the creation of web servers and handling of HTTP requests.
+
 **Example: Simple HTTP server**
 
 ```js
@@ -482,7 +485,9 @@ http
   });
 ```
 
-##### 3. Events
+The following above code snippet demonstrates creating a basic HTTP server that responds with **"Hello, World!"** when accessed.
+
+#### 3. Events
 
 The `events` module provides a way to work with event-driven programming. Node.js applications frequently rely on event emitters to trigger and handle asynchronous actions.
 
@@ -500,3 +505,14 @@ eventEmitter.on("greet", () => {
 // Emit event
 eventEmitter.emit("greet");
 ```
+
+The following above code snippet demonstrates using the `EventEmitter` module to create an event listener that logs **"Hello, World!"** when the "greet" event is emitted.
+
+## References
+
+For more information, check out the following resources:
+
+- [Unit Testing](https://www.testim.io/blog/node-js-unit-testing-get-started-quickly-with-examples/)
+- [Database Integration](https://expressjs.com/en/guide/database-integration.html)
+- [Node.js Documentation](https://nodejs.org/docs/latest/api/)
+- [Express.js Documentation](https://expressjs.com/en/starter/installing.html)
