@@ -2,12 +2,13 @@
 title: Replication and Sharding
 ---
 
+import { Steps } from "@astrojs/starlight/components";
+
 Replication and sharding are two fundamental concepts in MongoDB that play a critical role in ensuring data availability, fault tolerance, and horizontal scalability.
 
 ## What is Replication?
 
 **Replication** in MongoDB involves maintaining multiple copies of the same data across different servers, known as replica sets.A replica set consists of a primary node and multiple secondary nodes, where all data is replicated from the primary to the secondary nodes.
-
 
 ## What is Sharding?
 
@@ -16,7 +17,7 @@ This is particularly important for large-scale applications where the amount of 
 
 #### Importance of Replication and Sharding
 
-Replication and Sharding are  essential for scaling MongoDB and ensuring that your application remains available and performant, even under heavy load or in case of server failures.They provide:
+Replication and Sharding are essential for scaling MongoDB and ensuring that your application remains available and performant, even under heavy load or in case of server failures.They provide:
 
 1. **Resilience**: The combination of replication and automatic failover ensures that your application can withstand server failures without significant downtime.
 2. **Performance**: Sharding allows you to manage large datasets and high throughput, making it suitable for modern applications that require quick access to vast amounts of data.
@@ -30,121 +31,126 @@ Replica sets are important in MongoDB that ensures high availability and data re
 ### Prerequisites
 
 Before you begin, ensure you have the following:
+
 - MongoDB installed on all servers that will be part of the replica set.
 - Access to the command line interface (CLI) on each server.
 
 
-### Step 1: Setting up and  Start MongoDB Instances
 
-Start multiple MongoDB instances on different servers or ports, using the `--replSet` option to specify the replica set name. Here’s an example of starting three instances on a single machine for demonstration purposes:
+### Step 1: Setting up and Start MongoDB Instances
 
+To start multiple MongoDB instances on different servers or ports, using the `--replSet` option to specify the replica set name. Here’s an example of starting three instances on a single machine for demonstration purposes:
+
+<Steps>
 1. **Start three MongoDB Instances on different servers or ports**
 
-```bash
-# Start the primary instance
-mongod --replSet "rs0" --port 27017 --dbpath /data/db1 --bind_ip localhost
+   ```bash
+   Start the primary instance
+   mongod --replSet "rs0" --port 27017 --dbpath /data/db1 --bind_ip localhost
 
-# Start the first secondary instance
-mongod --replSet "rs0" --port 27018 --dbpath /data/db2 --bind_ip localhost
+   Start the first secondary instance
+   mongod --replSet "rs0" --port 27018 --dbpath /data/db2 --bind_ip localhost
 
-# Start the second secondary instance
-mongod --replSet "rs0" --port 27019 --dbpath /data/db3 --bind_ip localhost
-```
+   Start the second secondary instance
+   mongod --replSet "rs0" --port 27019 --dbpath /data/db3 --bind_ip localhost
+   ```
 
 2. **Connect to the Primary Node**:
 
-    ```bash
-    mongo --port 27017
-    ```
-
-
+   ```bash
+   mongo --port 27017
+   ```
 
 3. **Initiate the Replica Set**:
 
-    ```javascript
-    rs.initiate({
-      _id: "rs0",
-      members: [
-        { _id: 0, host: "localhost:27017" },
-        { _id: 1, host: "localhost:27018" },
-        { _id: 2, host: "localhost:27019" }
-      ]
-    });
-    ```
-
+   ```javascript
+   rs.initiate({
+     _id: "rs0",
+     members: [
+       { _id: 0, host: "localhost:27017" },
+       { _id: 1, host: "localhost:27018" },
+       { _id: 2, host: "localhost:27019" },
+     ],
+   });
+   ```
 
 4. **Check Replica Set Status**: Use the following command to verify the status of the replica set.
 
-    ```javascript
-    rs.status();
-    ```
+   ```javascript
+   rs.status();
+   ```
 
+</Steps>
 
 Replica sets automatically synchronize data from the primary node to the secondary nodes, providing a mechanism for data recovery and availabilit
 
-
 ### Step 2. Managing Replica Set Members
+
+<Steps>
 
 1. Adding a New Member
 
-To add a new member to the replica set, use the `rs.add()` command. For example, to add another secondary member:
-
-```javascript
-rs.add("localhost:27020");
-```
+   ```javascript
+   rs.add("localhost:27020");
+   ```
 
 2. Removing a member
-To remove a member from the replica set, use the rs.remove() command:
-```javascript
-rs.remove("localhost:27019");
-```
+ 
+
+   ```javascript
+   rs.remove("localhost:27019");
+   ```
+
+3. Monitor Replica Set Health
+
+   ```javascript
+   rs.printReplicationInfo();
+   ```
+
+</Steps>
 
 
-3.  Monitor Replica Set Health
-Regularly monitor the health of your replica set using:
-
-```javascript
-rs.printReplicationInfo();
-```
-
-
-## Failover and Recovery with  Replication
+## Failover and Recovery with Replication
 
 MongoDB's replication mechanism provides a robust way to ensure high availability and data durability through automatic failover and recovery processes.This means that if one server goes down, another can take its place without losing data.
 
 #### Failover
+
 MongoDB has a group of servers called a replica set. One server is the primary node and handles all writes. The others are secondaries and its copy data from the primary.
 
 ### Automatic Failover
+
 If the primary node fails or becomes unreachable due to network issues or hardware failure, MongoDB automatically initiates a failover process. The remaining members of the replica set will vote to select a new primary from the secondaries. This process happens quickly to avoid downtime.
 
 The criteria for electing a new primary include:
+
 - The member must be eligible means it should not be in recovering state.
 - It must have a sufficiently up-to-date data set, which is determined by the operation log.
 
 Once a new primary is selected, client applications can continue to write data without interruption, as the new primary will handle all subsequent write operations.
 
-
 ### Data Recovery
-In the event of a primary failure, MongoDB ensures that no data is lost through its replication mechanism. 
-The new primary uses the operation log (a log of changes) to catch up on any data it has missed while the old primary node was down.
 
+In the event of a primary failure, MongoDB ensures that no data is lost through its replication mechanism.
+The new primary uses the operation log (a log of changes) to catch up on any data it has missed while the old primary node was down.
 
 #### Recovery Scenarios
 
+<Steps>
 1. **Primary Node Recovery** : If the original primary node comes back online after a failure, it will rejoin the replica set as a secondary. The replica set will then synchronize its data with the current primary to ensure consistency.
 
 2. **Network Problem**: If the primary becomes isolated from some secondaries, the replica set will elect a new primary among the nodes that can still communicate. Once the network is restored, the former primary will sync with the new primary to recover its data state.
 
+</Steps>
 ## Horizontal Scaling using Sharding
+
 Sharding is a method used by MongoDB to distribute data across multiple servers or clusters, enabling horizontal scaling. This approach is crucial for managing large datasets and ensuring that applications can handle high throughput and performance demands.
 It's like dividing a big book into smaller chapters and putting each chapter on a different shelf.
-
 
 ### Sharding Architecture
 
 The architecture of MongoDB sharding consists of several components:
-
+<Steps>
 
 1. **Shards**: Each shard is a standalone MongoDB instance that stores its own data. Shards can be replica sets themselves, providing redundancy and high availability.
 
@@ -152,12 +158,12 @@ The architecture of MongoDB sharding consists of several components:
 
 3. **Mongos Routers**: The `mongos` processes act as query routers. They route client requests to the appropriate shard based on the shard key and data distribution. This abstraction allows clients to interact with the sharded cluster as if it were a single database.
 
-
+</Steps>
 ### How Sharding Enables Horizontal Scaling
 
 #### Data Distribution
 
-When a collection is sharded, it is divided into smaller chunks based on a **shard key**. The shard key determines how data is distributed across the shards. Choosing an appropriate shard key is critical for achieving balanced data distribution and optimal performance. 
+When a collection is sharded, it is divided into smaller chunks based on a **shard key**. The shard key determines how data is distributed across the shards. Choosing an appropriate shard key is critical for achieving balanced data distribution and optimal performance.
 
 For example, if a shard key is based on user IDs, documents related to different users will be evenly distributed across the shards, allowing parallel processing of requests.
 
@@ -169,47 +175,63 @@ Sharding enables load balancing by distributing both read and write operations a
 
 As data volumes grow, new shards can be added to the cluster without downtime. MongoDB allows for dynamic scaling by simply adding more shards and redistributing data accordingly. This capability ensures that applications can scale horizontally as their requirements evolve.
 
-
-
-
 ## Best Practices for Choosing Shard Keys
-1. **Cardinality**: 
+<Steps>
+
+
+1. **Cardinality**:
+
    - Choose a shard key with high cardinality, meaning it should have many unique values. This allows for even data distribution across shards. For example, using a user ID or a timestamp can create many distinct values.
 
-2. **Write Patterns**: 
+2. **Write Patterns**:
+
    - Consider your application's write patterns. A shard key that aligns with how data is written can improve performance. For instance, if your application frequently writes data for specific users, using a user ID as a shard key can optimize write operations.
 
-3. **Read Patterns**: 
+3. **Read Patterns**:
+
    - Understand your read operations as well. If certain queries are more common, choose a shard key that helps route those queries efficiently. A well-chosen shard key can reduce the number of shards queried for common read operations.
 
-4. **Avoid Hotspots**: 
+4. **Avoid Hotspots**:
+
    - Ensure that the shard key does not lead to hotspots—where a disproportionate amount of traffic or data is concentrated on a single shard. For example, using a range-based shard key can result in uneven data distribution, particularly if certain ranges are accessed more frequently.
 
-5. **Compound Shard Keys**: 
+5. **Compound Shard Keys**:
    - In some cases, using a compound shard key (a combination of multiple fields) can provide better distribution and access patterns. Ensure the order of fields in a compound key is optimized for your query patterns.
 
 
+</Steps>
 ## Managing Balanced Distribution of Data
 
+<Steps>
+
 1. **Chunk Size**:
-    - MongoDB divides data into chunks based on the shard key. By default, chunks are 64 MB in size. Monitoring and adjusting chunk sizes can help maintain balanced distribution as data grows.
+
+   - MongoDB divides data into chunks based on the shard key. By default, chunks are 64 MB in size. Monitoring and adjusting chunk sizes can help maintain balanced distribution as data grows.
+
+2. **Balancing Data Across Shards**:
 
 
-2. **Balancing Data Across Shards**: 
+
    - MongoDB automatically balances chunks across shards to prevent any single shard from becoming overloaded. You can monitor the balancer status and manually trigger balancing if needed using:
- 
-    ```javascript
-    sh.startBalancer();
-    ```
 
-    to check the current status:
-    ```javascript
-    sh.getBalancerState();
-    ```
+      ```javascript
+      sh.startBalancer();
+      ```
+
+   - To check the current status:
+
+      ```javascript
+      sh.getBalancerState();
+      ```
+
 
 
 3. **Monitor and Adjust**:
-    - Regularly monitor your shard distribution and performance metrics. Use MongoDB's built-in tools and commands, such as sh.status() and db.currentOp(), to assess the state of your sharded cluster.
+
+   - Regularly monitor your shard distribution and performance metrics. Use MongoDB's built-in tools and commands, such as sh.status() and db.currentOp(), to assess the state of your sharded cluster.
 
 4. **Rebalancing**:
-    - If you notice uneven distribution or performance degradation, consider rebalancing the data manually or adjusting your shard key strategy. Be prepared to adjust based on how data and access patterns evolve over time.
+   - If you notice uneven distribution or performance degradation, consider rebalancing the data manually or adjusting your shard key strategy. Be prepared to adjust based on how data and access patterns evolve over time.
+
+
+</Steps>
