@@ -136,7 +136,12 @@ export default defineConfig({
         },
         {
           label: "Node",
-          items: [{ label: "Introduction", slug: "node/introduction" }],
+          items: [
+            { label: "Introduction", slug: "node/introduction" },
+            { label: "Cluster Module", slug: "node/cluster-module" },
+            { label: "Microservices", slug: "node/microservices" },
+            { label: "Streams", slug: "node/streams" },
+          ],
         },
         {
           label: "Mongo DB",
