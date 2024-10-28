@@ -3,8 +3,12 @@ title: State and Props
 ---
 
 import { Steps } from '@astrojs/starlight/components';
-import localStateParentComponent from './codes/hooksCode/useReducer/Usage.txt?raw';
-import useReducerUsage from './codes/hooksCode/useReducer/Usage.txt?raw';
+import { Card } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+import localStateParentComponent from './codes/stateAndPropsCode/localState/ParentComponent.txt?raw';
+import localStateChildComponent from './codes/stateAndPropsCode/localState/ChildComponent.txt?raw';
 
 
 
@@ -19,7 +23,8 @@ Some common examples of when state is used include:
 - **API Data**: Storing data fetched from an API.
 - **UI States**: Managing component visibility, toggling modes (dark/light theme), etc.
 
-#### Importance of State
+### Importance of State
+
 <Steps>
 
 1. #### Enables Dynamic User Interface
