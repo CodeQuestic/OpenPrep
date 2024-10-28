@@ -9,6 +9,8 @@ import { Code } from "@astrojs/starlight/components";
 
 import localStateParentComponent from './codes/stateAndPropsCode/localState/ParentComponent.txt?raw';
 import localStateChildComponent from './codes/stateAndPropsCode/localState/ChildComponent.txt?raw';
+import updateStateParentComponent from './codes/stateAndPropsCode/updateState/ParentComponent.txt?raw';
+import updateStateChildComponent from './codes/stateAndPropsCode/updateState/ChildComponent.txt?raw';
 
 
 
@@ -113,3 +115,39 @@ When you initialize state in a React component, you use the useState hook to set
 </Tabs>
 
 In this example, the `ParentComponent` initializes a message state. `ParentComponent` passes the `updateMessage` function as a prop to `ChildComponent`. When the button in `ChildComponent` is clicked, it triggers `updateMessage`, updating message in `ParentComponent`. This allow child components to update parent state through functions passed down as props. This pattern, known as "lifting state up," keeps state centralized and shared across related components, making it easier to manage complex interactions in the application.
+
+### Updating State in Functional Components
+
+Updating state correctly is critical to keeping your components in sync with the application data. When calling the state updater function, you can pass a new state value directly, or use a functional update when the new state depends on the previous state. There are various techniques and nuances to state updates that help avoid bugs and improve application performance.
+
+#### Functional Updates
+
+In cases where the new state depends on the previous state, using functional updates is recommended. This is especially important in asynchronous scenarios, where relying on the previous state directly might lead to unexpected results due to timing issues.
+
+#### State Batching
+
+React optimizes performance by batching multiple state updates that occur within the same event handler, allowing all updates to be applied together in a single render cycle. This prevents unnecessary re-renders and makes updates more efficient.
+
+#### Example
+
+In this example, a ParentComponent that tracks a `count` state is created. The `ChildComponent` has a button that, when clicked, will increment the `count` in the parent component.
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="ParentComponent">
+    <Code code={updateStateParentComponent} lang="jsx" title="ParentComponent.jsx" />
+  </TabItem>
+  <TabItem label="ChildComponent">
+    <Code code={updateStateChildComponent} lang="jsx" title="ChildComponent.jsx" />
+  </TabItem>
+</Tabs>
+
+ - `ParentComponent` initializes a `count` state and defines the `incrementCount` function to update it.
+ - `incrementCount` is passed down to `ChildComponent` as a prop, allowing the child to modify the parent’s state.
+ - When the button in `ChildComponent` is clicked, `incrementCount` is triggered, incrementing `count` in `ParentComponent`.
+
+This example demonstrates how functional updates (using `prevCount => prevCount + 1`) ensure accuracy even with multiple asynchronous interactions and prop drilling, where a parent function is passed to a child to modify the parent’s state. It’s a common technique when managing shared state between components.
+
