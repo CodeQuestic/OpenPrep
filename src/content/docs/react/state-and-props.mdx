@@ -11,7 +11,9 @@ import localStateParentComponent from './codes/stateAndPropsCode/localState/Pare
 import localStateChildComponent from './codes/stateAndPropsCode/localState/ChildComponent.txt?raw';
 import updateStateParentComponent from './codes/stateAndPropsCode/updateState/ParentComponent.txt?raw';
 import updateStateChildComponent from './codes/stateAndPropsCode/updateState/ChildComponent.txt?raw';
-
+import propsParentComponent from './codes/stateAndPropsCode/props/ParentComponent.txt?raw';
+import propsProductList from './codes/stateAndPropsCode/props/ProductList.txt?raw';
+import propsProductItem from './codes/stateAndPropsCode/props/ProductItem.txt?raw';
 
 
 React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
@@ -150,4 +152,37 @@ In this example, a ParentComponent that tracks a `count` state is created. The `
  - When the button in `ChildComponent` is clicked, `incrementCount` is triggered, incrementing `count` in `ParentComponent`.
 
 This example demonstrates how functional updates (using `prevCount => prevCount + 1`) ensure accuracy even with multiple asynchronous interactions and prop drilling, where a parent function is passed to a child to modify the parent’s state. It’s a common technique when managing shared state between components.
+
+### Passing Data with Props
+
+Props (short for "properties") allow React components to pass data from a parent to a child, facilitating data sharing and creating modular, reusable components. Props are read-only, meaning that data flows one-way from parent to child and cannot be modified by the child component directly.
+
+**Key points to note**
+ - Props are immutable within the child component, which ensures that data flows in a single direction, preventing unexpected mutations.
+ - By using props, components can be configured differently based on the data received, making them more versatile and reusable.
+ - Props can carry any valid JavaScript data type—strings, numbers, arrays, objects, functions, etc.
+
+#### Example
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="ParentComponent">
+    <Code code={propsParentComponent} lang="jsx" title="ParentComponent.jsx" />
+  </TabItem>
+  <TabItem label="ProductList">
+    <Code code={propsProductList} lang="jsx" title="ProductList.jsx" />
+  </TabItem>
+    <TabItem label="ProductItem">
+    <Code code={propsProductItem} lang="jsx" title="ProductItem.jsx" />
+  </TabItem>
+</Tabs>
+
+ - `ParentComponent` passes an array of products as a `prop` to ProductList.
+ - `ProductList` iterates over `items` and renders each product using ProductItem, passing each product object as a prop.
+ - `ProductItem` receives each `product` object and displays its details.
+This example illustrates how props can handle complex data structures, allowing for structured, nested components.
+
 
