@@ -1,3 +1,110 @@
 ---
 title: State and Props
 ---
+
+import { Steps } from '@astrojs/starlight/components';
+import localStateParentComponent from './codes/hooksCode/useReducer/Usage.txt?raw';
+import useReducerUsage from './codes/hooksCode/useReducer/Usage.txt?raw';
+
+
+
+React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
+
+### What is State?
+
+**State** represents a component's dynamic data that React tracks and responds to. It's stored locally within the component and can change over time, allowing React to re-render the component in response to these changes. State is crucial for managing data that updates over time, like user inputs, form data, or fetched API data.
+
+Some common examples of when state is used include:
+- **User Inputs**: Tracking form values (like text inputs or checkboxes).
+- **API Data**: Storing data fetched from an API.
+- **UI States**: Managing component visibility, toggling modes (dark/light theme), etc.
+
+#### Importance of State
+<Steps>
+
+1. #### Enables Dynamic User Interface
+
+    State allows React components to respond to user actions and reflect real-time data changes without requiring a page reload. This ability to update only the changed parts of the UI creates a smoother, more responsive user experience.
+
+    **Example** : In a to-do list app, the state can manage the list of tasks. Adding, deleting, or completing a task only updates the affected parts of the UI instead of reloading the entire page.
+
+2. #### Maintains Data Consistency within Components
+
+   State provides a way to store and manage data that is specific to a component but may change over time. When the state updates, React ensures that the UI stays in sync with the latest data. This data consistency is essential for maintaining the correctness of the application.
+
+   **Example** : In a shopping cart, each item’s quantity and total price can be managed through state. As items are added, removed, or updated, the state ensures that the displayed information reflects the current cart contents.
+
+3. #### Simplifies Complex Component Behavior
+
+   With state, components can handle complex behaviors by tracking various data points (e.g., input values, fetched data, UI visibility, and loading statuses). By defining and updating state variables within the component, React allows developers to control these behaviors more easily.
+
+   **Example** : In a form, state can track the values of multiple fields, their validation statuses, and whether the form is submitting or not. Managing all these in one place enables the form component to handle complex scenarios like error messages, success messages, and loading spinners.
+
+4. #### Improves Performance with Efficient Re-rendering
+
+   React uses a virtual DOM to track changes to state and props, and re-renders only the components that have updated data. By updating only the necessary parts of the UI, state changes help improve performance and reduce the computational load on the browser.
+
+   **Example** : In a large list or table, state can track which items are currently visible, loaded, or selected. React will re-render only the affected items rather than the entire list, improving performance, especially for applications with complex data.
+
+5. #### Supports Real-Time Updates and Data Sync
+
+   Modern applications often require real-time data syncing, such as live chat, notifications, or stock prices. State is crucial for displaying this live data accurately within components and keeping the UI up-to-date with each change.
+
+   **Example** : In a messaging app, state can track incoming messages, online user status, and typing indicators. React automatically updates the UI to reflect these real-time changes, enhancing the user experience.
+  
+</Steps>
+
+
+#### Example
+
+```jsx
+import React, { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+```
+In this example, `count` is the local state in the `Counter` component, which updates and causes the component to re-render each time the user clicks the button.
+
+### Managing local state with `useState`
+
+The useState hook is the primary tool for managing local state in React’s functional components. It takes an initial value as its argument and returns an array with the current state and a function to update that state.
+
+**Syntax**
+```jsx
+const [state, setState] = useState(initialValue);
+```
+ - `state` : Holds the current state value.
+ - `setState` : Function used to update the state
+
+#### Initializing State
+
+When you initialize state in a React component, you use the useState hook to set up a default value. The initial state value can be any valid JavaScript data type, depending on what the component needs to track:
+
+ - Primitive Types: Strings, numbers, booleans.
+ - Arrays: For managing lists, collections, or multiple values.
+ - Objects: For managing multiple related properties within a single state object.
+
+#### Example
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="ParentComponent">
+    <Code code={localStateParentComponent} lang="jsx" title="ParentComponent.jsx" />
+  </TabItem>
+  <TabItem label="ChildComponent">
+    <Code code={localStateChildComponent} lang="jsx" title="ChildComponent.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example, the `ParentComponent` initializes a message state. `ParentComponent` passes the `updateMessage` function as a prop to `ChildComponent`. When the button in `ChildComponent` is clicked, it triggers `updateMessage`, updating message in `ParentComponent`. This allow child components to update parent state through functions passed down as props. This pattern, known as "lifting state up," keeps state centralized and shared across related components, making it easier to manage complex interactions in the application.
