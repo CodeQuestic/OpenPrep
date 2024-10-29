@@ -1,0 +1,12 @@
+import React from 'react';
+
+function ChildComponent({ incrementCount }) {
+  return (
+    <div>
+      <h2>Child Component</h2>
+      <button onClick={incrementCount}>Increment Count in Parent</button>
+    </div>
+  );
+}
+
+export default ChildComponent;
