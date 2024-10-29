@@ -16,6 +16,10 @@ import propsProductList from './codes/stateAndPropsCode/props/ProductList.txt?ra
 import propsProductItem from './codes/stateAndPropsCode/props/ProductItem.txt?raw';
 import liftingStateTemperatureInput from './codes/stateAndPropsCode/liftingState/TemperatureInput.txt?raw';
 import liftingStateTemperatureConverter from './codes/stateAndPropsCode/liftingState/TemperatureConverter.txt?raw';
+import contextAPIThemeProvider from './codes/stateAndPropsCode/contextAPI/ThemeProvider.txt?raw';
+import contextAPIToolbar from './codes/stateAndPropsCode/contextAPI/Toolbar.txt?raw';
+import contextAPIApp from './codes/stateAndPropsCode/contextAPI/App.txt?raw';
+
 
 
 React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
@@ -227,3 +231,36 @@ In this example,
 
 - Updating State: When the user enters a value, `TemperatureInput` calls the appropriate handler (`handleCelsiusChange` or `handleFahrenheitChange`), updating the parent state. This update then reflects in both components, keeping them synchronized.
 
+### Props Drilling
+
+Prop drilling in React refers to the process of passing down data (props) from a parent component to a deeply nested child component through intermediary components that do not actually use the data themselves. This can result in a cluttered and less maintainable codebase, as components that don't need the data end up receiving and passing it along just to facilitate the communication.
+
+#### Alternative : Context API
+
+The Context API provides a way to avoid prop drilling by creating a context that allows components to access shared data without needing props.  It provides a way to pass data through the component tree without having to pass props down manually at every level.
+
+#### Example
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="ThemeProvider">
+    <Code code={contextAPIThemeProvider} lang="jsx" title="ThemeProvider.jsx" />
+  </TabItem>
+  <TabItem label="Toolbar">
+    <Code code={contextAPIToolbar} lang="jsx" title="ToolBar.jsx" />
+  </TabItem>
+    <TabItem label="App">
+    <Code code={contextAPIApp} lang="jsx" title="App.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example,
+ - `ThemeContext` : Holds the global theme state and provides the theme and toggle function to other components.
+ - `ThemeProvider` : Wraps the app and makes theme data available to all child components.
+ - We define a context using `createContext()` and set up a `ThemeProvider` component. `ThemeProvider` holds the theme state and `toggleTheme` function, which will switch between light and dark themes. The `ThemeContext.Provider` wraps `{children}`, making `theme` and `toggleTheme` available to any component within its tree.
+
+
+ While the Context API is a powerful tool for managing global state in small to medium-sized React applications, state management libraries like Redux, MobX, or Zustand can offer additional advantages when dealing with complex state logic and performance-sensitive applications.
