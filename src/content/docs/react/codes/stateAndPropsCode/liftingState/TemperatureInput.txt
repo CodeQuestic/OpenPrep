@@ -1,0 +1,20 @@
+import React, { useState } from 'react';
+
+function TemperatureInput({ scale, temperature, onTemperatureChange }) {
+  const scaleNames = { c: "Celsius", f: "Fahrenheit" };
+
+  return (
+    <div>
+      <label>
+        Enter temperature in {scaleNames[scale]}:
+        <input
+          type="number"
+          value={temperature}
+          onChange={e => onTemperatureChange(e.target.value)}
+        />
+      </label>
+    </div>
+  );
+}
+
+export default TemperatureInput;

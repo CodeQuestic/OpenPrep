@@ -1,0 +1,14 @@
+import React from 'react';
+import ProductItem from './ProductItem';
+
+function ProductList({ items }) {
+  return (
+    <div>
+      {items.map(product => (
+        <ProductItem key={product.id} product={product} />
+      ))}
+    </div>
+  );
+}
+
+export default ProductList;
