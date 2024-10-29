@@ -24,7 +24,7 @@ import contextAPIApp from './codes/stateAndPropsCode/contextAPI/App.txt?raw';
 
 React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
 
-### What is State?
+## What is State?
 
 **State** represents a component's dynamic data that React tracks and responds to. It's stored locally within the component and can change over time, allowing React to re-render the component in response to these changes. State is crucial for managing data that updates over time, like user inputs, form data, or fetched API data.
 
@@ -88,7 +88,7 @@ function Counter() {
 ```
 In this example, `count` is the local state in the `Counter` component, which updates and causes the component to re-render each time the user clicks the button.
 
-### Managing local state with `useState`
+## Managing local state with `useState`
 
 The useState hook is the primary tool for managing local state in React’s functional components. It takes an initial value as its argument and returns an array with the current state and a function to update that state.
 
@@ -99,7 +99,7 @@ const [state, setState] = useState(initialValue);
  - `state` : Holds the current state value.
  - `setState` : Function used to update the state
 
-#### Initializing State
+### Initializing State
 
 When you initialize state in a React component, you use the useState hook to set up a default value. The initial state value can be any valid JavaScript data type, depending on what the component needs to track:
 
@@ -124,7 +124,7 @@ When you initialize state in a React component, you use the useState hook to set
 
 In this example, the `ParentComponent` initializes a message state. `ParentComponent` passes the `updateMessage` function as a prop to `ChildComponent`. When the button in `ChildComponent` is clicked, it triggers `updateMessage`, updating message in `ParentComponent`. This allow child components to update parent state through functions passed down as props. This pattern, known as "lifting state up," keeps state centralized and shared across related components, making it easier to manage complex interactions in the application.
 
-### Updating State in Functional Components
+## Updating State in Functional Components
 
 Updating state correctly is critical to keeping your components in sync with the application data. When calling the state updater function, you can pass a new state value directly, or use a functional update when the new state depends on the previous state. There are various techniques and nuances to state updates that help avoid bugs and improve application performance.
 
@@ -159,7 +159,7 @@ In this example, a ParentComponent that tracks a `count` state is created. The `
 
 This example demonstrates how functional updates (using `prevCount => prevCount + 1`) ensure accuracy even with multiple asynchronous interactions and prop drilling, where a parent function is passed to a child to modify the parent’s state. It’s a common technique when managing shared state between components.
 
-### Passing Data with Props
+## Passing Data with Props
 
 Props (short for "properties") allow React components to pass data from a parent to a child, facilitating data sharing and creating modular, reusable components. Props are read-only, meaning that data flows one-way from parent to child and cannot be modified by the child component directly.
 
@@ -191,7 +191,7 @@ Props (short for "properties") allow React components to pass data from a parent
  - `ProductItem` receives each `product` object and displays its details.
 This example illustrates how props can handle complex data structures, allowing for structured, nested components.
 
-### Lifting State Up in React
+## Lifting State Up in React
 
 When multiple components need to interact with the same piece of data, it’s often beneficial to lift the state up to a common ancestor. This approach centralizes the state in a single parent component, ensuring that data remains consistent across child components without the need for redundant state copies.
 
@@ -231,11 +231,11 @@ In this example,
 
 - Updating State: When the user enters a value, `TemperatureInput` calls the appropriate handler (`handleCelsiusChange` or `handleFahrenheitChange`), updating the parent state. This update then reflects in both components, keeping them synchronized.
 
-### Props Drilling
+## Props Drilling
 
 Prop drilling in React refers to the process of passing down data (props) from a parent component to a deeply nested child component through intermediary components that do not actually use the data themselves. This can result in a cluttered and less maintainable codebase, as components that don't need the data end up receiving and passing it along just to facilitate the communication.
 
-#### Alternative : Context API
+### Alternative : Context API
 
 The Context API provides a way to avoid prop drilling by creating a context that allows components to access shared data without needing props.  It provides a way to pass data through the component tree without having to pass props down manually at every level.
 
