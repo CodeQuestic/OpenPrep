@@ -1,0 +1,16 @@
+import React, { useState } from 'react';
+
+function ControlledTextarea() {
+  const [text, setText] = useState("");
+
+  return (
+    <form>
+      <label>Message:</label>
+      <textarea 
+        value={text} 
+        onChange={(e) => setText(e.target.value)} 
+      />
+      <p>Current text: {text}</p>
+    </form>
+  );
+}
