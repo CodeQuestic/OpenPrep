@@ -14,6 +14,8 @@ import updateStateChildComponent from './codes/stateAndPropsCode/updateState/Chi
 import propsParentComponent from './codes/stateAndPropsCode/props/ParentComponent.txt?raw';
 import propsProductList from './codes/stateAndPropsCode/props/ProductList.txt?raw';
 import propsProductItem from './codes/stateAndPropsCode/props/ProductItem.txt?raw';
+import liftingStateTemperatureInput from './codes/stateAndPropsCode/liftingState/TemperatureInput.txt?raw';
+import liftingStateTemperatureConverter from './codes/stateAndPropsCode/liftingState/TemperatureConverter.txt?raw';
 
 
 React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
@@ -185,4 +187,43 @@ Props (short for "properties") allow React components to pass data from a parent
  - `ProductItem` receives each `product` object and displays its details.
 This example illustrates how props can handle complex data structures, allowing for structured, nested components.
 
+### Lifting State Up in React
+
+When multiple components need to interact with the same piece of data, it’s often beneficial to lift the state up to a common ancestor. This approach centralizes the state in a single parent component, ensuring that data remains consistent across child components without the need for redundant state copies.
+
+By lifting state up, you can manage data in one place and pass it down via props, creating a single source of truth for that state. This technique not only improves code maintainability but also helps avoid bugs caused by data duplication or desynchronization.
+
+#### When to Use Lifting State Up
+
+Lifting state is especially useful in scenarios where:
+
+ - **Components Need Shared Access to Data** : If two or more sibling components require the same data or need to respond to changes in that data, lifting state up provides a clear, unified source of truth.
+
+ - **Multiple Components Need to Modify State** : When more than one component needs to modify a piece of data, lifting state up allows all changes to happen in the parent component, which then propagates the updated data to each child.
+
+ - **Avoiding Prop Drilling** : When state is lifted up, the need to pass data down through multiple intermediary components can be minimized, simplifying component structure and making the data flow more straightforward.
+
+#### Example
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have installed
+    <Code code={`npm install react react-dom`} lang="shell" />
+  </TabItem>
+  <TabItem label="TemperatureInput">
+    <Code code={liftingStateTemperatureInput} lang="jsx" title="TemperatureInput.jsx" />
+  </TabItem>
+  <TabItem label="TemperatureConverter">
+    <Code code={liftingStateTemperatureConverter} lang="jsx" title="TemperatureConverter.jsx" />
+  </TabItem>
+</Tabs>
+
+In this example,
+- `TemperatureConverter` (Parent): This component holds the `temperature` state and handles all logic related to temperature conversion. It tracks the temperature value and its scale (Celsius or Fahrenheit).
+
+- `TemperatureInput` (Child): This component renders an input for entering the temperature in a specific scale (Celsius or Fahrenheit). It receives `temperature` and `onTemperatureChange` as props from the parent.
+
+- Conversion Functions: `toCelsius` and `toFahrenheit` functions help convert the temperature based on the scale chosen. These functions are part of the parent component, ensuring centralized control over conversion logic.
+
+- Updating State: When the user enters a value, `TemperatureInput` calls the appropriate handler (`handleCelsiusChange` or `handleFahrenheitChange`), updating the parent state. This update then reflects in both components, keeping them synchronized.
 
