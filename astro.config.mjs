@@ -141,6 +141,10 @@ export default defineConfig({
             { label: "Cluster Module", slug: "node/cluster-module" },
             { label: "Microservices", slug: "node/microservices" },
             { label: "Streams", slug: "node/streams" },
+            {
+              label: "Event Loop",
+              slug: "node/event-loop",
+            },
           ],
         },
         {
