@@ -62,7 +62,7 @@ Streams come with several methods and events that aid in managing data flow effe
 
 ---
 
-- ### Piping
+### Piping
 
 Piping is a core feature of streams that allows directing data from one stream into another seamlessly. It’s commonly used to read from a file, compress it, and write it to another file.
 
@@ -77,8 +77,9 @@ const gzip = zlib.createGzip();
 readStream.pipe(gzip).pipe(writeStream);
 ```
 
-- ### Chaining
-  Chaining streams is particularly useful when multiple transform operations are needed. For instance, data could be compressed and then encrypted before being saved to a file. Chaining helps data move smoothly from one operation to another.
+### Chaining
+
+Chaining streams is particularly useful when multiple transform operations are needed. For instance, data could be compressed and then encrypted before being saved to a file. Chaining helps data move smoothly from one operation to another.
 
 ## Real-World Examples and Best Practices
 
