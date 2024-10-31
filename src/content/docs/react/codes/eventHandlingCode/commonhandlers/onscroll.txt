@@ -1,0 +1,14 @@
+function ScrollExample() {
+  const handleScroll = () => {
+    console.log("Scrolled!");
+  };
+
+  return (
+    <div
+      onScroll={handleScroll}
+      style={{ height: '100px', overflowY: 'scroll', border: '1px solid #ccc' }}
+    >
+      <div style={{ height: '300px' }}>Scroll down this content!</div>
+    </div>
+  );
+}

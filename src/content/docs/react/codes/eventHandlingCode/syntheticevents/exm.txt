@@ -1,0 +1,11 @@
+import React from 'react'
+function SyntheticEventExample() {
+  const handleClick = (event) => {
+    console.log(event.type); // "click"
+    console.log(event.isDefaultPrevented()); // false
+  };
+
+  return <button onClick={handleClick}>Click Me</button>;
+}
+
+export default SyntheticEventExample;

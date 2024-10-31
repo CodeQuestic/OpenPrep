@@ -1,0 +1,13 @@
+import React from 'react'
+function EventPoolingExample() {
+  const handleClick = (event) => {
+    event.persist(); // Retain event properties beyond the handler's execution
+    setTimeout(() => {
+      console.log(event.type); // This will work as event.persist() was called
+    }, 1000);
+  };
+
+  return <button onClick={handleClick}>Click Me</button>;
+}
+
+export default EventPoolingExample;
