@@ -1,0 +1,13 @@
+function SubmitExample() {
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent page refresh
+    console.log("Form submitted!");
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" placeholder="Your name" required />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}

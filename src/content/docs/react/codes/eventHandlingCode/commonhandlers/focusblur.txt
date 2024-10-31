@@ -1,0 +1,18 @@
+function FocusBlurExample() {
+  const handleFocus = () => {
+    console.log("Input focused!");
+  };
+
+  const handleBlur = () => {
+    console.log("Input lost focus!");
+  };
+
+  return (
+    <input
+      type="text"
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      placeholder="Focus on me!"
+    />
+  );
+}
