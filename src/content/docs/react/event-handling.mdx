@@ -2,23 +2,9 @@
 title: Event Handling in React
 ---
 
-import { Steps } from '@astrojs/starlight/components';
+import { Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-
-import onclick from './codes/eventHandlingCode/commonhandlers/onclick.txt?raw';
-import onchange from './codes/eventHandlingCode/commonhandlers/onchange.txt?raw';
-import onsubmit from './codes/eventHandlingCode/commonhandlers/onsubmit.txt?raw';
-import onkey from './codes/eventHandlingCode/commonhandlers/keyevents.txt?raw';
-import onfocus from './codes/eventHandlingCode/commonhandlers/focusblur.txt?raw';
-import onmouse from './codes/eventHandlingCode/commonhandlers/mouse.txt?raw';
-import onscroll from './codes/eventHandlingCode/commonhandlers/onscroll.txt?raw';
-import classcomponent from './codes/eventHandlingCode/handling/classcomponents.txt?raw';
-import funccomponents from './codes/eventHandlingCode/handling/funccomponents.txt?raw';
-import exm from './codes/eventHandlingCode/syntheticevents/exm.txt?raw';
-import pooling from './codes/eventHandlingCode/syntheticevents/pooling.txt?raw';
-import dependencies from './codes/eventHandlingCode/arguments/dependencies.txt?raw';
-import bind from './codes/eventHandlingCode/arguments/bind.txt?raw';
 
 React provides various ways to handle user events, such as clicks, input changes, and form submissions, through event handlers. Event handlers are functions that React calls in response to user interactions with UI elements.
 
@@ -26,197 +12,318 @@ React provides various ways to handle user events, such as clicks, input changes
 
 React supports several standard events that you can handle. Here are some commonly used ones:
 
-- **onClick**: Triggered when an element is clicked.
-- **onChange**: Used to handle changes in input fields.
-- **onSubmit**: Executes when a form is submitted.
-- **onKeyDown**, **onKeyUp**, **onKeyPress**: Handle keyboard events.
-- **onFocus** and **onBlur**: The `onFocus` event is triggered when an input gains focus, and `onBlur` is triggered when it loses focus.
-- **onMouseEnter** and **onMouseLeave**: These events handle mouse hover interactions.
-- **onDoubleClick**: The onDoubleClick event is triggered when an element is double-clicked.
-- **onScroll**: The `onScroll` event is triggered when an element is scrolled.
-
-These events provide an efficient way to manage user interactions in the app.
-
-### Example of every event
+### 1. Basic Event Handling
 
 <Tabs>
   <TabItem label="onClick">
-    <Code code={onclick} lang="jsx" title="OnClick.jsx" />
+    <Code 
+      code={`function Button() {
+  const handleClick = () => {
+    console.log('Button clicked!');
+  };
+
+return <button onClick={handleClick}>Click me</button>;
+}`}
+lang="jsx"
+title="onClick Example"
+/>
+
   </TabItem>
    <TabItem label="onChange">
-    <Code code={onchange} lang="jsx" title="OnChange.jsx" />
+    <Code 
+      code={`function Input() {
+  const [value, setValue] = useState('');
+  
+  const handleChange = (event) => {
+    setValue(event.target.value);
+  };
+
+return <input type="text" value={value} onChange={handleChange} />;
+}`}
+lang="jsx"
+title="onChange Example"
+/>
+
   </TabItem>
    <TabItem label="onSubmit">
-    <Code code={onsubmit} lang="jsx" title="OnSubmit.jsx" />
+    <Code 
+      code={`function Form() {
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Form submitted!');
+  };
+
+return (
+<form onSubmit={handleSubmit}>
+<input type="text" />
+<button type="submit">Submit</button>
+</form>
+);
+}`}
+lang="jsx"
+title="onSubmit Example"
+/>
+
   </TabItem>
    <TabItem label="KeyEvents">
-    <Code code={onkey} lang="jsx" title="OnKey.jsx" />
+    <Code 
+      code={`function KeyHandler() {
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      console.log('Enter key pressed!');
+    }
+  };
+
+return <input onKeyDown={handleKeyDown} placeholder="Press Enter" />;
+}`}
+lang="jsx"
+title="onKeyDown Example"
+/>
+
   </TabItem>
   <TabItem label="onFocus&onBlur">
-    <Code code={onfocus} lang="jsx" title="onFocus&onBlur.jsx" />
+    <Code 
+      code={`function FocusHandler() {
+  const [isFocused, setIsFocused] = useState(false);
+
+const handleFocus = () => setIsFocused(true);
+const handleBlur = () => setIsFocused(false);
+
+return (
+<div>
+<input
+onFocus={handleFocus}
+onBlur={handleBlur}
+placeholder="Focus on me"
+style={{ borderColor: isFocused ? 'blue' : 'gray' }}
+/>
+<p>{isFocused ? 'Input is focused' : 'Input is not focused'}</p>
+</div>
+);
+}`}
+lang="jsx"
+title="onFocus & onBlur Example"
+/>
+
   </TabItem>
   <TabItem label="MouseEvents">
-    <Code code={onmouse} lang="jsx" title="MouseEvents.jsx" />
+    <Code 
+      code={`function MouseHandler() {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+const handleMouseMove = (event) => {
+setPosition({ x: event.clientX, y: event.clientY });
+};
+
+return (
+<div onMouseMove={handleMouseMove} style={{ height: '200px', border: '1px solid black' }}>
+<p>Mouse position: ({position.x}, {position.y})</p>
+</div>
+);
+}`}
+lang="jsx"
+title="onMouseMove Example"
+/>
+
   </TabItem>
   <TabItem label="onScroll">
-    <Code code={onscroll} lang="jsx" title="onscroll.jsx" />
+    <Code 
+      code={`function ScrollHandler() {
+  const [scrollY, setScrollY] = useState(0);
+
+const handleScroll = () => {
+setScrollY(window.scrollY);
+};
+
+useEffect(() => {
+window.addEventListener('scroll', handleScroll);
+return () => window.removeEventListener('scroll', handleScroll);
+}, []);
+
+return <div>Scroll position: {scrollY}</div>;
+}`}
+lang="jsx"
+title="onScroll Example"
+/>
+
   </TabItem>
 </Tabs>
 
-## Event Binding and Event Handlers
+## Class Components vs Functional Components
 
-In React, handling user interactions is crucial for creating dynamic applications. This section discusses the concept of event binding, how to define and attach event handlers to elements, and best practices for effective event handling.
-
-### What is Event Binding?
-
-Event binding refers to the process of connecting an event (such as a click or a change) to a specific handler function that executes when that event occurs. In React, event handlers are usually defined as methods within a component and can be attached directly to elements via JSX attributes.
-
-### Defining Event Handlers
-
-Event handlers can be defined as methods within a class component or as functions within a functional component. Here's how to create event handlers in both types of components:
-#### 1. Class Components
-
-In class components, you need to bind the event handler to the class instance, typically done in the constructor or by using class fields.
+Event handling differs slightly between class and functional components:
 
 <Tabs>
   <TabItem label="ClassComponent">
-    <Code code={classcomponent} lang="jsx" title="ClassComponent.jsx" />
+    <Code 
+      code={`class ClassComponent extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+    
+    // Binding is required for class methods
+    this.handleClick = this.handleClick.bind(this);
+  }
+
+handleClick() {
+this.setState({ count: this.state.count + 1 });
+}
+
+render() {
+return (
+<div>
+<p>Count: {this.state.count}</p>
+<button onClick={this.handleClick}>Increment</button>
+</div>
+);
+}
+}`}
+lang="jsx"
+title="Class Component Event Handling"
+/>
+
+  </TabItem>
+  <TabItem label="FunctionalComponent">
+    <Code 
+      code={`function FunctionalComponent() {
+  const [count, setCount] = useState(0);
+
+const handleClick = () => {
+setCount(count + 1);
+};
+
+return (
+<div>
+<p>Count: {count}</p>
+<button onClick={handleClick}>Increment</button>
+</div>
+);
+}`}
+lang="jsx"
+title="Functional Component Event Handling"
+/>
+
   </TabItem>
 </Tabs>
 
+## Event Object and SyntheticEvent
 
-#### 2. Functional Components
-In functional components, you can define event handlers as arrow functions, which automatically bind this to the function’s context.
-import React from 'react';
+React wraps native events in `SyntheticEvent` objects to provide consistent behavior across browsers:
 
 <Tabs>
-  <TabItem label="FunctionalComponent">
-    <Code code={funccomponents} lang="jsx" title="FunctionalComponent.jsx" />
+  <TabItem label="EventObject">
+    <Code 
+      code={`function EventInfo() {
+  const handleEvent = (event) => {
+    console.log('Event type:', event.type);
+    console.log('Target element:', event.target);
+    console.log('Current target:', event.currentTarget);
+    console.log('Native event:', event.nativeEvent);
+    
+    // Prevent default behavior
+    event.preventDefault();
+    
+    // Stop event propagation
+    event.stopPropagation();
+  };
+
+return (
+<div onClick={handleEvent}>
+<button onClick={handleEvent}>Click me</button>
+</div>
+);
+}`}
+lang="jsx"
+title="SyntheticEvent Properties"
+/>
+
+  </TabItem>
+  <TabItem label="CustomData">
+    <Code 
+      code={`function CustomEventData() {
+  const handleClick = (event, customData) => {
+    console.log('Custom data:', customData);
+    console.log('Event:', event.type);
+  };
+
+return (
+<div>
+<button onClick={(e) => handleClick(e, 'Button 1')}>
+Button 1
+</button>
+<button onClick={(e) => handleClick(e, 'Button 2')}>
+Button 2
+</button>
+</div>
+);
+}`}
+lang="jsx"
+title="Passing Custom Data"
+/>
+
   </TabItem>
 </Tabs>
-
-### Attaching Event Handlers
-
-Event handlers can be attached to any DOM element or custom React component using JSX. Here's an example demonstrating how to attach various event handlers to different elements.
-
-```bash
-function EventBindingExample() {
-  const handleMouseEnter = () => {
-    console.log('Mouse entered');
-  };
-
-  const handleChange = (event) => {
-    console.log('Input changed:', event.target.value);
-  };
-
-  return (
-    <div>
-      <button onMouseEnter={handleMouseEnter}>Hover Over Me</button>
-      <input type="text" onChange={handleChange} placeholder="Type something" />
-    </div>
-  );
-}
-```
-
-### Best Practices for Event Handling
-
-#### 1. Use Arrow Functions: 
-For functional components, use arrow functions to avoid binding issues with `this`.
-
-##### Example
-
-```bash
-const handleClick = () => {
-  // Your logic here
-};
-```
-
-#### 2. Bind Methods in Constructor: 
-For class components, bind your event handler methods in the constructor or use class fields to define them.
-
-
-#### 3. Prevent Default Behavior: 
-If you want to prevent the default behavior of an event (like form submission), use `event.preventDefault()`.
-
-##### Example
-
-```bash 
-const handleSubmit = (event) => {
-  event.preventDefault();
-  // Your submission logic here
-};
-```
-
-#### 4. Use Descriptive Names: 
-Name your event handlers descriptively based on the action they perform (e.g., `handleClick`, `handleChange`).
-
-#### 5. Keep Handlers Simple:
-Try to keep event handlers simple and focused. If the logic gets complex, consider extracting it into separate functions.
-
-
-By following these best practices, you can create clean and maintainable code while effectively managing user events in your React applications.
 
 ## Synthetic Events in React
 
-React uses a concept called **Synthetic Events** to manage events consistently across different browsers. Synthetic events wrap the browser's native event system, enabling React to provide a uniform API that works the same way across all supported browsers.
+React uses synthetic events to wrap native DOM events, providing a consistent interface across different browsers. Synthetic events help React maintain cross-browser compatibility and improve performance.
 
-### What are Synthetic Events?
+### Advantages of Synthetic Events
 
-Synthetic Events are React’s abstraction layer over native browser events, which ensures consistency and compatibility. By using synthetic events, React developers do not need to worry about handling browser-specific quirks in event handling, as React normalizes the event system for consistent behavior.
+#### 1. Cross-Browser Consistency
 
-### Key Benefits of Synthetic Events
-
-1. **Cross-Browser Compatibility**: Synthetic events provide a consistent API that normalizes events across various browsers, making it easier to write cross-browser-compatible code.
-2. **Enhanced Performance**: Synthetic events improve performance by pooling and reusing event objects. React creates a pool of event objects and reuses them across events, reducing the need for new memory allocation.
-3. **Event Normalization**: Synthetic events unify event properties and behaviors, so developers don’t need to account for browser differences manually.
-
-### Working with Synthetic Events
-
-In React, Synthetic Events work similarly to native events, but they offer a standardized interface. Here’s an example of how synthetic events work with a simple `onClick` event handler.
-
-<Tabs>
-<TabItem label="SyntheticEventExample">
-    <Code code={exm} lang="jsx" title="SyncEvent.jsx" />
-    The `event` object passed to `handleClick` is a synthetic event. The synthetic event behaves similarly to a native event but offers a cross-browser-compatible interface.
-  </TabItem>
-</Tabs>
-
-### Properties and Methods in Synthetic Events
-
-Synthetic events expose properties and methods that are familiar to native events but work consistently across different browsers. Here are some common properties and methods available in synthetic events:
-
-
-- `event.type`: Returns the type of event, e.g.,`"click"`.
-- `event.target`: References the element that triggered the event.
-- `event.preventDefault()`: Prevents the default action associated with the event.
-- `event.stopPropagation()`: Stops the event from bubbling up the DOM hierarchy.
-- `event.isDefaultPrevented()`: Returns `true` if `preventDefault()` was called on the event, otherwise `false`.
-
-
-### How does Event System Achieves Cross-Browser Normalization?
-
-Synthetic Events play a crucial role in providing a normalized interface for handling events across different browsers. The synthetic event system abstracts away the subtle inconsistencies of native event handling by wrapping the native browser events in a single, standardized API.
-
-#### 1. Consistent Event Properties
 - Different browsers have historically handled event properties slightly differently. For example, properties like `event.target` and `event.currentTarget` may vary in behavior across browsers.
-- React’s synthetic events ensure that commonly accessed properties (such as `target`, `type`, `key`, and `button`) behave in a predictable, uniform way on all supported browsers. This makes event handling code more reliable, as you won’t need to include browser-specific checks.
+- React's synthetic events ensure that commonly accessed properties (such as `target`, `type`, `key`, and `button`) behave in a predictable, uniform way on all supported browsers. This makes event handling code more reliable, as you won't need to include browser-specific checks.
 
 #### 2. Unified Event Methods
-- Functions such as `preventDefault()` and `stopPropagation()` may have browser-specific implementations. React’s synthetic events standardize these methods, so they always work the same way.
+
+- Functions such as `preventDefault()` and `stopPropagation()` may have browser-specific implementations. React's synthetic events standardize these methods, so they always work the same way.
 - For example, `event.preventDefault()` will prevent the default action across all browsers, and `event.stopPropagation()` will reliably stop the event from bubbling up, regardless of the browser in use.
 
-#### 3.  Handling Event Variations (e.g., Pointer Events)
-- Browsers may vary in their support for different types of input events like `mouse`, `touch`, or `pointer` events. React’s synthetic event system normalizes these variations, making it easier to write code that works for multiple input types without extra handling.
+#### 3. Handling Event Variations (e.g., Pointer Events)
+
+- Browsers may vary in their support for different types of input events like `mouse`, `touch`, or `pointer` events. React's synthetic event system normalizes these variations, making it easier to write code that works for multiple input types without extra handling.
 
 #### 4. Event Pooling in Synthetic Events
-- React employs event pooling as a performance optimization. When an event is triggered, React reuses a synthetic event object from a pool, which reduces the need to create new event objects and saves memory. However, this also means that properties of synthetic events are reset after the event handler executes.
-- To access the event properties asynchronously (such as in a timeout or asynchronous function), you must call `event.persist()` to retain the event’s values.
 
-- Example
+- React employs event pooling as a performance optimization. When an event is triggered, React reuses a synthetic event object from a pool, which reduces the need to create new event objects and saves memory. However, this also means that properties of synthetic events are reset after the event handler executes.
+- To access the event properties asynchronously (such as in a timeout or asynchronous function), you must call `event.persist()` to retain the event's values.
+
+**Example:**
+
 <Tabs>
   <TabItem label="Pooling">
-    <Code code={pooling} lang="jsx" title="Pooling.jsx" />
-    Calling `event.persist()` allows us to use the event properties even after the event handler has finished execution, which is useful for asynchronous operations.
+    <Code 
+      code={`import React from 'react';
+
+function PoolingExample() {
+const handleClick = (event) => {
+// Access event properties immediately
+console.log('Immediate access:', event.type);
+
+    // For async operations, persist the event
+    event.persist();
+
+    setTimeout(() => {
+      // This works because we called persist()
+      console.log('Async access:', event.type);
+      console.log('Target:', event.target.tagName);
+    }, 1000);
+
+};
+
+return (
+<button onClick={handleClick}>
+Click me to see event pooling in action
+</button>
+);
+}
+
+export default PoolingExample;`}
+      lang="jsx" 
+      title="Pooling.jsx" 
+    />
+    Calling \`event.persist()\` allows us to use the event properties even after the event handler has finished execution, which is useful for asynchronous operations.
   </TabItem>
 </Tabs>
 
@@ -225,202 +332,231 @@ Synthetic Events play a crucial role in providing a normalized interface for han
 - **Performance**: By pooling events and reusing objects, React improves memory efficiency, which can be beneficial for applications with frequent event handling, such as games or animations.
 - **Compatibility**: Synthetic events eliminate browser-specific inconsistencies, making it simpler for developers to write code that works uniformly across environments.
 
-
 ## Passing Arguments to Event Handlers
 
-React event handlers often need additional data beyond the event object itself. This guide covers various approaches to passing arguments to event handlers, along with best practices and common pitfalls to avoid.
+There are several ways to pass arguments to event handlers:
 
-### Basic Event Handling
-Before diving into passing arguments, let's review the basic event handler syntax:
+<Tabs>
+  <TabItem label="ArrowFunction">
+    <Code 
+      code={`function ListComponent() {
+  const items = ['Apple', 'Banana', 'Cherry'];
 
-#### Example
+const handleItemClick = (item, index, event) => {
+console.log('Clicked item:', item);
+console.log('At index:', index);
+console.log('Event:', event.type);
+};
 
-```bash
-function Button() {
-  const handleClick = (event) => {
-    console.log('Button clicked!');
-    console.log('Event:', event);
+return (
+<ul>
+{items.map((item, index) => (
+<li key={index}>
+<button onClick={(e) => handleItemClick(item, index, e)}>
+{item}
+</button>
+</li>
+))}
+</ul>
+);
+}`}
+lang="jsx"
+title="Arrow Function Approach"
+/>
+
+  </TabItem>
+  <TabItem label="BindMethod">
+    <Code 
+      code={`class ListComponent extends React.Component {
+  handleItemClick = (item, index, event) => {
+    console.log('Clicked item:', item);
+    console.log('At index:', index);
+    console.log('Event:', event.type);
   };
 
-  return <button onClick={handleClick}>Click me</button>;
+render() {
+const items = ['Apple', 'Banana', 'Cherry'];
+
+    return (
+      <ul>
+        {items.map((item, index) => (
+          <li key={index}>
+            <button onClick={this.handleItemClick.bind(this, item, index)}>
+              {item}
+            </button>
+          </li>
+        ))}
+      </ul>
+    );
+
 }
-```
+}`}
+lang="jsx"
+title="Bind Method Approach"
+/>
 
-React provides a flexible way to pass arguments to event handlers using:
+  </TabItem>
+  <TabItem label="DataAttributes">
+    <Code 
+      code={`function ListComponent() {
+  const items = ['Apple', 'Banana', 'Cherry'];
 
-- Arrow Functions
-- Function Binding
-- Curried Function
+const handleItemClick = (event) => {
+const item = event.target.dataset.item;
+const index = event.target.dataset.index;
 
-#### 1. Arrow Function
+    console.log('Clicked item:', item);
+    console.log('At index:', index);
+    console.log('Event:', event.type);
 
-The most straightforward way to pass arguments is using arrow functions in your JSX:
+};
 
-##### Example
+return (
+<ul>
+{items.map((item, index) => (
+<li key={index}>
+<button 
+            data-item={item} 
+            data-index={index} 
+            onClick={handleItemClick}
+          >
+{item}
+</button>
+</li>
+))}
+</ul>
+);
+}`}
+lang="jsx"
+title="Data Attributes Approach"
+/>
 
-```bash
-function ItemList() {
-  const handleDelete = (id, event) => {
-    console.log(`Deleting item ${id}`);
-    console.log('Event:', event);
-  };
+  </TabItem>
+</Tabs>
 
+## Best Practices for Event Handling
+
+### Choosing the Right Approach
+
+Different approaches have different performance implications:
+
+- **Arrow Functions**
+- **Function Binding**
+- **Curried Function**
+
+<Tabs>
+  <TabItem label="Performance">
+    <Code 
+      code={`// ✅ Good: Function defined outside render
+function GoodExample() {
+  const [count, setCount] = useState(0);
+  
+  const handleClick = useCallback(() => {
+    setCount(prev => prev + 1);
+  }, []);
+  
   return (
-    <ul>
-      <li>
-        Item 1
-        <button onClick={(e) => handleDelete(1, e)}>Delete</button>
-      </li>
-      <li>
-        Item 2
-        <button onClick={(e) => handleDelete(2, e)}>Delete</button>
-      </li>
-    </ul>
+    <div>
+      <ChildComponent onClick={handleClick} />
+      <p>Count: {count}</p>
+    </div>
   );
 }
-```
-**Pros of Arrow Functions:**
 
+// ❌ Poor: New function created on each render
+function BadExample() {
+const [count, setCount] = useState(0);
+
+return (
+<div>
+<ChildComponent onClick={() => setCount(count + 1)} />
+<p>Count: {count}</p>
+</div>
+);
+}`}
+lang="jsx"
+title="Performance Considerations"
+/>
+
+  </TabItem>
+  <TabItem label="Accessibility">
+    <Code 
+      code={`function AccessibleButton() {
+  const handleClick = () => {
+    console.log('Button clicked');
+  };
+  
+  const handleKeyPress = (event) => {
+    if (event.key === 'Enter' || event.key === ' ') {
+      handleClick();
+    }
+  };
+  
+  return (
+    <button 
+      onClick={handleClick}
+      onKeyPress={handleKeyPress}
+      aria-label="Custom action button"
+      role="button"
+      tabIndex={0}
+    >
+      Click me
+    </button>
+  );
+}`}
+      lang="jsx"
+      title="Accessibility Best Practices"
+    />
+  </TabItem>
+</Tabs>
+
+### Pros and Cons
+
+#### Arrow Functions
+
+- **Pros:**
 - Clear and explicit.
 - Easy to pass multiple arguments.
 - Access to the event object.
 - No binding required.
 
-**Cons of Arrow Functions:**
-
+- **Cons:**
 - Creates a new function on each render.
 - Slightly worse performance in high-frequency updates.
 - May cause unnecessary re-renders in child components.
 
-#### 2. Function Binding
+#### Function Binding
 
-An alternative approach is using the `bind()` method:
-<Tabs>
-  <TabItem label="Bind">
-    <Code code={bind} lang="jsx" title="Bind.jsx" />
-  </TabItem>
-</Tabs>
+- **Pros:**
+- Only creates the function once.
+- Better performance for frequent updates.
+- Works well with class components.
 
-**Pros of bind():**
+- **Cons:**
+- Less readable syntax.
+- Can be confusing for beginners.
+- Requires understanding of `this` binding.
 
-- Does not create a new function on each render.
-- Maintains proper this context.
-- Arguments are partially applied.
+#### Data Attributes
 
-**Cons of bind():**
+- **Pros:**
+- Single event handler function.
+- Best performance for large lists.
+- Clean HTML structure.
 
-- Less readable than arrow functions.
-- Can be confusing for developers new to JavaScript.
-- The event object is always passed as the last argument.
+- **Cons:**
+- Data is passed as strings only.
+- Requires parsing for complex data types.
+- Less explicit about what data is being passed.
 
-#### 3. Curried Functions
+## Conclusion
 
-For more complex scenarios, you can use curried functions:
+Event handling is a fundamental concept in React that enables interactive user interfaces. Understanding synthetic events, proper event handler patterns, and performance implications will help you build more efficient and maintainable React applications.
 
-#### Example
+Key takeaways:
 
-```bash
-function ProductList() {
-  const handleAction = (action) => (id) => (event) => {
-    console.log(`${action} product ${id}`);
-    console.log('Event:', event);
-  };
-
-  return (
-    <div>
-      <button onClick={handleAction('view')(1)}>View Product 1</button>
-      <button onClick={handleAction('edit')(1)}>Edit Product 1</button>
-      <button onClick={handleAction('delete')(1)}>Delete Product 1</button>
-    </div>
-  );
-}
-```
-
-### Best Practices
-
-#### 1. Consider Performance
-
-```bash
-// 🚫 Avoid: Creates new function every render
-<button onClick={(e) => handleClick(id, e)}>Click</button>
-
-// ✅ Better: Define handler outside render
-const buttonHandler = useCallback((e) => {
-  handleClick(id, e);
-}, [id]);
-
-<button onClick={buttonHandler}>Click</button>
-```
-
-#### 2. Event Pooling and Async Operations
-
-```bash
-const handleClick = (id, event) => {
-  // 🚫 Avoid: Event object may be nullified
-  setTimeout(() => {
-    console.log(event.target);
-  }, 100);
-
-  // ✅ Better: Persist event data if needed
-  const target = event.target;
-  setTimeout(() => {
-    console.log(target);
-  }, 100);
-};
-```
-
-#### 3. Type Safety with TypeScript
-
-```tsx
-interface ButtonProps {
-  id: number;
-  onAction: (id: number, event: React.MouseEvent<HTMLButtonElement>) => void;
-}
-
-function Button({ id, onAction }: ButtonProps) {
-  return (
-    <button onClick={(e) => onAction(id, e)}>
-      Click me
-    </button>
-  );
-}
-```
-
-### Performance Optimization
-
-For optimal performance when passing arguments, consider using the useCallback hook:
-
-#### Example
-
-```bash
-function ShoppingCart() {
-  const handleQuantityChange = useCallback((productId, newQuantity, event) => {
-    console.log(`Updating product ${productId} to quantity ${newQuantity}`);
-    console.log('Event:', event);
-  }, []); // Dependencies array empty as no external values are used
-
-  return (
-    <div>
-      <ProductQuantity
-        productId={1}
-        onChange={(e) => handleQuantityChange(1, e.target.value, e)}
-      />
-    </div>
-  );
-}
-```
-
-
-## Related Resources
-
-- [React Official Documentation on Events](https://react.dev/learn/responding-to-events)
-- [MDN Web Docs - Event reference](https://developer.mozilla.org/en-US/docs/Web/Events)
-- [React TypeScript Cheatsheet](https://github.com/typescript-cheatsheets/react)
-- [React Performance Optimization](https://react.dev/learn/render-and-commit)
-
-
-## Further Reading
-
-- [Event Bubbling and Capturing](https://developer.mozilla.org/en-US/docs/Learn/JavaScript/Building_blocks/Events#event_bubbling_and_capture)
-- [React Event Pooling (Legacy)](https://legacy.reactjs.org/docs/events.html#event-pooling) 
-- [JavaScript Event Loop](https://developer.mozilla.org/en-US/docs/Web/JavaScript/EventLoop)
+- Use synthetic events for cross-browser compatibility
+- Be mindful of performance when creating event handlers
+- Choose the right approach based on your specific use case
+- Always consider accessibility when handling events
+- Leverage React's event system for optimal performance

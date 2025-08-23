@@ -1,3 +1,1197 @@
 ---
-title: Microservices
+title: Microservices with Node.js
+description: Learn how to build scalable microservices architecture using Node.js, including service communication, API gateways, and deployment strategies.
 ---
+
+import { Code } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## What are Microservices?
+
+**Microservices** is an architectural pattern that structures an application as a collection of small, independent services that communicate over well-defined APIs. Instead of building a single monolithic application, microservices break down functionality into discrete services, each responsible for a specific business capability.
+
+Each microservice:
+
+- Runs in its own process
+- Communicates via lightweight mechanisms (HTTP/REST, messaging)
+- Can be deployed independently
+- Can use different programming languages and databases
+- Is owned by a small, focused team
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    Monolith Application                     │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────────────┐   │
+│  │    User     │ │   Product   │ │      Payment        │   │
+│  │  Management │ │  Management │ │    Processing       │   │
+│  └─────────────┘ └─────────────┘ └─────────────────────┘   │
+│                        Single Database                      │
+└─────────────────────────────────────────────────────────────┘
+
+                            VS
+
+┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+│     User     │    │   Product    │    │   Payment    │
+│   Service    │    │   Service    │    │   Service    │
+│              │    │              │    │              │
+│  ┌────────┐  │    │  ┌────────┐  │    │  ┌────────┐  │
+│  │   DB   │  │    │  │   DB   │  │    │  │   DB   │  │
+│  └────────┘  │    │  └────────┘  │    │  └────────┘  │
+└──────────────┘    └──────────────┘    └──────────────┘
+```
+
+## Benefits and Challenges
+
+### Benefits
+
+- **Scalability**: Scale individual services based on demand
+- **Technology Diversity**: Use different languages and databases for different services
+- **Independent Deployment**: Deploy services independently without affecting others
+- **Fault Isolation**: Failure in one service doesn't bring down the entire application
+- **Team Autonomy**: Small teams can own and develop services independently
+
+### Challenges
+
+- **Distributed System Complexity**: Network latency, service discovery, load balancing
+- **Data Consistency**: Managing transactions across multiple services
+- **Testing**: Integration testing becomes more complex
+- **Monitoring**: Need comprehensive logging and monitoring across services
+- **Operational Overhead**: Managing multiple deployments and infrastructure
+
+## Building Microservices with Node.js
+
+### 1. Simple Microservice Structure
+
+<Steps>
+
+1. **User Service**
+
+   ```javascript
+   // user-service/server.js
+   const express = require("express");
+   const mongoose = require("mongoose");
+   const app = express();
+
+   app.use(express.json());
+
+   // User model
+   const UserSchema = new mongoose.Schema({
+     name: String,
+     email: { type: String, unique: true },
+     createdAt: { type: Date, default: Date.now },
+   });
+
+   const User = mongoose.model("User", UserSchema);
+
+   // Routes
+   app.get("/users", async (req, res) => {
+     try {
+       const users = await User.find();
+       res.json(users);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   app.post("/users", async (req, res) => {
+     try {
+       const user = new User(req.body);
+       await user.save();
+       res.status(201).json(user);
+     } catch (error) {
+       res.status(400).json({ error: error.message });
+     }
+   });
+
+   app.get("/users/:id", async (req, res) => {
+     try {
+       const user = await User.findById(req.params.id);
+       if (!user) {
+         return res.status(404).json({ error: "User not found" });
+       }
+       res.json(user);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   // Health check
+   app.get("/health", (req, res) => {
+     res.json({ status: "healthy", service: "user-service" });
+   });
+
+   const PORT = process.env.PORT || 3001;
+   mongoose
+     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/users")
+     .then(() => {
+       app.listen(PORT, () => {
+         console.log(`User service running on port ${PORT}`);
+       });
+     });
+   ```
+
+2. **Product Service**
+
+   ```javascript
+   // product-service/server.js
+   const express = require("express");
+   const mongoose = require("mongoose");
+   const app = express();
+
+   app.use(express.json());
+
+   // Product model
+   const ProductSchema = new mongoose.Schema({
+     name: String,
+     description: String,
+     price: Number,
+     category: String,
+     stock: { type: Number, default: 0 },
+     createdAt: { type: Date, default: Date.now },
+   });
+
+   const Product = mongoose.model("Product", ProductSchema);
+
+   // Routes
+   app.get("/products", async (req, res) => {
+     try {
+       const { category, minPrice, maxPrice } = req.query;
+       let filter = {};
+
+       if (category) filter.category = category;
+       if (minPrice || maxPrice) {
+         filter.price = {};
+         if (minPrice) filter.price.$gte = parseFloat(minPrice);
+         if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
+       }
+
+       const products = await Product.find(filter);
+       res.json(products);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   app.post("/products", async (req, res) => {
+     try {
+       const product = new Product(req.body);
+       await product.save();
+       res.status(201).json(product);
+     } catch (error) {
+       res.status(400).json({ error: error.message });
+     }
+   });
+
+   app.get("/products/:id", async (req, res) => {
+     try {
+       const product = await Product.findById(req.params.id);
+       if (!product) {
+         return res.status(404).json({ error: "Product not found" });
+       }
+       res.json(product);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   // Update stock
+   app.patch("/products/:id/stock", async (req, res) => {
+     try {
+       const { quantity } = req.body;
+       const product = await Product.findById(req.params.id);
+
+       if (!product) {
+         return res.status(404).json({ error: "Product not found" });
+       }
+
+       product.stock += quantity;
+       await product.save();
+
+       res.json(product);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   app.get("/health", (req, res) => {
+     res.json({ status: "healthy", service: "product-service" });
+   });
+
+   const PORT = process.env.PORT || 3002;
+   mongoose
+     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/products")
+     .then(() => {
+       app.listen(PORT, () => {
+         console.log(`Product service running on port ${PORT}`);
+       });
+     });
+   ```
+
+3. **Order Service**
+
+   ```javascript
+   // order-service/server.js
+   const express = require("express");
+   const mongoose = require("mongoose");
+   const axios = require("axios");
+   const app = express();
+
+   app.use(express.json());
+
+   // Order model
+   const OrderSchema = new mongoose.Schema({
+     userId: { type: String, required: true },
+     items: [
+       {
+         productId: String,
+         quantity: Number,
+         price: Number,
+       },
+     ],
+     totalAmount: Number,
+     status: {
+       type: String,
+       enum: ["pending", "confirmed", "shipped", "delivered", "cancelled"],
+       default: "pending",
+     },
+     createdAt: { type: Date, default: Date.now },
+   });
+
+   const Order = mongoose.model("Order", OrderSchema);
+
+   // Service discovery - In production, use proper service discovery
+   const USER_SERVICE_URL =
+     process.env.USER_SERVICE_URL || "http://localhost:3001";
+   const PRODUCT_SERVICE_URL =
+     process.env.PRODUCT_SERVICE_URL || "http://localhost:3002";
+
+   // Helper function to fetch user
+   async function getUser(userId) {
+     try {
+       const response = await axios.get(`${USER_SERVICE_URL}/users/${userId}`);
+       return response.data;
+     } catch (error) {
+       throw new Error(`User service error: ${error.message}`);
+     }
+   }
+
+   // Helper function to fetch product
+   async function getProduct(productId) {
+     try {
+       const response = await axios.get(
+         `${PRODUCT_SERVICE_URL}/products/${productId}`
+       );
+       return response.data;
+     } catch (error) {
+       throw new Error(`Product service error: ${error.message}`);
+     }
+   }
+
+   // Create order
+   app.post("/orders", async (req, res) => {
+     try {
+       const { userId, items } = req.body;
+
+       // Validate user exists
+       await getUser(userId);
+
+       // Validate products and calculate total
+       let totalAmount = 0;
+       const validatedItems = [];
+
+       for (const item of items) {
+         const product = await getProduct(item.productId);
+
+         if (product.stock < item.quantity) {
+           return res.status(400).json({
+             error: `Insufficient stock for product ${product.name}`,
+           });
+         }
+
+         const itemTotal = product.price * item.quantity;
+         totalAmount += itemTotal;
+
+         validatedItems.push({
+           productId: item.productId,
+           quantity: item.quantity,
+           price: product.price,
+         });
+
+         // Update product stock
+         await axios.patch(
+           `${PRODUCT_SERVICE_URL}/products/${item.productId}/stock`,
+           {
+             quantity: -item.quantity,
+           }
+         );
+       }
+
+       // Create order
+       const order = new Order({
+         userId,
+         items: validatedItems,
+         totalAmount,
+       });
+
+       await order.save();
+       res.status(201).json(order);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   // Get orders for a user
+   app.get("/users/:userId/orders", async (req, res) => {
+     try {
+       const orders = await Order.find({ userId: req.params.userId });
+       res.json(orders);
+     } catch (error) {
+       res.status(500).json({ error: error.message });
+     }
+   });
+
+   app.get("/health", (req, res) => {
+     res.json({ status: "healthy", service: "order-service" });
+   });
+
+   const PORT = process.env.PORT || 3003;
+   mongoose
+     .connect(process.env.MONGODB_URI || "mongodb://localhost:27017/orders")
+     .then(() => {
+       app.listen(PORT, () => {
+         console.log(`Order service running on port ${PORT}`);
+       });
+     });
+   ```
+
+</Steps>
+
+### 2. API Gateway
+
+An API Gateway acts as a single entry point for all client requests, routing them to appropriate microservices.
+
+```javascript
+// api-gateway/server.js
+const express = require("express");
+const httpProxy = require("http-proxy-middleware");
+const rateLimit = require("express-rate-limit");
+const jwt = require("jsonwebtoken");
+const app = express();
+
+app.use(express.json());
+
+// Rate limiting
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
+app.use(limiter);
+
+// Authentication middleware
+const authenticate = (req, res, next) => {
+  const token = req.headers.authorization?.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ error: "No token provided" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || "secret");
+    req.user = decoded;
+    next();
+  } catch (error) {
+    res.status(401).json({ error: "Invalid token" });
+  }
+};
+
+// Service configurations
+const services = {
+  users: {
+    target: process.env.USER_SERVICE_URL || "http://localhost:3001",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api/users": "",
+    },
+  },
+  products: {
+    target: process.env.PRODUCT_SERVICE_URL || "http://localhost:3002",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api/products": "",
+    },
+  },
+  orders: {
+    target: process.env.ORDER_SERVICE_URL || "http://localhost:3003",
+    changeOrigin: true,
+    pathRewrite: {
+      "^/api/orders": "",
+    },
+  },
+};
+
+// Health check endpoint
+app.get("/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    service: "api-gateway",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// Public routes (no authentication required)
+app.use("/api/users", httpProxy(services.users));
+app.use("/api/products", httpProxy(services.products));
+
+// Protected routes (authentication required)
+app.use("/api/orders", authenticate, httpProxy(services.orders));
+
+// Error handling
+app.use((error, req, res, next) => {
+  console.error("Gateway error:", error);
+  res.status(500).json({
+    error: "Internal server error",
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// 404 handler
+app.use("*", (req, res) => {
+  res.status(404).json({
+    error: "Route not found",
+    path: req.originalUrl,
+  });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+  console.log(`API Gateway running on port ${PORT}`);
+});
+```
+
+## Service Communication Patterns
+
+### 1. Synchronous Communication (HTTP/REST)
+
+```javascript
+// Synchronous service call with retry logic
+const axios = require("axios");
+
+class ServiceClient {
+  constructor(baseURL, retryAttempts = 3) {
+    this.client = axios.create({
+      baseURL,
+      timeout: 5000,
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    this.retryAttempts = retryAttempts;
+  }
+
+  async request(config) {
+    let attempt = 0;
+
+    while (attempt < this.retryAttempts) {
+      try {
+        const response = await this.client.request(config);
+        return response.data;
+      } catch (error) {
+        attempt++;
+
+        if (attempt >= this.retryAttempts) {
+          throw new ServiceError(
+            `Service request failed after ${this.retryAttempts} attempts`,
+            error.response?.status,
+            error.response?.data
+          );
+        }
+
+        // Exponential backoff
+        await this.delay(Math.pow(2, attempt) * 1000);
+      }
+    }
+  }
+
+  delay(ms) {
+    return new Promise((resolve) => setTimeout(resolve, ms));
+  }
+}
+
+class ServiceError extends Error {
+  constructor(message, status, data) {
+    super(message);
+    this.status = status;
+    this.data = data;
+    this.name = "ServiceError";
+  }
+}
+
+// Usage
+const userServiceClient = new ServiceClient("http://localhost:3001");
+
+async function getUserWithOrders(userId) {
+  try {
+    const user = await userServiceClient.request({
+      method: "GET",
+      url: `/users/${userId}`,
+    });
+
+    const orders = await userServiceClient.request({
+      method: "GET",
+      url: `/users/${userId}/orders`,
+    });
+
+    return { ...user, orders };
+  } catch (error) {
+    console.error("Failed to get user with orders:", error.message);
+    throw error;
+  }
+}
+```
+
+### 2. Asynchronous Communication (Message Queues)
+
+```javascript
+// Using Redis as a message broker
+const redis = require("redis");
+const EventEmitter = require("events");
+
+class MessageBroker extends EventEmitter {
+  constructor() {
+    super();
+    this.publisher = redis.createClient();
+    this.subscriber = redis.createClient();
+    this.setupSubscriber();
+  }
+
+  async setupSubscriber() {
+    this.subscriber.on("message", (channel, message) => {
+      try {
+        const data = JSON.parse(message);
+        this.emit(channel, data);
+      } catch (error) {
+        console.error("Failed to parse message:", error);
+      }
+    });
+  }
+
+  async publish(channel, data) {
+    await this.publisher.publish(channel, JSON.stringify(data));
+  }
+
+  async subscribe(channel) {
+    await this.subscriber.subscribe(channel);
+  }
+}
+
+// Order service publishing events
+const messageBroker = new MessageBroker();
+
+// In order service
+app.post("/orders", async (req, res) => {
+  try {
+    // ... order creation logic ...
+
+    const order = await new Order(orderData).save();
+
+    // Publish order created event
+    await messageBroker.publish("order.created", {
+      orderId: order._id,
+      userId: order.userId,
+      totalAmount: order.totalAmount,
+      timestamp: new Date(),
+    });
+
+    res.status(201).json(order);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Inventory service listening for order events
+messageBroker.subscribe("order.created");
+messageBroker.on("order.created", async (orderData) => {
+  try {
+    // Update inventory
+    console.log(`Processing inventory for order: ${orderData.orderId}`);
+
+    // Send confirmation
+    await messageBroker.publish("inventory.updated", {
+      orderId: orderData.orderId,
+      status: "confirmed",
+    });
+  } catch (error) {
+    console.error("Failed to process inventory:", error);
+  }
+});
+```
+
+## Circuit Breaker Pattern
+
+Protect your services from cascading failures with circuit breaker pattern:
+
+```javascript
+class CircuitBreaker {
+  constructor(threshold = 5, timeout = 10000, monitoringPeriod = 2000) {
+    this.threshold = threshold;
+    this.timeout = timeout;
+    this.monitoringPeriod = monitoringPeriod;
+    this.failureCount = 0;
+    this.lastFailureTime = null;
+    this.state = "CLOSED"; // CLOSED, OPEN, HALF_OPEN
+  }
+
+  async call(fn) {
+    if (this.state === "OPEN") {
+      if (Date.now() - this.lastFailureTime > this.timeout) {
+        this.state = "HALF_OPEN";
+      } else {
+        throw new Error("Circuit breaker is OPEN");
+      }
+    }
+
+    try {
+      const result = await fn();
+
+      if (this.state === "HALF_OPEN") {
+        this.reset();
+      }
+
+      return result;
+    } catch (error) {
+      this.recordFailure();
+      throw error;
+    }
+  }
+
+  recordFailure() {
+    this.failureCount++;
+    this.lastFailureTime = Date.now();
+
+    if (this.failureCount >= this.threshold) {
+      this.state = "OPEN";
+    }
+  }
+
+  reset() {
+    this.failureCount = 0;
+    this.lastFailureTime = null;
+    this.state = "CLOSED";
+  }
+}
+
+// Usage with service calls
+const userServiceBreaker = new CircuitBreaker(3, 5000);
+
+async function getUserWithCircuitBreaker(userId) {
+  try {
+    return await userServiceBreaker.call(async () => {
+      const response = await axios.get(`http://localhost:3001/users/${userId}`);
+      return response.data;
+    });
+  } catch (error) {
+    // Fallback logic
+    console.error("User service unavailable, using cached data");
+    return getCachedUser(userId);
+  }
+}
+```
+
+## Service Discovery
+
+### Simple Service Registry
+
+```javascript
+// service-registry/server.js
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+// In-memory service registry (use Redis/etcd in production)
+const services = new Map();
+
+// Register service
+app.post("/register", (req, res) => {
+  const { name, host, port, health } = req.body;
+
+  const serviceId = `${name}-${Date.now()}`;
+  const service = {
+    id: serviceId,
+    name,
+    host,
+    port,
+    health: health || "/health",
+    registeredAt: new Date(),
+    lastHeartbeat: new Date(),
+  };
+
+  services.set(serviceId, service);
+  console.log(`Service registered: ${name} at ${host}:${port}`);
+
+  res.json({ serviceId, message: "Service registered successfully" });
+});
+
+// Discover services
+app.get("/discover/:name", (req, res) => {
+  const serviceName = req.params.name;
+  const availableServices = [];
+
+  for (const [id, service] of services) {
+    if (service.name === serviceName) {
+      // Check if service is healthy (heartbeat within last 30 seconds)
+      const isHealthy = Date.now() - service.lastHeartbeat < 30000;
+      if (isHealthy) {
+        availableServices.push({
+          id: service.id,
+          host: service.host,
+          port: service.port,
+          url: `http://${service.host}:${service.port}`,
+        });
+      }
+    }
+  }
+
+  if (availableServices.length === 0) {
+    return res
+      .status(404)
+      .json({ error: `No healthy instances of ${serviceName} found` });
+  }
+
+  // Simple load balancing - return random service
+  const randomService =
+    availableServices[Math.floor(Math.random() * availableServices.length)];
+  res.json(randomService);
+});
+
+// Heartbeat endpoint
+app.post("/heartbeat/:serviceId", (req, res) => {
+  const serviceId = req.params.serviceId;
+  const service = services.get(serviceId);
+
+  if (!service) {
+    return res.status(404).json({ error: "Service not found" });
+  }
+
+  service.lastHeartbeat = new Date();
+  services.set(serviceId, service);
+
+  res.json({ message: "Heartbeat received" });
+});
+
+// Health check for registry itself
+app.get("/health", (req, res) => {
+  res.json({
+    status: "healthy",
+    service: "service-registry",
+    registeredServices: services.size,
+  });
+});
+
+const PORT = process.env.PORT || 3010;
+app.listen(PORT, () => {
+  console.log(`Service Registry running on port ${PORT}`);
+});
+```
+
+## Monitoring and Observability
+
+### Health Checks and Metrics
+
+```javascript
+// shared/monitoring.js
+const express = require("express");
+const promClient = require("prom-client");
+
+class Monitoring {
+  constructor(serviceName) {
+    this.serviceName = serviceName;
+    this.register = new promClient.Registry();
+
+    // Default metrics
+    promClient.collectDefaultMetrics({
+      register: this.register,
+      prefix: `${serviceName}_`,
+    });
+
+    // Custom metrics
+    this.httpRequestsTotal = new promClient.Counter({
+      name: `${serviceName}_http_requests_total`,
+      help: "Total number of HTTP requests",
+      labelNames: ["method", "route", "status_code"],
+      registers: [this.register],
+    });
+
+    this.httpRequestDuration = new promClient.Histogram({
+      name: `${serviceName}_http_request_duration_seconds`,
+      help: "Duration of HTTP requests in seconds",
+      labelNames: ["method", "route"],
+      registers: [this.register],
+    });
+  }
+
+  // Middleware to track HTTP metrics
+  trackHttpRequests() {
+    return (req, res, next) => {
+      const startTime = Date.now();
+
+      res.on("finish", () => {
+        const duration = (Date.now() - startTime) / 1000;
+        const route = req.route?.path || req.path;
+
+        this.httpRequestsTotal
+          .labels(req.method, route, res.statusCode.toString())
+          .inc();
+
+        this.httpRequestDuration.labels(req.method, route).observe(duration);
+      });
+
+      next();
+    };
+  }
+
+  // Health check endpoint
+  createHealthEndpoint() {
+    return (req, res) => {
+      // Basic health checks
+      const health = {
+        status: "healthy",
+        service: this.serviceName,
+        timestamp: new Date().toISOString(),
+        uptime: process.uptime(),
+        memory: process.memoryUsage(),
+        pid: process.pid,
+      };
+
+      res.json(health);
+    };
+  }
+
+  // Metrics endpoint
+  createMetricsEndpoint() {
+    return async (req, res) => {
+      res.set("Content-Type", this.register.contentType);
+      res.end(await this.register.metrics());
+    };
+  }
+}
+
+module.exports = Monitoring;
+
+// Usage in services
+const Monitoring = require("./shared/monitoring");
+const monitoring = new Monitoring("user-service");
+
+app.use(monitoring.trackHttpRequests());
+app.get("/health", monitoring.createHealthEndpoint());
+app.get("/metrics", monitoring.createMetricsEndpoint());
+```
+
+## Docker Configuration
+
+### Individual Service Dockerfile
+
+```dockerfile
+# user-service/Dockerfile
+FROM node:16-alpine
+
+WORKDIR /app
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy application code
+COPY . .
+
+# Create non-root user
+RUN addgroup -g 1001 -S nodejs
+RUN adduser -S nodeuser -u 1001
+
+# Change ownership of the app directory
+RUN chown -R nodeuser:nodejs /app
+USER nodeuser
+
+EXPOSE 3001
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+  CMD node healthcheck.js
+
+CMD ["node", "server.js"]
+```
+
+### Docker Compose for Development
+
+```yaml
+# docker-compose.yml
+version: "3.8"
+
+services:
+  # Databases
+  user-db:
+    image: mongo:5
+    environment:
+      MONGO_INITDB_DATABASE: users
+    volumes:
+      - user-db-data:/data/db
+    ports:
+      - "27017:27017"
+
+  product-db:
+    image: mongo:5
+    environment:
+      MONGO_INITDB_DATABASE: products
+    volumes:
+      - product-db-data:/data/db
+    ports:
+      - "27018:27017"
+
+  order-db:
+    image: mongo:5
+    environment:
+      MONGO_INITDB_DATABASE: orders
+    volumes:
+      - order-db-data:/data/db
+    ports:
+      - "27019:27017"
+
+  redis:
+    image: redis:6-alpine
+    ports:
+      - "6379:6379"
+
+  # Services
+  user-service:
+    build:
+      context: ./user-service
+    ports:
+      - "3001:3001"
+    environment:
+      - PORT=3001
+      - MONGODB_URI=mongodb://user-db:27017/users
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - user-db
+      - redis
+    volumes:
+      - ./user-service:/app
+      - /app/node_modules
+
+  product-service:
+    build:
+      context: ./product-service
+    ports:
+      - "3002:3002"
+    environment:
+      - PORT=3002
+      - MONGODB_URI=mongodb://product-db:27017/products
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - product-db
+      - redis
+
+  order-service:
+    build:
+      context: ./order-service
+    ports:
+      - "3003:3003"
+    environment:
+      - PORT=3003
+      - MONGODB_URI=mongodb://order-db:27017/orders
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - order-db
+      - user-service
+      - product-service
+      - redis
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - USER_SERVICE_URL=http://user-service:3001
+      - PRODUCT_SERVICE_URL=http://product-service:3002
+      - ORDER_SERVICE_URL=http://order-service:3003
+      - JWT_SECRET=your-secret-key
+    depends_on:
+      - user-service
+      - product-service
+      - order-service
+
+volumes:
+  user-db-data:
+  product-db-data:
+  order-db-data:
+```
+
+## Testing Microservices
+
+### Integration Tests
+
+```javascript
+// tests/integration/order-service.test.js
+const request = require("supertest");
+const mongoose = require("mongoose");
+const { MongoMemoryServer } = require("mongodb-memory-server");
+const app = require("../order-service/server");
+
+describe("Order Service Integration Tests", () => {
+  let mongoServer;
+
+  beforeAll(async () => {
+    mongoServer = await MongoMemoryServer.create();
+    const mongoUri = mongoServer.getUri();
+    await mongoose.connect(mongoUri);
+  });
+
+  afterAll(async () => {
+    await mongoose.disconnect();
+    await mongoServer.stop();
+  });
+
+  beforeEach(async () => {
+    // Clean up database before each test
+    await mongoose.connection.db.dropDatabase();
+  });
+
+  describe("POST /orders", () => {
+    it("should create a new order", async () => {
+      // Mock external service calls
+      const mockAxios = jest.spyOn(require("axios"), "get");
+      mockAxios.mockResolvedValueOnce({
+        data: { id: "user1", name: "John Doe" },
+      });
+      mockAxios.mockResolvedValueOnce({
+        data: { id: "product1", name: "Product 1", price: 10, stock: 5 },
+      });
+
+      const orderData = {
+        userId: "user1",
+        items: [
+          {
+            productId: "product1",
+            quantity: 2,
+          },
+        ],
+      };
+
+      const response = await request(app)
+        .post("/orders")
+        .send(orderData)
+        .expect(201);
+
+      expect(response.body).toHaveProperty("_id");
+      expect(response.body.userId).toBe("user1");
+      expect(response.body.totalAmount).toBe(20);
+
+      mockAxios.mockRestore();
+    });
+
+    it("should return 400 for insufficient stock", async () => {
+      const mockAxios = jest.spyOn(require("axios"), "get");
+      mockAxios.mockResolvedValueOnce({
+        data: { id: "user1", name: "John Doe" },
+      });
+      mockAxios.mockResolvedValueOnce({
+        data: { id: "product1", name: "Product 1", price: 10, stock: 1 },
+      });
+
+      const orderData = {
+        userId: "user1",
+        items: [
+          {
+            productId: "product1",
+            quantity: 5, // More than available stock
+          },
+        ],
+      };
+
+      const response = await request(app)
+        .post("/orders")
+        .send(orderData)
+        .expect(400);
+
+      expect(response.body).toHaveProperty("error");
+      expect(response.body.error).toMatch(/Insufficient stock/);
+
+      mockAxios.mockRestore();
+    });
+  });
+});
+```
+
+## Best Practices for Node.js Microservices
+
+### 1. Service Independence
+
+- Each service should have its own database
+- Services should be loosely coupled
+- Use API versioning for backward compatibility
+
+### 2. Error Handling and Resilience
+
+```javascript
+// Graceful error handling
+process.on("uncaughtException", (error) => {
+  console.error("Uncaught Exception:", error);
+  process.exit(1);
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.error("Unhandled Rejection at:", promise, "reason:", reason);
+  process.exit(1);
+});
+
+// Graceful shutdown
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM received, shutting down gracefully");
+
+  // Close database connections
+  await mongoose.connection.close();
+
+  // Close HTTP server
+  server.close(() => {
+    console.log("Process terminated");
+  });
+});
+```
+
+### 3. Configuration Management
+
+```javascript
+// config/index.js
+const config = {
+  port: process.env.PORT || 3000,
+  database: {
+    url: process.env.MONGODB_URI || "mongodb://localhost:27017/myapp",
+    options: {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    },
+  },
+  redis: {
+    url: process.env.REDIS_URL || "redis://localhost:6379",
+  },
+  services: {
+    userService: process.env.USER_SERVICE_URL || "http://localhost:3001",
+    productService: process.env.PRODUCT_SERVICE_URL || "http://localhost:3002",
+  },
+  jwt: {
+    secret: process.env.JWT_SECRET || "fallback-secret",
+    expiresIn: process.env.JWT_EXPIRES_IN || "24h",
+  },
+};
+
+module.exports = config;
+```
+
+Microservices architecture with Node.js provides scalability and flexibility but requires careful consideration of service design, communication patterns, and operational complexity. Start with a monolith and gradually extract services as your application grows and team structure evolves.

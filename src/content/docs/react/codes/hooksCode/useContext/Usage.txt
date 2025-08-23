@@ -1,4 +1,0 @@
-const value = useContext(MyContext);
-
-// Create a context
-const ThemeContext = createContext();

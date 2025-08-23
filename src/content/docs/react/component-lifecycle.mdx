@@ -1,3 +1,954 @@
 ---
 title: Component Lifecycle
+description: Master React component lifecycle methods, hooks equivalents, and lifecycle patterns for both class and functional components.
 ---
+
+import { Code } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## What is Component Lifecycle?
+
+**Component lifecycle** refers to the series of phases that every React component goes through from creation to destruction. Understanding these phases is crucial for performing side effects, optimizing performance, and managing component state properly.
+
+React components go through three main phases:
+
+1. **Mounting** - Component is being created and inserted into the DOM
+2. **Updating** - Component is being re-rendered as a result of changes to props or state
+3. **Unmounting** - Component is being removed from the DOM
+
+```
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│    MOUNTING     │───▶ │    UPDATING     │───▶│   UNMOUNTING   │
+│                 │     │                 │     │                 │
+│ • constructor   │     │ • render        │     │ • cleanup       │
+│ • render        │     │ • effects       │     │ • effects       │
+│ • effects       │     │ • updates       │     │                 │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+## Class Component Lifecycle Methods
+
+### Mounting Phase
+
+These methods are called when a component is being created and inserted into the DOM:
+
+<Steps>
+
+1. **constructor()**
+   Called before the component is mounted. Used for initializing state and binding methods.
+
+   ```jsx
+   class MyComponent extends React.Component {
+     constructor(props) {
+       super(props);
+
+       // Initialize state
+       this.state = {
+         count: 0,
+         loading: true,
+       };
+
+       // Bind methods (if not using arrow functions)
+       this.handleClick = this.handleClick.bind(this);
+     }
+
+     handleClick() {
+       this.setState({ count: this.state.count + 1 });
+     }
+   }
+   ```
+
+2. **static getDerivedStateFromProps()**
+   Called right before rendering, both on initial mount and subsequent updates.
+
+   ```jsx
+   class UserProfile extends React.Component {
+     constructor(props) {
+       super(props);
+       this.state = {
+         email: "",
+         prevUserId: null,
+       };
+     }
+
+     static getDerivedStateFromProps(nextProps, prevState) {
+       // Update state based on props changes
+       if (nextProps.userId !== prevState.prevUserId) {
+         return {
+           email: nextProps.userEmail,
+           prevUserId: nextProps.userId,
+         };
+       }
+
+       // Return null if no state update is needed
+       return null;
+     }
+   }
+   ```
+
+3. **render()**
+   The only required method in a class component. Returns JSX to be rendered.
+
+   ```jsx
+   class WelcomeMessage extends React.Component {
+     render() {
+       const { name, isLoggedIn } = this.props;
+       const { theme } = this.state;
+
+       return (
+         <div className={`welcome ${theme}`}>
+           {isLoggedIn ? (
+             <h1>Welcome back, {name}!</h1>
+           ) : (
+             <h1>Please log in</h1>
+           )}
+         </div>
+       );
+     }
+   }
+   ```
+
+4. **componentDidMount()**
+   Called immediately after the component is mounted. Perfect for side effects.
+
+   ```jsx
+   class DataFetcher extends React.Component {
+     constructor(props) {
+       super(props);
+       this.state = {
+         data: null,
+         loading: true,
+         error: null,
+       };
+     }
+
+     async componentDidMount() {
+       try {
+         // Fetch data from API
+         const response = await fetch(`/api/users/${this.props.userId}`);
+         const userData = await response.json();
+
+         this.setState({
+           data: userData,
+           loading: false,
+         });
+
+         // Set up event listeners
+         window.addEventListener("resize", this.handleResize);
+
+         // Start timers/intervals
+         this.timer = setInterval(this.updateTime, 1000);
+       } catch (error) {
+         this.setState({
+           error: error.message,
+           loading: false,
+         });
+       }
+     }
+
+     handleResize = () => {
+       this.setState({ windowWidth: window.innerWidth });
+     };
+
+     updateTime = () => {
+       this.setState({ currentTime: new Date() });
+     };
+   }
+   ```
+
+</Steps>
+
+### Updating Phase
+
+These methods are called when a component's props or state changes:
+
+<Steps>
+
+1. **static getDerivedStateFromProps()**
+   Same method as in mounting phase, called before every render.
+
+2. **shouldComponentUpdate()**
+   Determines if the component should re-render. Used for performance optimization.
+
+   ```jsx
+   class ExpensiveComponent extends React.Component {
+     shouldComponentUpdate(nextProps, nextState) {
+       // Only re-render if specific props/state have changed
+       return (
+         nextProps.importantProp !== this.props.importantProp ||
+         nextState.criticalState !== this.state.criticalState
+       );
+     }
+
+     render() {
+       console.log("ExpensiveComponent rendered");
+       return (
+         <div>
+           <ExpensiveCalculation data={this.props.importantProp} />
+         </div>
+       );
+     }
+   }
+
+   // Modern alternative: React.memo for functional components
+   const MemoizedComponent = React.memo(
+     ({ importantProp }) => {
+       return <ExpensiveCalculation data={importantProp} />;
+     },
+     (prevProps, nextProps) => {
+       // Return true if props are equal (skip re-render)
+       return prevProps.importantProp === nextProps.importantProp;
+     }
+   );
+   ```
+
+3. **render()**
+   Same as in mounting phase.
+
+4. **getSnapshotBeforeUpdate()**
+   Called right before DOM mutations. The value returned is passed to componentDidUpdate.
+
+   ```jsx
+   class ChatMessages extends React.Component {
+     constructor(props) {
+       super(props);
+       this.messagesRef = React.createRef();
+     }
+
+     getSnapshotBeforeUpdate(prevProps, prevState) {
+       // Capture scroll position before new messages are added
+       if (prevProps.messages.length < this.props.messages.length) {
+         const messagesContainer = this.messagesRef.current;
+         return {
+           scrollTop: messagesContainer.scrollTop,
+           scrollHeight: messagesContainer.scrollHeight,
+         };
+       }
+       return null;
+     }
+
+     componentDidUpdate(prevProps, prevState, snapshot) {
+       if (snapshot !== null) {
+         const messagesContainer = this.messagesRef.current;
+         const shouldScrollToBottom =
+           snapshot.scrollTop + messagesContainer.clientHeight >=
+           snapshot.scrollHeight - 10;
+
+         if (shouldScrollToBottom) {
+           // Auto-scroll to bottom for new messages
+           messagesContainer.scrollTop = messagesContainer.scrollHeight;
+         }
+       }
+     }
+
+     render() {
+       return (
+         <div ref={this.messagesRef} className="messages-container">
+           {this.props.messages.map((message) => (
+             <MessageItem key={message.id} message={message} />
+           ))}
+         </div>
+       );
+     }
+   }
+   ```
+
+5. **componentDidUpdate()**
+   Called immediately after updating occurs.
+
+   ```jsx
+   class UserDashboard extends React.Component {
+     componentDidUpdate(prevProps, prevState, snapshot) {
+       // Fetch new data when userId prop changes
+       if (this.props.userId !== prevProps.userId) {
+         this.fetchUserData(this.props.userId);
+       }
+
+       // Update document title when user name changes
+       if (prevState.userName !== this.state.userName) {
+         document.title = `Dashboard - ${this.state.userName}`;
+       }
+
+       // Log analytics event
+       if (prevState.currentPage !== this.state.currentPage) {
+         analytics.track("page_view", {
+           page: this.state.currentPage,
+           userId: this.props.userId,
+         });
+       }
+     }
+
+     async fetchUserData(userId) {
+       try {
+         const response = await fetch(`/api/users/${userId}`);
+         const userData = await response.json();
+         this.setState({ userName: userData.name });
+       } catch (error) {
+         console.error("Failed to fetch user data:", error);
+       }
+     }
+   }
+   ```
+
+</Steps>
+
+### Unmounting Phase
+
+<Steps>
+
+1. **componentWillUnmount()**
+   Called immediately before a component is unmounted and destroyed. Used for cleanup.
+
+   ```jsx
+   class TimerComponent extends React.Component {
+     constructor(props) {
+       super(props);
+       this.state = { time: new Date() };
+       this.timerID = null;
+     }
+
+     componentDidMount() {
+       // Start timer
+       this.timerID = setInterval(() => {
+         this.setState({ time: new Date() });
+       }, 1000);
+
+       // Add event listeners
+       window.addEventListener("beforeunload", this.handleBeforeUnload);
+       document.addEventListener(
+         "visibilitychange",
+         this.handleVisibilityChange
+       );
+
+       // Subscribe to external services
+       this.subscription = EventService.subscribe(
+         "user-update",
+         this.handleUserUpdate
+       );
+     }
+
+     componentWillUnmount() {
+       // Clear timers and intervals
+       if (this.timerID) {
+         clearInterval(this.timerID);
+       }
+
+       // Remove event listeners
+       window.removeEventListener("beforeunload", this.handleBeforeUnload);
+       document.removeEventListener(
+         "visibilitychange",
+         this.handleVisibilityChange
+       );
+
+       // Unsubscribe from services
+       if (this.subscription) {
+         this.subscription.unsubscribe();
+       }
+
+       // Cancel pending async operations
+       if (this.abortController) {
+         this.abortController.abort();
+       }
+
+       // Clear any pending timeouts
+       if (this.debounceTimeout) {
+         clearTimeout(this.debounceTimeout);
+       }
+     }
+
+     handleBeforeUnload = (event) => {
+       // Save data before page unload
+       localStorage.setItem("lastVisit", new Date().toISOString());
+     };
+
+     handleVisibilityChange = () => {
+       if (document.hidden) {
+         this.pauseUpdates();
+       } else {
+         this.resumeUpdates();
+       }
+     };
+   }
+   ```
+
+</Steps>
+
+## Error Handling Methods
+
+<Steps>
+
+1. **static getDerivedStateFromError()**
+   Called when a child component throws an error during rendering.
+
+   ```jsx
+   class ErrorBoundary extends React.Component {
+     constructor(props) {
+       super(props);
+       this.state = { hasError: false, error: null };
+     }
+
+     static getDerivedStateFromError(error) {
+       // Update state to trigger error UI
+       return {
+         hasError: true,
+         error: error.message,
+       };
+     }
+
+     componentDidCatch(error, errorInfo) {
+       // Log error to monitoring service
+       console.error("Error caught by boundary:", error, errorInfo);
+
+       // Send to error reporting service
+       ErrorReportingService.captureException(error, {
+         extra: errorInfo,
+         tags: {
+           component: "ErrorBoundary",
+         },
+       });
+     }
+
+     render() {
+       if (this.state.hasError) {
+         return (
+           <div className="error-boundary">
+             <h2>Something went wrong</h2>
+             <p>Error: {this.state.error}</p>
+             <button onClick={() => window.location.reload()}>
+               Reload Page
+             </button>
+           </div>
+         );
+       }
+
+       return this.props.children;
+     }
+   }
+
+   // Usage
+   function App() {
+     return (
+       <ErrorBoundary>
+         <Header />
+         <MainContent />
+         <Footer />
+       </ErrorBoundary>
+     );
+   }
+   ```
+
+2. **componentDidCatch()**
+   Called when a child component throws an error during rendering.
+
+</Steps>
+
+## Functional Components with Hooks
+
+Modern React development primarily uses functional components with hooks, which provide equivalent functionality to class lifecycle methods:
+
+### useEffect Hook - The Lifecycle Swiss Army Knife
+
+```jsx
+import React, { useState, useEffect } from "react";
+
+function DataComponent({ userId }) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Equivalent to componentDidMount and componentDidUpdate
+  useEffect(() => {
+    let abortController = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(`/api/users/${userId}`, {
+          signal: abortController.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const userData = await response.json();
+        setData(userData);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err.message);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+
+    // Cleanup function (equivalent to componentWillUnmount)
+    return () => {
+      abortController.abort();
+    };
+  }, [userId]); // Dependency array - effect runs when userId changes
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error}</div>;
+  if (!data) return <div>No data found</div>;
+
+  return (
+    <div>
+      <h1>{data.name}</h1>
+      <p>Email: {data.email}</p>
+    </div>
+  );
+}
+```
+
+### Common useEffect Patterns
+
+<Tabs>
+  <TabItem label="Mount Only">
+    ```jsx
+    // Equivalent to componentDidMount only
+    function MountOnlyEffect() {
+      const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+      
+      useEffect(() => {
+        const handleResize = () => {
+          setWindowWidth(window.innerWidth);
+        };
+        
+        // Add event listener
+        window.addEventListener('resize', handleResize);
+        
+        // Cleanup function
+        return () => {
+          window.removeEventListener('resize', handleResize);
+        };
+      }, []); // Empty dependency array = runs only on mount
+      
+      return <div>Window width: {windowWidth}px</div>;
+    }
+    ```
+  </TabItem>
+  
+  <TabItem label="Update Only">
+    ```jsx
+    // Equivalent to componentDidUpdate only
+    function UpdateOnlyEffect({ count }) {
+      const [previousCount, setPreviousCount] = useState(count);
+      
+      useEffect(() => {
+        // This runs on every update (after first render)
+        if (count !== previousCount) {
+          console.log(`Count changed from ${previousCount} to ${count}`);
+          setPreviousCount(count);
+          
+          // Update document title
+          document.title = `Count: ${count}`;
+          
+          // Log analytics
+          analytics.track('count_updated', { newCount: count });
+        }
+      }); // No dependency array = runs after every render
+      
+      return <div>Count: {count}</div>;
+    }
+    ```
+  </TabItem>
+  
+  <TabItem label="Conditional Updates">
+    ```jsx
+    // Runs only when specific values change
+    function ConditionalEffect({ userId, theme }) {
+      const [userData, setUserData] = useState(null);
+      const [themePreferences, setThemePreferences] = useState(null);
+      
+      // Effect for user data (runs when userId changes)
+      useEffect(() => {
+        if (userId) {
+          fetchUserData(userId).then(setUserData);
+        }
+      }, [userId]);
+      
+      // Effect for theme (runs when theme changes)
+      useEffect(() => {
+        if (theme) {
+          document.body.className = `theme-${theme}`;
+          loadThemePreferences(theme).then(setThemePreferences);
+        }
+      }, [theme]);
+      
+      // Multiple dependencies
+      useEffect(() => {
+        if (userData && themePreferences) {
+          syncUserPreferences(userData.id, themePreferences);
+        }
+      }, [userData, themePreferences]);
+      
+      return <div>User: {userData?.name} | Theme: {theme}</div>;
+    }
+    ```
+  </TabItem>
+  
+  <TabItem label="Complex Cleanup">
+    ```jsx
+    function ComplexCleanupEffect() {
+      const [isOnline, setIsOnline] = useState(navigator.onLine);
+      const [notifications, setNotifications] = useState([]);
+      
+      useEffect(() => {
+        let intervalId;
+        let timeoutId;
+        let subscription;
+        
+        // Set up multiple side effects
+        const handleOnline = () => setIsOnline(true);
+        const handleOffline = () => setIsOnline(false);
+        
+        window.addEventListener('online', handleOnline);
+        window.addEventListener('offline', handleOffline);
+        
+        // Set up interval
+        intervalId = setInterval(() => {
+          setNotifications(prev => 
+            prev.filter(notification => 
+              Date.now() - notification.timestamp < 5000
+            )
+          );
+        }, 1000);
+        
+        // Set up timeout
+        timeoutId = setTimeout(() => {
+          console.log('Component has been mounted for 10 seconds');
+        }, 10000);
+        
+        // Set up subscription
+        subscription = NotificationService.subscribe(notification => {
+          setNotifications(prev => [...prev, notification]);
+        });
+        
+        // Cleanup function - cleans up ALL side effects
+        return () => {
+          window.removeEventListener('online', handleOnline);
+          window.removeEventListener('offline', handleOffline);
+          
+          if (intervalId) clearInterval(intervalId);
+          if (timeoutId) clearTimeout(timeoutId);
+          if (subscription) subscription.unsubscribe();
+        };
+      }, []); // Empty dependency array
+      
+      return (
+        <div>
+          <p>Status: {isOnline ? 'Online' : 'Offline'}</p>
+          <p>Active notifications: {notifications.length}</p>
+        </div>
+      );
+    }
+    ```
+  </TabItem>
+</Tabs>
+
+## Advanced Lifecycle Patterns
+
+### Custom Hooks for Lifecycle Logic
+
+```jsx
+// Custom hook for data fetching
+function useDataFetcher(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let abortController = new AbortController();
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const response = await fetch(url, {
+          signal: abortController.signal,
+        });
+
+        const result = await response.json();
+        setData(result);
+      } catch (err) {
+        if (err.name !== "AbortError") {
+          setError(err);
+        }
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (url) {
+      fetchData();
+    }
+
+    return () => {
+      abortController.abort();
+    };
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Custom hook for window size
+function useWindowSize() {
+  const [windowSize, setWindowSize] = useState({
+    width: typeof window !== "undefined" ? window.innerWidth : 0,
+    height: typeof window !== "undefined" ? window.innerHeight : 0,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setWindowSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  return windowSize;
+}
+
+// Custom hook for local storage
+function useLocalStorage(key, initialValue) {
+  const [storedValue, setStoredValue] = useState(() => {
+    try {
+      const item = window.localStorage.getItem(key);
+      return item ? JSON.parse(item) : initialValue;
+    } catch (error) {
+      console.error(`Error reading localStorage key "${key}":`, error);
+      return initialValue;
+    }
+  });
+
+  const setValue = (value) => {
+    try {
+      setStoredValue(value);
+      window.localStorage.setItem(key, JSON.stringify(value));
+    } catch (error) {
+      console.error(`Error setting localStorage key "${key}":`, error);
+    }
+  };
+
+  return [storedValue, setValue];
+}
+
+// Using custom hooks
+function UserProfile({ userId }) {
+  const { data: user, loading, error } = useDataFetcher(`/api/users/${userId}`);
+  const { width, height } = useWindowSize();
+  const [preferences, setPreferences] = useLocalStorage("userPreferences", {});
+
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>Error: {error.message}</div>;
+
+  return (
+    <div>
+      <h1>{user.name}</h1>
+      <p>
+        Screen size: {width}x{height}
+      </p>
+      <p>Theme: {preferences.theme || "default"}</p>
+    </div>
+  );
+}
+```
+
+### Lifecycle Comparison Table
+
+| Class Component Method       | Hooks Equivalent                           | Purpose                        |
+| ---------------------------- | ------------------------------------------ | ------------------------------ |
+| `constructor()`              | `useState()`                               | Initialize state               |
+| `componentDidMount()`        | `useEffect(() => {}, [])`                  | Run after first render         |
+| `componentDidUpdate()`       | `useEffect(() => {})`                      | Run after every render         |
+| `componentWillUnmount()`     | `useEffect(() => { return () => {} }, [])` | Cleanup before unmount         |
+| `shouldComponentUpdate()`    | `React.memo()`                             | Prevent unnecessary re-renders |
+| `getDerivedStateFromProps()` | `useState()` + `useEffect()`               | Update state from props        |
+| `componentDidCatch()`        | No hooks equivalent                        | Error boundaries (class only)  |
+
+### Performance Optimization Patterns
+
+```jsx
+import React, { useState, useEffect, useMemo, useCallback, memo } from "react";
+
+// Memoized component to prevent unnecessary re-renders
+const ExpensiveChild = memo(({ data, onUpdate }) => {
+  console.log("ExpensiveChild rendered");
+
+  const processedData = useMemo(() => {
+    // Expensive calculation
+    return data.map((item) => ({
+      ...item,
+      processed: item.value * 2 + Math.random(),
+    }));
+  }, [data]);
+
+  return (
+    <div>
+      {processedData.map((item) => (
+        <div key={item.id} onClick={() => onUpdate(item.id)}>
+          {item.processed}
+        </div>
+      ))}
+    </div>
+  );
+});
+
+function OptimizedParent() {
+  const [count, setCount] = useState(0);
+  const [items, setItems] = useState([
+    { id: 1, value: 10 },
+    { id: 2, value: 20 },
+    { id: 3, value: 30 },
+  ]);
+
+  // Memoized callback to prevent child re-renders
+  const handleUpdate = useCallback((id) => {
+    setItems((prevItems) =>
+      prevItems.map((item) =>
+        item.id === id ? { ...item, value: item.value + 1 } : item
+      )
+    );
+  }, []);
+
+  // Expensive calculation with useMemo
+  const expensiveValue = useMemo(() => {
+    console.log("Calculating expensive value...");
+    return items.reduce((sum, item) => sum + item.value, 0) * Math.PI;
+  }, [items]);
+
+  return (
+    <div>
+      <button onClick={() => setCount(count + 1)}>Count: {count}</button>
+      <p>Expensive calculation: {expensiveValue.toFixed(2)}</p>
+      <ExpensiveChild data={items} onUpdate={handleUpdate} />
+    </div>
+  );
+}
+```
+
+## Best Practices
+
+### 1. Cleanup Side Effects
+
+```jsx
+// ❌ Memory leak - no cleanup
+function BadTimer() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+  }, []); // Missing cleanup!
+
+  return <div>{time.toLocaleTimeString()}</div>;
+}
+
+// ✅ Proper cleanup
+function GoodTimer() {
+  const [time, setTime] = useState(new Date());
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime(new Date());
+    }, 1000);
+
+    return () => clearInterval(interval); // Cleanup
+  }, []);
+
+  return <div>{time.toLocaleTimeString()}</div>;
+}
+```
+
+### 2. Handle Async Operations Safely
+
+```jsx
+// ❌ Potential memory leak and warnings
+function BadAsyncComponent({ userId }) {
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    fetchUser(userId).then((userData) => {
+      setUser(userData); // Component might be unmounted!
+    });
+  }, [userId]);
+
+  return user ? <div>{user.name}</div> : <div>Loading...</div>;
+}
+
+// ✅ Safe async handling
+function GoodAsyncComponent({ userId }) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    let mounted = true;
+
+    const fetchData = async () => {
+      try {
+        const userData = await fetchUser(userId);
+        if (mounted) {
+          setUser(userData);
+        }
+      } catch (error) {
+        if (mounted) {
+          console.error("Failed to fetch user:", error);
+        }
+      } finally {
+        if (mounted) {
+          setLoading(false);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      mounted = false; // Cleanup
+    };
+  }, [userId]);
+
+  if (loading) return <div>Loading...</div>;
+  return user ? <div>{user.name}</div> : <div>User not found</div>;
+}
+```
+
+### 3. Use Dependency Arrays Correctly
+
+```jsx
+// ❌ Missing dependencies
+function BadDependencies({ userId, filter }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchData(userId, filter).then(setData);
+  }, [userId]); // Missing 'filter' dependency!
+
+  return <div>{data.length} items</div>;
+}
+
+// ✅ Complete dependencies
+function GoodDependencies({ userId, filter }) {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    fetchData(userId, filter).then(setData);
+  }, [userId, filter]); // All dependencies included
+
+  return <div>{data.length} items</div>;
+}
+```
+
+Understanding component lifecycle is essential for building robust React applications. Whether using class components or functional components with hooks, proper lifecycle management ensures your components perform well, handle side effects correctly, and clean up resources to prevent memory leaks.

@@ -1,6 +1,0 @@
-const memoizedCallback = useCallback(
-  () => {
-    // Function logic here
-  },
-  [dependencies]
-);

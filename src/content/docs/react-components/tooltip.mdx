@@ -1,8 +1,20 @@
 ---
 title: Tooltip
+description: A versatile React tooltip component with hover/click triggers, multiple positions, and customizable styling using Tailwind CSS.
 ---
 
-The following tooltip component is a single and highly customizable component, you can trigger it via clicking on an element or hovering it. You can set various positions, predefined variants (And can define your own) and delay but also it is highly customizable via Tailwind. It is very versatile
+A highly customizable tooltip component that provides contextual information on hover or click interactions. This component supports multiple positioning options, trigger methods, custom styling, and delay configurations. Perfect for enhancing user experience by providing helpful hints, explanations, or additional information without cluttering the interface.
+
+## Features
+
+- **Multiple Trigger Methods**: Hover or click activation
+- **Flexible Positioning**: Top, bottom, left, right with auto-positioning
+- **Customizable Delay**: Configurable show/hide delays for better UX
+- **Rich Content Support**: Text, HTML, or React components as tooltip content
+- **Responsive Design**: Adapts to screen edges and viewport constraints
+- **Accessibility**: ARIA attributes and keyboard navigation support
+- **Custom Styling**: Full control with Tailwind CSS classes
+- **Arrow Indicator**: Optional arrow pointing to the trigger element
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -23,3 +35,196 @@ import tooltip from "./codes/Tooltip/tooltip.txt?raw";
     <Code code={tooltip} lang="jsx" title="tooltip.jsx" />
   </TabItem>
 </Tabs>
+
+## Props
+
+| Prop             | Type                                     | Default    | Description                                  |
+| ---------------- | ---------------------------------------- | ---------- | -------------------------------------------- |
+| `content`        | `string \| ReactNode`                    | `required` | The tooltip content to display               |
+| `children`       | `ReactNode`                              | `required` | The element that triggers the tooltip        |
+| `position`       | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'`    | Preferred position of the tooltip            |
+| `trigger`        | `'hover' \| 'click'`                     | `'hover'`  | How the tooltip is activated                 |
+| `delay`          | `number`                                 | `300`      | Delay in milliseconds before showing tooltip |
+| `hideDelay`      | `number`                                 | `100`      | Delay in milliseconds before hiding tooltip  |
+| `className`      | `string`                                 | `''`       | Additional CSS classes for the tooltip       |
+| `arrowClassName` | `string`                                 | `''`       | Additional CSS classes for the arrow         |
+| `disabled`       | `boolean`                                | `false`    | Whether the tooltip is disabled              |
+| `showArrow`      | `boolean`                                | `true`     | Whether to show the pointing arrow           |
+
+## Usage Examples
+
+### Basic Hover Tooltip
+
+```jsx
+<Tooltip content="This is helpful information">
+  <button className="px-4 py-2 bg-blue-500 text-white rounded">Hover me</button>
+</Tooltip>
+```
+
+### Click Tooltip with Custom Position
+
+```jsx
+<Tooltip
+  content="Click tooltip with detailed information"
+  trigger="click"
+  position="bottom"
+>
+  <span className="text-blue-500 cursor-pointer underline">
+    Click for more info
+  </span>
+</Tooltip>
+```
+
+### Tooltip with React Content
+
+```jsx
+const tooltipContent = (
+  <div>
+    <h4 className="font-bold text-sm mb-1">User Profile</h4>
+    <p className="text-xs">View and edit your profile information</p>
+  </div>
+);
+
+<Tooltip content={tooltipContent} position="right">
+  <img
+    src="/avatar.jpg"
+    alt="User Avatar"
+    className="w-8 h-8 rounded-full cursor-pointer"
+  />
+</Tooltip>;
+```
+
+### Custom Styled Tooltip
+
+```jsx
+<Tooltip
+  content="Custom styled tooltip"
+  className="bg-purple-600 text-white border-2 border-purple-800 shadow-2xl"
+  arrowClassName="border-purple-800"
+  delay={500}
+>
+  <button className="px-3 py-1 bg-purple-100 text-purple-800 rounded">
+    Custom Style
+  </button>
+</Tooltip>
+```
+
+### Disabled Tooltip
+
+```jsx
+<Tooltip content="This tooltip won't show" disabled>
+  <button className="px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed">
+    Disabled Button
+  </button>
+</Tooltip>
+```
+
+## Positioning System
+
+The tooltip automatically calculates the best position based on:
+
+### Priority Order
+
+1. **Preferred Position**: The position you specify in the `position` prop
+2. **Viewport Constraints**: Automatically flips if there's not enough space
+3. **Fallback Positions**: Tries alternative positions in this order:
+   - `top` → `bottom` → `right` → `left`
+   - `bottom` → `top` → `left` → `right`
+   - `left` → `right` → `top` → `bottom`
+   - `right` → `left` → `bottom` → `top`
+
+### Smart Positioning
+
+```jsx
+// Will try 'top' first, but flip to 'bottom' if near top of viewport
+<Tooltip content="Smart positioning" position="top">
+  <button>Near viewport edge</button>
+</Tooltip>
+```
+
+## Advanced Examples
+
+### Form Field Help
+
+```jsx
+function FormField({ label, name, helpText }) {
+  return (
+    <div className="mb-4">
+      <label className="flex items-center gap-2 mb-1">
+        {label}
+        <Tooltip content={helpText} position="right">
+          <span className="text-gray-400 hover:text-gray-600 cursor-help">
+            ⓘ
+          </span>
+        </Tooltip>
+      </label>
+      <input
+        name={name}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+    </div>
+  );
+}
+
+<FormField
+  label="Email Address"
+  name="email"
+  helpText="We'll never share your email with anyone else"
+/>;
+```
+
+### Icon with Tooltip
+
+```jsx
+function IconWithTooltip({ icon, tooltip, onClick }) {
+  return (
+    <Tooltip content={tooltip}>
+      <button
+        onClick={onClick}
+        className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
+      >
+        {icon}
+      </button>
+    </Tooltip>
+  );
+}
+
+<div className="flex gap-2">
+  <IconWithTooltip
+    icon="📁"
+    tooltip="Open folder"
+    onClick={() => console.log("Open folder")}
+  />
+  <IconWithTooltip
+    icon="❤️"
+    tooltip="Add to favorites"
+    onClick={() => console.log("Add to favorites")}
+  />
+</div>;
+```
+
+## Preview
+
+<iframe
+  src="https://stackblitz.com/edit/react-tooltip-component-demo?embed=1&file=src%2FTooltip.jsx&theme=dark&view=preview"
+  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+/>
+
+## Accessibility Features
+
+- **ARIA Attributes**: Proper `aria-describedby` and `role="tooltip"` attributes
+- **Keyboard Support**: Tooltips show/hide with focus and blur events
+- **Screen Reader Support**: Content is announced to assistive technologies
+- **High Contrast**: Works well with high contrast modes and themes
+- **Focus Management**: Doesn't interfere with keyboard navigation flow
+
+## Best Practices
+
+1. **Keep content concise** - Tooltips should provide brief, helpful information
+2. **Use appropriate triggers** - Hover for quick info, click for complex content
+3. **Consider mobile users** - Click triggers work better on touch devices
+4. **Don't hide essential information** - Tooltips should enhance, not replace visible content
+5. **Test positioning** - Ensure tooltips don't get cut off by viewport edges
+6. **Use consistent styling** - Maintain visual consistency across your application
+7. **Provide keyboard access** - Ensure tooltip content is accessible via keyboard navigation

@@ -6,7 +6,6 @@ import { Steps } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
 import { FileTree } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
-import snippet from "./codes/introductionCode/introduction.txt?raw";
 
 ## What is Node.js?
 
@@ -283,7 +282,15 @@ Inside your project folder, create a file called index.js, which will serve as y
     <Code code={`npm install express`} lang="shell" />
   </TabItem>
   <TabItem label="Snippet">
-    <Code code={snippet} lang="js" title="index.js" />
+    <Code code={`const express = require('express');
+const app = express();
+
+// method can be GET,PUT,DELETE,POST,UPDATE
+app.get('/', (req, res) => res.send('Hello, Node.js World!'));
+
+const PORT = 3000;
+app.listen(PORT, () => console.log(\`Server running on http://localhost:\${PORT}\`));`} lang="js" title="index.js" />
+
   </TabItem>
 </Tabs>
 

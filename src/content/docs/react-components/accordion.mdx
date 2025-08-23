@@ -1,8 +1,18 @@
 ---
 title: Accordion
+description: A collapsible content component with smooth animations using Framer Motion and Tailwind CSS.
 ---
 
-The following accordion component is used for showing hidden information based on the collapse and expand. You can use it as a single component and style it extensively by yourself if you desire. It takes in an array of elements `items` with `title` and `content`. An example of usage is:
+The following accordion component provides an elegant way to display collapsible content sections. Built with Framer Motion for smooth animations and styled with Tailwind CSS, this component is perfect for FAQs, documentation sections, or any content that needs to be organized in an expandable format. Each accordion item can be toggled independently, making it ideal for organizing large amounts of information in a compact space.
+
+## Features
+
+- **Smooth Animations**: Powered by Framer Motion for fluid expand/collapse animations
+- **Multiple Items**: Support for arrays of accordion items with title and content
+- **Independent Toggle**: Each accordion item can be opened/closed independently
+- **Customizable Styling**: Full control over appearance with Tailwind CSS classes
+- **Keyboard Accessible**: Proper focus management and keyboard navigation
+- **Mobile Responsive**: Works seamlessly on all device sizes
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -25,10 +35,106 @@ import accordion from "./codes/Accordion/accordion.txt?raw";
   </TabItem>
 </Tabs>
 
-### Preview
+## Props
+
+| Prop            | Type                                         | Default    | Description                                           |
+| --------------- | -------------------------------------------- | ---------- | ----------------------------------------------------- |
+| `items`         | `Array<{title: string, content: ReactNode}>` | `required` | Array of accordion items with title and content       |
+| `className`     | `string`                                     | `''`       | Additional CSS classes for the accordion container    |
+| `itemClassName` | `string`                                     | `''`       | Additional CSS classes for individual accordion items |
+| `allowMultiple` | `boolean`                                    | `true`     | Whether multiple items can be open simultaneously     |
+
+## Usage Examples
+
+### Basic Accordion
+
+```jsx
+const faqItems = [
+  {
+    title: "What is React?",
+    content:
+      "React is a JavaScript library for building user interfaces, particularly web applications.",
+  },
+  {
+    title: "How do I install React?",
+    content:
+      "You can create a new React app using 'npx create-react-app my-app' or use Vite with 'npm create vite@latest my-app -- --template react'.",
+  },
+  {
+    title: "What are React Hooks?",
+    content:
+      "Hooks are functions that let you use state and other React features in functional components.",
+  },
+];
+
+<Accordion items={faqItems} />;
+```
+
+### Single Item Open Accordion
+
+```jsx
+const steps = [
+  {
+    title: "Step 1: Setup",
+    content:
+      "Install the necessary dependencies and set up your project structure.",
+  },
+  {
+    title: "Step 2: Configuration",
+    content: "Configure your build tools and environment variables.",
+  },
+  {
+    title: "Step 3: Development",
+    content: "Start developing your application with the configured setup.",
+  },
+];
+
+<Accordion items={steps} allowMultiple={false} className="max-w-2xl mx-auto" />;
+```
+
+### Custom Styled Accordion
+
+```jsx
+<Accordion
+  items={items}
+  className="bg-gray-50 rounded-lg p-4"
+  itemClassName="border-l-4 border-blue-500 bg-white"
+/>
+```
+
+## Preview
 
 <iframe
-  src="https://stackblitz.com/edit/vitejs-vite-ummale?embed=1&file=src%2Fcomponents%2FAccordion.jsx&hideNavigation=1&theme=dark&view=preview"
+  src="https://stackblitz.com/edit/react-accordion-component-demo?embed=1&file=src%2FAccordion.jsx&theme=dark&view=preview"
   style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
   sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
 />
+
+## Animation Details
+
+The accordion uses Framer Motion's `AnimatePresence` and `motion.div` to provide smooth animations:
+
+- **Height Animation**: Content smoothly expands and collapses with height transitions
+- **Opacity Transition**: Content fades in and out during state changes
+- **Icon Rotation**: Chevron icons rotate to indicate expanded/collapsed state
+- **Custom Timing**: Configurable animation duration and easing curves
+
+## Accessibility Features
+
+- **ARIA Attributes**: Proper `aria-expanded`, `aria-controls`, and `aria-labelledby` attributes
+- **Keyboard Navigation**: Full keyboard support with Enter/Space key activation
+- **Focus Management**: Proper focus indicators and logical tab order
+- **Screen Reader Support**: Descriptive labels and state announcements
+
+## Best Practices
+
+1. **Keep titles concise** - Use clear, descriptive titles for accordion items
+2. **Organize content logically** - Group related information together
+3. **Limit nesting** - Avoid deeply nested accordion structures
+4. **Use consistent styling** - Maintain visual consistency across all items
+5. **Test with screen readers** - Ensure accessibility compliance
+6. **Consider mobile experience** - Ensure touch targets are appropriately sized
+   src="https://stackblitz.com/edit/vitejs-vite-ummale?embed=1&file=src%2Fcomponents%2FAccordion.jsx&hideNavigation=1&theme=dark&view=preview"
+   style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+   sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+   />
