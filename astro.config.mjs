@@ -38,99 +38,76 @@ export default defineConfig({
           label: "React Components",
           items: [
             {
-              label: "Using Tailwind",
-              items: [
-                {
-                  label: "Accordion",
-                  slug: "react-components/tailwind/accordion",
-                },
-                {
-                  label: "Alerts",
-                  slug: "react-components/tailwind/alert",
-                },
-                {
-                  label: "Breadcrumb",
-                  slug: "react-components/tailwind/breadcrumb",
-                },
-                {
-                  label: "Button Group",
-                  slug: "react-components/tailwind/button-group",
-                },
-                {
-                  label: "Buttons",
-                  slug: "react-components/tailwind/buttons",
-                },
-                {
-                  label: "Chips",
-                  slug: "react-components/tailwind/chips",
-                },
-                {
-                  label: "Dropdowns",
-                  slug: "react-components/tailwind/dropdown",
-                },
-                {
-                  label: "Input",
-                  slug: "react-components/tailwind/input",
-                },
-                {
-                  label: "Lightbox",
-                  slug: "react-components/tailwind/lightbox",
-                },
-                {
-                  label: "Modal",
-                  slug: "react-components/tailwind/modal",
-                },
-                {
-                  label: "Navigation Bar",
-                  slug: "react-components/tailwind/navbar",
-                },
-                {
-                  label: "Popovers",
-                  slug: "react-components/tailwind/popover",
-                },
-                {
-                  label: "Social Buttons",
-                  slug: "react-components/tailwind/social-buttons",
-                },
-                {
-                  label: "Star Rating",
-                  slug: "react-components/tailwind/star-rating",
-                },
-                {
-                  label: "Tabs",
-                  slug: "react-components/tailwind/tabs",
-                },
-                {
-                  label: "Testimonials",
-                  slug: "react-components/tailwind/testimonials",
-                },
-                {
-                  label: "Toast",
-                  slug: "react-components/tailwind/toast",
-                },
-                {
-                  label: "Tooltip",
-                  slug: "react-components/tailwind/tooltip",
-                },
-              ],
+              label: "Accordion",
+              slug: "react-components/accordion",
             },
             {
-              label: "Using CSS Modules",
-              items: [
-                {
-                  label: "CSS Modules",
-                  slug: "react-components/css-modules/css-module",
-                },
-              ],
+              label: "Alerts",
+              slug: "react-components/alert",
             },
             {
-              label: "Advanced Components",
-              items: [
-                {
-                  label: "Advance",
-                  slug: "react-components/advance/advance",
-                },
-              ],
+              label: "Breadcrumb",
+              slug: "react-components/breadcrumb",
+            },
+            {
+              label: "Button Group",
+              slug: "react-components/button-group",
+            },
+            {
+              label: "Buttons",
+              slug: "react-components/buttons",
+            },
+            {
+              label: "Chips",
+              slug: "react-components/chips",
+            },
+            {
+              label: "Dropdowns",
+              slug: "react-components/dropdown",
+            },
+            {
+              label: "Input",
+              slug: "react-components/input",
+            },
+            {
+              label: "Lightbox",
+              slug: "react-components/lightbox",
+            },
+            {
+              label: "Modal",
+              slug: "react-components/modal",
+            },
+            {
+              label: "Navigation Bar",
+              slug: "react-components/navbar",
+            },
+            {
+              label: "Popovers",
+              slug: "react-components/popover",
+            },
+            {
+              label: "Social Buttons",
+              slug: "react-components/social-buttons",
+            },
+            {
+              label: "Star Rating",
+              slug: "react-components/star-rating",
+            },
+            {
+              label: "Tabs",
+              slug: "react-components/tabs",
+            },
+            {
+              label: "Testimonials",
+              slug: "react-components/testimonials",
+            },
+            {
+              label: "Toast",
+              slug: "react-components/toast",
+            },
+            {
+              label: "Tooltip",
+              slug: "react-components/tooltip",
             },
           ],
         },
