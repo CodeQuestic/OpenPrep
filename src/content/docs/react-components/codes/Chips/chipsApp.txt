@@ -1,0 +1,40 @@
+// App.jsx
+import React, { useState } from 'react';
+import Chip from './components/chip';
+
+const App = () => {
+  const handleDelete = (label) => { alert(`Deleted: ${label}`); };
+  return (
+    <div className="p-4">
+      <h1 className="text-xl mb-4">Chip Component Example</h1>
+      <Chip
+        label="Link Chip"
+        link="https://example.com" // Link behavior
+        variant="primary"
+        size="medium"
+        className="mr-2"
+      />
+      <Chip
+        label="Deletable Tag"
+        variant="secondary"
+        size="medium"
+        className="mr-2"
+        onDelete={() => handleDelete('Deletable Tag')}
+      />
+      <Chip
+        label="Non-Deletable Tag"
+        variant="danger"
+        size="medium"
+        className="mr-2"
+      />
+      <Chip
+        label="Info Chip"
+        variant="default"
+        size="small"
+        className="mr-2"
+      />
+    </div>
+  );
+};
+
+export default App;

@@ -1,0 +1,23 @@
+// App.jsx
+import React from 'react';
+import Accordion from './components/accordion';
+
+const App = () => {
+  const accordionItems = [
+    { title: 'Section 1', content: 'Content for section 1 goes here.' },
+    { title: 'Section 2', content: 'Content for section 2 goes here.' },
+    { title: 'Section 3', content: 'Content for section 3 goes here.' },
+  ];
+
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <Accordion
+        items={accordionItems}
+        titleClass="text-lg font-semibold hover:bg-gray-300"
+        contentClass="text-gray-700"
+        className="max-w-md w-48 bg-white border border-gray-300 shadow-lg"
+      />
+    </div>
+  );
+};
+export default App;

@@ -1,0 +1,60 @@
+// App.jsx
+import React, { useState } from 'react';
+import ToastContainer from './components/toast';
+
+const App = () => {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = ({ title, description, type, duration = 3000 }) => {
+    const newToast = { title, description, type, duration };
+    setToasts((prevToasts) => [...prevToasts, newToast]);
+
+    setTimeout(() => {
+      dismissToast(toasts.length);
+    }, duration);
+  };
+
+  const dismissToast = (index) => {
+    setToasts((prevToasts) => prevToasts.filter((_, i) => i !== index));
+  };
+
+  return (
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">Toast Notifications</h1>
+      <button
+        onClick={() => addToast({ title: 'Success!', description: 'This is a success message!', type: 'success' })}
+        className="mr-2 px-4 py-2 bg-green-600 text-white rounded"
+      >
+        Show Success Toast
+      </button>
+      <button
+        onClick={() => addToast({ title: 'Error!', description: 'This is an error message!', type: 'error' })}
+        className="mr-2 px-4 py-2 bg-red-600 text-white rounded"
+      >
+        Show Error Toast
+      </button>
+      <button
+        onClick={() => addToast({ title: 'Warning!', description: 'This is a warning message!', type: 'warning' })}
+        className="mr-2 px-4 py-2 bg-yellow-600 text-white rounded"
+      >
+        Show Warning Toast
+      </button>
+      <button
+        onClick={() => addToast({ title: 'Info!', description: 'This is an info message!', type: 'info' })}
+        className="px-4 py-2 bg-blue-600 text-white rounded"
+      >
+        Show Info Toast
+      </button>
+
+      <ToastContainer
+        toasts={toasts}
+        onDismiss={dismissToast}
+        position="topRight" // Choose from "topRight", "topLeft", "bottomRight", "bottomLeft"
+        size="medium" // Choose from "small", "medium", "large"
+        className="z-50"
+      />
+    </div>
+  );
+};
+
+export default App;

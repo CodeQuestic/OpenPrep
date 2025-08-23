@@ -1,0 +1,58 @@
+// Navbar.jsx
+import React, { useState } from 'react';
+
+const Navbar = ({ logo, children, className = '' }) => {
+  const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  const toggleMobileMenu = () => {
+    setMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  return (
+    <nav className={`bg-white shadow ${className}`}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center py-4">
+          <div className="flex items-center space-x-4">
+            {logo && (
+              <img src={logo} alt="Logo" className="h-8 w-auto" />
+            )}
+          </div>
+          <div className="hidden md:flex space-x-8">
+            {React.Children.map(children, (child) => (
+              <div className="flex">{child}</div>
+            ))}
+          </div>
+          <div className="md:hidden">
+            <button
+              onClick={toggleMobileMenu}
+              className="text-gray-700 focus:outline-none"
+            >
+              {/* Mobile menu button */}
+              <svg
+                className="w-6 h-6"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16m-7 6h7" />
+              </svg>
+            </button>
+          </div>
+        </div>
+      </div>
+      {/* Mobile Menu */}
+      {isMobileMenuOpen && (
+        <div className="md:hidden bg-white shadow">
+          <div className="flex flex-col space-y-4 p-4">
+            {React.Children.map(children, (child) => (
+              <div>{child}</div>
+            ))}
+          </div>
+        </div>
+      )}
+    </nav>
+  );
+};
+
+export default Navbar;

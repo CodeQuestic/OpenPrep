@@ -1,0 +1,34 @@
+---
+title: Breadcrumb
+---
+
+The following breadcrumb component is used to show the current location in a hierarchy. It is a single component and you can style both the items within the breadcrumb as well as the entire component. It takes in an array of `breadcrumbItems` and you may pass in icons as well to have a nicer look.
+
+import { Card } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+import { Code } from "@astrojs/starlight/components";
+
+import breadcrumbApp from "./codes/Breadcrumb/breadcrumbApp.txt?raw";
+import breadcrumb from "./codes/Breadcrumb/breadcrumb.txt?raw";
+
+<Tabs>
+  <TabItem label="Dependencies">
+    Install the following libraries. Assuming you have [Tailwind
+    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
+    <Code code={`npm install react-router-dom lucide-react`} lang="shell" />
+  </TabItem>
+  <TabItem label="Usage">
+    <Code code={breadcrumbApp} lang="jsx" title="App.jsx" />
+  </TabItem>
+  <TabItem label="Component">
+    <Code code={breadcrumb} lang="jsx" title="breadcrumb.jsx" />
+  </TabItem>
+</Tabs>
+
+### Preview
+
+<iframe
+  src="https://stackblitz.com/edit/vitejs-vite-qt8lwg?embed=1&file=src%2Fcomponents%2FBreadcrumb.jsx&theme=dark&view=preview"
+  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+/>
