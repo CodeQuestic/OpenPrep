@@ -1,0 +1,104 @@
+---
+title: Streams
+---
+
+Streams in Node.js are powerful abstractions for handling data that can be read from or written to incrementally, rather than all at once. They are highly efficient for working with large files or data, enabling chunked data handling which conserves memory. Node.js utilizes streams extensively for input/output (I/O) operations, such as files, network communications, and data transfer.
+
+Streams operate as a sequence of data chunks, allowing a continuous and asynchronous flow of data processing.
+
+---
+
+## Types of Streams
+
+---
+
+Node.js provides four types of streams, each designed for different data handling purposes:
+
+### 1. Readable Streams
+
+Readable streams are used for reading data. Examples include reading from a file or receiving data from an HTTP request.
+
+- **Example**: `fs.createReadStream()` for reading files.
+
+### 2. Writable Streams
+
+Writable streams allow writing data to a destination, like a file or HTTP response.
+
+- **Example**: `fs.createWriteStream()` for writing data to files.
+
+### 3. Duplex Streams
+
+Duplex streams are both readable and writable, supporting bidirectional data flow. They’re useful for sockets and network connections.
+
+- **Example**: `net.Socket` (TCP socket connection).
+
+### 4. Transform Streams
+
+Transform streams are a special type of duplex stream where the output is derived from the input. They’re often used to modify data on the fly.
+
+- **Example**: `zlib.createGzip()` for compressing data.
+
+## Stream Methods and Events
+
+---
+
+Streams come with several methods and events that aid in managing data flow effectively:
+
+### Methods
+
+- **`readable.pipe(destination)`**: Pipes data from a readable stream to a writable stream. This is often used to connect multiple streams together.
+- **`stream.write(chunk)`**: Writes a chunk of data to a writable stream.
+- **`stream.end()`**: Signals the end of writing data to a writable stream.
+- **`stream.read(size)`**: Reads data from a readable stream, with an optional `size` argument.
+
+### Events
+
+- **`data`**: Triggered when a chunk of data is available for reading.
+- **`end`**: Fired when no more data is available for reading from the stream.
+- **`error`**: Emitted if an error occurs during the data flow.
+- **`finish`**: Emitted when all data has been flushed to a writable stream.
+
+## Piping and Chaining Streams
+
+---
+
+### Piping
+
+Piping is a core feature of streams that allows directing data from one stream into another seamlessly. It’s commonly used to read from a file, compress it, and write it to another file.
+
+```javascript
+import fs from "fs";
+import zlib from "zlib";
+
+const readStream = fs.createReadStream("input.txt");
+const writeStream = fs.createWriteStream("input.txt.gz");
+const gzip = zlib.createGzip();
+
+readStream.pipe(gzip).pipe(writeStream);
+```
+
+### Chaining
+
+Chaining streams is particularly useful when multiple transform operations are needed. For instance, data could be compressed and then encrypted before being saved to a file. Chaining helps data move smoothly from one operation to another.
+
+## Real-World Examples and Best Practices
+
+---
+
+### Real-World Examples
+
+- **File Compression**: Streams are ideal for compressing large files, which conserves storage space and improves efficiency.
+- **HTTP Requests**: Stream server responses directly to clients to save memory and improve response times.
+- **Data Processing Pipelines**: Streams work well with large data flows, such as processing logs, JSON data, or files from APIs, by handling the data in smaller, manageable chunks.
+- **Data Transformations**: Transform streams can modify data on-the-fly, making them suitable for tasks like image resizing or real-time encryption.
+
+### Best Practices
+
+- **Error Handling**: Always add error handlers to streams to manage potential issues gracefully.
+- **Backpressure Management**: Use methods like `pause()` and `resume()` to control the data flow and prevent memory overload when the data source produces faster than the destination can process.
+- **Piping over Manual Event Handling**: Instead of manually handling `data` and `end` events, use `.pipe()` to connect streams whenever possible.
+- **Optimize for Performance**: For large data sets, process data in chunks using streams to avoid loading everything into memory at once.
+
+---
+
+This section covers practical uses of Node.js streams and recommended practices to ensure efficient and reliable data handling.

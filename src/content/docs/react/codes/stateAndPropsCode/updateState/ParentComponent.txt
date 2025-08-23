@@ -1,0 +1,21 @@
+import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+  const [count, setCount] = useState(0);
+
+  // Function to increment the count, passed down to the child component
+  const incrementCount = () => {
+    setCount(prevCount => prevCount + 1);
+  };
+
+  return (
+    <div>
+      <h1>Parent Component</h1>
+      <p>Current Count: {count}</p>
+      <ChildComponent incrementCount={incrementCount} />
+    </div>
+  );
+}
+
+export default ParentComponent;

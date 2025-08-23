@@ -1,0 +1,12 @@
+function App() {
+    const [a, setA] = useState(2);
+    const [b, setB] = useState(3);
+
+    return (
+        <div>
+            <ExpensiveComponent a={a} b={b} />
+            <button onClick={() => setA(a + 1)}>Increment A</button>
+            <button onClick={() => setB(b + 1)}>Increment B</button>
+        </div>
+    );
+}
