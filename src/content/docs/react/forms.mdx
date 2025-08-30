@@ -41,31 +41,31 @@ npm install yup
       code={`import React, { useState } from 'react';
 
 function ControlledInput() {
-const [name, setName] = useState('');
+  const [name, setName] = useState('');
 
-const handleChange = (event) => {
-setName(event.target.value);
-};
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
 
-const handleSubmit = (event) => {
-event.preventDefault();
-alert(\`Hello, \${name}!\`);
-};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(\`Hello, \${name}!\`);
+  };
 
-return (
-<form onSubmit={handleSubmit}>
-<label>
-Name:
-<input
+  return (
+    <form onSubmit={handleSubmit}>
+      <label>
+        Name:
+        <input
           type="text"
           value={name}
           onChange={handleChange}
           placeholder="Enter your name"
         />
-</label>
-<button type="submit">Submit</button>
-</form>
-);
+      </label>
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 
 export default ControlledInput;`}
@@ -80,26 +80,26 @@ export default ControlledInput;`}
       code={`import React, { useState } from 'react';
 
 function ControlledSelect() {
-const [selectedOption, setSelectedOption] = useState('apple');
+  const [selectedOption, setSelectedOption] = useState('apple');
 
-const handleChange = (event) => {
-setSelectedOption(event.target.value);
-};
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
-return (
-<form>
-<label>
-Choose a fruit:
-<select value={selectedOption} onChange={handleChange}>
-<option value="apple">Apple</option>
-<option value="banana">Banana</option>
-<option value="orange">Orange</option>
-<option value="grape">Grape</option>
-</select>
-</label>
-<p>You selected: {selectedOption}</p>
-</form>
-);
+  return (
+    <form>
+      <label>
+        Choose a fruit:
+        <select value={selectedOption} onChange={handleChange}>
+          <option value="apple">Apple</option>
+          <option value="banana">Banana</option>
+          <option value="orange">Orange</option>
+          <option value="grape">Grape</option>
+        </select>
+      </label>
+      <p>You selected: {selectedOption}</p>
+    </form>
+  );
 }
 
 export default ControlledSelect;`}
@@ -114,26 +114,26 @@ export default ControlledSelect;`}
       code={`import React, { useState } from 'react';
 
 function ControlledTextarea() {
-const [text, setText] = useState('Write your message here...');
+  const [text, setText] = useState('Write your message here...');
 
-const handleChange = (event) => {
-setText(event.target.value);
-};
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
 
-return (
-<form>
-<label>
-Message:
-<textarea
+  return (
+    <form>
+      <label>
+        Message:
+        <textarea
           value={text}
           onChange={handleChange}
           rows="4"
           cols="50"
         />
-</label>
-<p>Character count: {text.length}</p>
-</form>
-);
+      </label>
+      <p>Character count: {text.length}</p>
+    </form>
+  );
 }
 
 export default ControlledTextarea;`}
@@ -154,75 +154,75 @@ For forms with multiple inputs, you can use a single state object to manage all 
       code={`import React, { useState } from 'react';
 
 function MultipleInputForm() {
-const [formData, setFormData] = useState({
-firstName: '',
-lastName: '',
-email: '',
-subscribe: false
-});
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subscribe: false
+  });
 
-const handleChange = (event) => {
-const { name, value, type, checked } = event.target;
-setFormData(prevData => ({
-...prevData,
-[name]: type === 'checkbox' ? checked : value
-}));
-};
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
 
-const handleSubmit = (event) => {
-event.preventDefault();
-console.log('Form Data:', formData);
-};
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Form Data:', formData);
+  };
 
-return (
-<form onSubmit={handleSubmit}>
-<div>
-<label>
-First Name:
-<input
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          First Name:
+          <input
             type="text"
             name="firstName"
             value={formData.firstName}
             onChange={handleChange}
           />
-</label>
-</div>
-<div>
-<label>
-Last Name:
-<input
+        </label>
+      </div>
+      <div>
+        <label>
+          Last Name:
+          <input
             type="text"
             name="lastName"
             value={formData.lastName}
             onChange={handleChange}
           />
-</label>
-</div>
-<div>
-<label>
-Email:
-<input
+        </label>
+      </div>
+      <div>
+        <label>
+          Email:
+          <input
             type="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
           />
-</label>
-</div>
-<div>
-<label>
-<input
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
             type="checkbox"
             name="subscribe"
             checked={formData.subscribe}
             onChange={handleChange}
           />
-Subscribe to newsletter
-</label>
-</div>
-<button type="submit">Submit</button>
-</form>
-);
+          Subscribe to newsletter
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 
 export default MultipleInputForm;`}
@@ -243,12 +243,12 @@ Uncontrolled components store their own state internally and use refs to access 
       code={`import React, { useRef } from 'react';
 
 function UncontrolledForm() {
-const nameRef = useRef(null);
-const emailRef = useRef(null);
-const messageRef = useRef(null);
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const messageRef = useRef(null);
 
-const handleSubmit = (event) => {
-event.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
     const formData = {
       name: nameRef.current.value,
@@ -262,47 +262,46 @@ event.preventDefault();
     nameRef.current.value = '';
     emailRef.current.value = '';
     messageRef.current.value = '';
+  };
 
-};
-
-return (
-<form onSubmit={handleSubmit}>
-<div>
-<label>
-Name:
-<input
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          Name:
+          <input
             type="text"
             ref={nameRef}
             defaultValue=""
             placeholder="Enter your name"
           />
-</label>
-</div>
-<div>
-<label>
-Email:
-<input
+        </label>
+      </div>
+      <div>
+        <label>
+          Email:
+          <input
             type="email"
             ref={emailRef}
             defaultValue=""
             placeholder="Enter your email"
           />
-</label>
-</div>
-<div>
-<label>
-Message:
-<textarea
+        </label>
+      </div>
+      <div>
+        <label>
+          Message:
+          <textarea
             ref={messageRef}
             defaultValue=""
             rows="4"
             placeholder="Enter your message"
           />
-</label>
-</div>
-<button type="submit">Submit</button>
-</form>
-);
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
 }
 
 export default UncontrolledForm;`}
@@ -325,15 +324,15 @@ Form validation ensures data integrity and provides user feedback. Here are diff
       code={`import React, { useState } from 'react';
 
 function BasicValidationForm() {
-const [formData, setFormData] = useState({
-email: '',
-password: '',
-confirmPassword: ''
-});
-const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState({});
 
-const validateForm = () => {
-const newErrors = {};
+  const validateForm = () => {
+    const newErrors = {};
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -357,15 +356,14 @@ const newErrors = {};
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
 
-};
-
-const handleChange = (event) => {
-const { name, value } = event.target;
-setFormData(prev => ({
-...prev,
-[name]: value
-}));
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
 
     // Clear error when user starts typing
     if (errors[name]) {
@@ -374,34 +372,32 @@ setFormData(prev => ({
         [name]: ''
       }));
     }
+  };
 
-};
-
-const handleSubmit = (event) => {
-event.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
     if (validateForm()) {
       console.log('Form is valid:', formData);
       alert('Form submitted successfully!');
     }
+  };
 
-};
-
-return (
-<form onSubmit={handleSubmit}>
-<div>
-<label>
-Email:
-<input
-type="email"
-name="email"
-value={formData.email}
-onChange={handleChange}
-style={{ borderColor: errors.email ? 'red' : '' }}
-/>
-</label>
-{errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
-</div>
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            style={{ borderColor: errors.email ? 'red' : '' }}
+          />
+        </label>
+        {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
+      </div>
 
       <div>
         <label>
@@ -433,8 +429,7 @@ style={{ borderColor: errors.email ? 'red' : '' }}
 
       <button type="submit">Register</button>
     </form>
-
-);
+  );
 }
 
 export default BasicValidationForm;`}
@@ -458,42 +453,43 @@ Formik is a popular library that simplifies form management in React:
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 function FormikForm() {
-return (
-<div>
-<h2>Sign Up Form</h2>
-<Formik
-initialValues={{
+  return (
+    <div>
+      <h2>Sign Up Form</h2>
+      <Formik
+        initialValues={{
           firstName: '',
           lastName: '',
           email: '',
         }}
-validate={values => {
-const errors = {};
-if (!values.email) {
-errors.email = 'Required';
-} else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
-errors.email = 'Invalid email address';
-}
-if (!values.firstName) {
-errors.firstName = 'Required';
-}
-if (!values.lastName) {
-errors.lastName = 'Required';
-}
-return errors;
-}}
-onSubmit={(values, { setSubmitting }) => {
-setTimeout(() => {
-alert(JSON.stringify(values, null, 2));
-setSubmitting(false);
-}, 400);
-}} >
-<Form>
-<div>
-<label htmlFor="firstName">First Name</label>
-<Field name="firstName" type="text" />
-<ErrorMessage name="firstName" component="div" style={{ color: 'red' }} />
-</div>
+        validate={values => {
+          const errors = {};
+          if (!values.email) {
+            errors.email = 'Required';
+          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+            errors.email = 'Invalid email address';
+          }
+          if (!values.firstName) {
+            errors.firstName = 'Required';
+          }
+          if (!values.lastName) {
+            errors.lastName = 'Required';
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setTimeout(() => {
+            alert(JSON.stringify(values, null, 2));
+            setSubmitting(false);
+          }, 400);
+        }}
+      >
+        <Form>
+          <div>
+            <label htmlFor="firstName">First Name</label>
+            <Field name="firstName" type="text" />
+            <ErrorMessage name="firstName" component="div" style={{ color: 'red' }} />
+          </div>
 
           <div>
             <label htmlFor="lastName">Last Name</label>
@@ -511,8 +507,7 @@ setSubmitting(false);
         </Form>
       </Formik>
     </div>
-
-);
+  );
 }
 
 export default FormikForm;`}
@@ -534,38 +529,38 @@ React Hook Form is a performant library with minimal re-renders:
 import { useForm } from 'react-hook-form';
 
 function ReactHookFormExample() {
-const {
-register,
-handleSubmit,
-watch,
-formState: { errors },
-} = useForm();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-const onSubmit = (data) => {
-console.log('Form Data:', data);
-alert('Form submitted successfully!');
-};
+  const onSubmit = (data) => {
+    console.log('Form Data:', data);
+    alert('Form submitted successfully!');
+  };
 
-const watchedPassword = watch('password');
+  const watchedPassword = watch('password');
 
-return (
-<form onSubmit={handleSubmit(onSubmit)}>
-<div>
-<label>
-First Name:
-<input
-type="text"
-{...register('firstName', {
-required: 'First name is required',
-maxLength: {
-value: 20,
-message: 'First name cannot exceed 20 characters'
-}
-})}
-/>
-</label>
-{errors.firstName && <span style={{ color: 'red' }}>{errors.firstName.message}</span>}
-</div>
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label>
+          First Name:
+          <input
+            type="text"
+            {...register('firstName', {
+              required: 'First name is required',
+              maxLength: {
+                value: 20,
+                message: 'First name cannot exceed 20 characters'
+              }
+            })}
+          />
+        </label>
+        {errors.firstName && <span style={{ color: 'red' }}>{errors.firstName.message}</span>}
+      </div>
 
       <div>
         <label>
@@ -618,8 +613,7 @@ message: 'First name cannot exceed 20 characters'
 
       <button type="submit">Submit</button>
     </form>
-
-);
+  );
 }
 
 export default ReactHookFormExample;`}

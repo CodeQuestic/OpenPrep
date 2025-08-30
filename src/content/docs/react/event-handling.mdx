@@ -22,11 +22,11 @@ React supports several standard events that you can handle. Here are some common
     console.log('Button clicked!');
   };
 
-return <button onClick={handleClick}>Click me</button>;
+  return <button onClick={handleClick}>Click me</button>;
 }`}
-lang="jsx"
-title="onClick Example"
-/>
+      lang="jsx"
+      title="onClick Example"
+    />
 
   </TabItem>
    <TabItem label="onChange">
@@ -38,11 +38,11 @@ title="onClick Example"
     setValue(event.target.value);
   };
 
-return <input type="text" value={value} onChange={handleChange} />;
+  return <input type="text" value={value} onChange={handleChange} />;
 }`}
-lang="jsx"
-title="onChange Example"
-/>
+      lang="jsx"
+      title="onChange Example"
+    />
 
   </TabItem>
    <TabItem label="onSubmit">
@@ -53,16 +53,16 @@ title="onChange Example"
     console.log('Form submitted!');
   };
 
-return (
-<form onSubmit={handleSubmit}>
-<input type="text" />
-<button type="submit">Submit</button>
-</form>
-);
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="text" />
+      <button type="submit">Submit</button>
+    </form>
+  );
 }`}
-lang="jsx"
-title="onSubmit Example"
-/>
+      lang="jsx"
+      title="onSubmit Example"
+    />
 
   </TabItem>
    <TabItem label="KeyEvents">
@@ -74,11 +74,11 @@ title="onSubmit Example"
     }
   };
 
-return <input onKeyDown={handleKeyDown} placeholder="Press Enter" />;
+  return <input onKeyDown={handleKeyDown} placeholder="Press Enter" />;
 }`}
-lang="jsx"
-title="onKeyDown Example"
-/>
+      lang="jsx"
+      title="onKeyDown Example"
+    />
 
   </TabItem>
   <TabItem label="onFocus&onBlur">
@@ -86,24 +86,24 @@ title="onKeyDown Example"
       code={`function FocusHandler() {
   const [isFocused, setIsFocused] = useState(false);
 
-const handleFocus = () => setIsFocused(true);
-const handleBlur = () => setIsFocused(false);
+  const handleFocus = () => setIsFocused(true);
+  const handleBlur = () => setIsFocused(false);
 
-return (
-<div>
-<input
-onFocus={handleFocus}
-onBlur={handleBlur}
-placeholder="Focus on me"
-style={{ borderColor: isFocused ? 'blue' : 'gray' }}
-/>
-<p>{isFocused ? 'Input is focused' : 'Input is not focused'}</p>
-</div>
-);
+  return (
+    <div>
+      <input
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        placeholder="Focus on me"
+        style={{ borderColor: isFocused ? 'blue' : 'gray' }}
+      />
+      <p>{isFocused ? 'Input is focused' : 'Input is not focused'}</p>
+    </div>
+  );
 }`}
-lang="jsx"
-title="onFocus & onBlur Example"
-/>
+      lang="jsx"
+      title="onFocus & onBlur Example"
+    />
 
   </TabItem>
   <TabItem label="MouseEvents">
@@ -111,21 +111,22 @@ title="onFocus & onBlur Example"
       code={`function MouseHandler() {
   const [position, setPosition] = useState({ x: 0, y: 0 });
 
-const handleMouseMove = (event) => {
-setPosition({ x: event.clientX, y: event.clientY });
-};
+  const handleMouseMove = (event) => {
+    setPosition({ x: event.clientX, y: event.clientY });
+  };
 
-return (
-<div
-onMouseMove={handleMouseMove}
-style={{ height: '200px', border: '1px solid black' }} >
-<p>Mouse position: ({position.x}, {position.y})</p>
-</div>
-);
+  return (
+    <div
+      onMouseMove={handleMouseMove}
+      style={{ height: '200px', border: '1px solid black' }}
+    >
+      <p>Mouse position: ({position.x}, {position.y})</p>
+    </div>
+  );
 }`}
-lang="jsx"
-title="onMouseMove Example"
-/>
+      lang="jsx"
+      title="onMouseMove Example"
+    />
 
   </TabItem>
   <TabItem label="onScroll">
@@ -133,20 +134,20 @@ title="onMouseMove Example"
       code={`function ScrollHandler() {
   const [scrollY, setScrollY] = useState(0);
 
-const handleScroll = () => {
-setScrollY(window.scrollY);
-};
+  const handleScroll = () => {
+    setScrollY(window.scrollY);
+  };
 
-useEffect(() => {
-window.addEventListener('scroll', handleScroll);
-return () => window.removeEventListener('scroll', handleScroll);
-}, []);
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
-return <div>Scroll position: {scrollY}</div>;
+  return <div>Scroll position: {scrollY}</div>;
 }`}
-lang="jsx"
-title="onScroll Example"
-/>
+      lang="jsx"
+      title="onScroll Example"
+    />
 
   </TabItem>
 </Tabs>
@@ -167,22 +168,22 @@ Event handling differs slightly between class and functional components:
     this.handleClick = this.handleClick.bind(this);
   }
 
-handleClick() {
-this.setState({ count: this.state.count + 1 });
-}
+  handleClick() {
+    this.setState({ count: this.state.count + 1 });
+  }
 
-render() {
-return (
-<div>
-<p>Count: {this.state.count}</p>
-<button onClick={this.handleClick}>Increment</button>
-</div>
-);
-}
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.handleClick}>Increment</button>
+      </div>
+    );
+  }
 }`}
-lang="jsx"
-title="Class Component Event Handling"
-/>
+      lang="jsx"
+      title="Class Component Event Handling"
+    />
 
   </TabItem>
   <TabItem label="FunctionalComponent">
@@ -190,20 +191,20 @@ title="Class Component Event Handling"
       code={`function FunctionalComponent() {
   const [count, setCount] = useState(0);
 
-const handleClick = () => {
-setCount(count + 1);
-};
+  const handleClick = () => {
+    setCount(count + 1);
+  };
 
-return (
-<div>
-<p>Count: {count}</p>
-<button onClick={handleClick}>Increment</button>
-</div>
-);
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={handleClick}>Increment</button>
+    </div>
+  );
 }`}
-lang="jsx"
-title="Functional Component Event Handling"
-/>
+      lang="jsx"
+      title="Functional Component Event Handling"
+    />
 
   </TabItem>
 </Tabs>
@@ -229,15 +230,15 @@ React wraps native events in `SyntheticEvent` objects to provide consistent beha
     event.stopPropagation();
   };
 
-return (
-<div onClick={handleEvent}>
-<button onClick={handleEvent}>Click me</button>
-</div>
-);
+  return (
+    <div onClick={handleEvent}>
+      <button onClick={handleEvent}>Click me</button>
+    </div>
+  );
 }`}
-lang="jsx"
-title="SyntheticEvent Properties"
-/>
+      lang="jsx"
+      title="SyntheticEvent Properties"
+    />
 
   </TabItem>
   <TabItem label="CustomData">
@@ -248,20 +249,20 @@ title="SyntheticEvent Properties"
     console.log('Event:', event.type);
   };
 
-return (
-<div>
-<button onClick={(e) => handleClick(e, 'Button 1')}>
-Button 1
-</button>
-<button onClick={(e) => handleClick(e, 'Button 2')}>
-Button 2
-</button>
-</div>
-);
+  return (
+    <div>
+      <button onClick={(e) => handleClick(e, 'Button 1')}>
+        Button 1
+      </button>
+      <button onClick={(e) => handleClick(e, 'Button 2')}>
+        Button 2
+      </button>
+    </div>
+  );
 }`}
-lang="jsx"
-title="Passing Custom Data"
-/>
+      lang="jsx"
+      title="Passing Custom Data"
+    />
 
   </TabItem>
 </Tabs>
@@ -299,9 +300,9 @@ React uses synthetic events to wrap native DOM events, providing a consistent in
       code={`import React from 'react';
 
 function PoolingExample() {
-const handleClick = (event) => {
-// Access event properties immediately
-console.log('Immediate access:', event.type);
+  const handleClick = (event) => {
+    // Access event properties immediately
+    console.log('Immediate access:', event.type);
 
     // For async operations, persist the event
     event.persist();
@@ -311,14 +312,13 @@ console.log('Immediate access:', event.type);
       console.log('Async access:', event.type);
       console.log('Target:', event.target.tagName);
     }, 1000);
+  };
 
-};
-
-return (
-<button onClick={handleClick}>
-Click me to see event pooling in action
-</button>
-);
+  return (
+    <button onClick={handleClick}>
+      Click me to see event pooling in action
+    </button>
+  );
 }
 
 export default PoolingExample;`}
@@ -344,27 +344,27 @@ There are several ways to pass arguments to event handlers:
       code={`function ListComponent() {
   const items = ['Apple', 'Banana', 'Cherry'];
 
-const handleItemClick = (item, index, event) => {
-console.log('Clicked item:', item);
-console.log('At index:', index);
-console.log('Event:', event.type);
-};
+  const handleItemClick = (item, index, event) => {
+    console.log('Clicked item:', item);
+    console.log('At index:', index);
+    console.log('Event:', event.type);
+  };
 
-return (
-<ul>
-{items.map((item, index) => (
-<li key={index}>
-<button onClick={(e) => handleItemClick(item, index, e)}>
-{item}
-</button>
-</li>
-))}
-</ul>
-);
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>
+          <button onClick={(e) => handleItemClick(item, index, e)}>
+            {item}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
 }`}
-lang="jsx"
-title="Arrow Function Approach"
-/>
+      lang="jsx"
+      title="Arrow Function Approach"
+    />
 
   </TabItem>
   <TabItem label="BindMethod">
@@ -376,8 +376,8 @@ title="Arrow Function Approach"
     console.log('Event:', event.type);
   };
 
-render() {
-const items = ['Apple', 'Banana', 'Cherry'];
+  render() {
+    const items = ['Apple', 'Banana', 'Cherry'];
 
     return (
       <ul>
@@ -390,12 +390,11 @@ const items = ['Apple', 'Banana', 'Cherry'];
         ))}
       </ul>
     );
-
-}
+  }
 }`}
-lang="jsx"
-title="Bind Method Approach"
-/>
+      lang="jsx"
+      title="Bind Method Approach"
+    />
 
   </TabItem>
   <TabItem label="DataAttributes">
@@ -403,35 +402,34 @@ title="Bind Method Approach"
       code={`function ListComponent() {
   const items = ['Apple', 'Banana', 'Cherry'];
 
-const handleItemClick = (event) => {
-const item = event.target.dataset.item;
-const index = event.target.dataset.index;
+  const handleItemClick = (event) => {
+    const item = event.target.dataset.item;
+    const index = event.target.dataset.index;
 
     console.log('Clicked item:', item);
     console.log('At index:', index);
     console.log('Event:', event.type);
+  };
 
-};
-
-return (
-<ul>
-{items.map((item, index) => (
-<li key={index}>
-<button 
+  return (
+    <ul>
+      {items.map((item, index) => (
+        <li key={index}>
+          <button 
             data-item={item} 
             data-index={index} 
             onClick={handleItemClick}
           >
-{item}
-</button>
-</li>
-))}
-</ul>
-);
+            {item}
+          </button>
+        </li>
+      ))}
+    </ul>
+  );
 }`}
-lang="jsx"
-title="Data Attributes Approach"
-/>
+      lang="jsx"
+      title="Data Attributes Approach"
+    />
 
   </TabItem>
 </Tabs>
@@ -467,18 +465,18 @@ function GoodExample() {
 
 // ❌ Poor: New function created on each render
 function BadExample() {
-const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
 
-return (
-<div>
-<ChildComponent onClick={() => setCount(count + 1)} />
-<p>Count: {count}</p>
-</div>
-);
+  return (
+    <div>
+      <ChildComponent onClick={() => setCount(count + 1)} />
+      <p>Count: {count}</p>
+    </div>
+  );
 }`}
-lang="jsx"
-title="Performance Considerations"
-/>
+      lang="jsx"
+      title="Performance Considerations"
+    />
 
   </TabItem>
   <TabItem label="Accessibility">
