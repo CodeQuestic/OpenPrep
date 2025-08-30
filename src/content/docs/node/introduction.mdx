@@ -9,7 +9,7 @@ import { Tabs, TabItem } from "@astrojs/starlight/components";
 
 ## What is Node.js?
 
-Node.js is an open-source, cross-platform JavaScript runtime environment built on Chrome's V8 JavaScript engine. It enables developers to use JavaScript for server-side scripting—running scripts on the server to produce dynamic web page content before the page is sent to the user's web browser.
+Node.js is an open-source, cross-platform JavaScript runtime environment built on Chrome's V8 JavaScript engine. It enables developers to use JavaScript for server-side scripting, running scripts on the server to produce dynamic web page content before the page is sent to the user's web browser.
 
 Traditionally, JavaScript was used only in the browser, but Node.js extends the capabilities of JavaScript beyond the browser, making it suitable for building scalable, high-performance backend services like APIs, web servers, and microservices.
 
@@ -55,7 +55,7 @@ Node.js embraces an **asynchronous programming model**, where tasks that might t
 
 Node.js shines in various real-world applications due to its efficient, non-blocking architecture. Here are some scenarios where Node.js is particularly beneficial:
 
-### 1. Web Servers and REST API's
+### 1. Web Servers and REST APIs
 
 Node.js is widely used to create **web servers** and **RESTful APIs** that handle multiple requests simultaneously. Its ability to process many client requests without creating multiple threads makes it an ideal choice for **high-traffic websites** and **API-driven applications**. For example:
 
@@ -116,7 +116,7 @@ When choosing a backend technology, it's important to consider the specific requ
 - **Performance**: Python's performance, especially when handling a large number of concurrent connections, is generally slower than Node.js due to Python's synchronous nature.
 - **Concurrency**: Python's **Global Interpreter Lock (GIL)** limits its ability to execute multiple threads at once, which can be a bottleneck for highly concurrent applications.
 
-#### When to Choose Node.js Over Python?
+#### When to Choose Node.js Over Python
 
 If you're building an I/O-bound, real-time application like a chat platform, gaming server, or API gateway, Node.js is often the better choice due to its event-driven, non-blocking architecture. However, for data-driven tasks, machine learning, or scientific computing, Python is a stronger contender.
 
@@ -181,54 +181,60 @@ If you’re developing an application that requires high concurrency, low-latenc
 
     </Steps>
 
-## Code Editor:
+## Code Editor
 
-        **Visual Studio Code (VS Code)**:
-            - Lightweight and feature-rich.
-            - Install it from the [official website](https://code.visualstudio.com/).
+**Visual Studio Code (VS Code)**:
 
-        **Recommended extensions**:
-            - **Node.js Extension Pack**: Adds debugging, IntelliSense, and tools for Node.js.
-            - **ESLint**: Helps in identifying and fixing coding errors.
-            - **Prettier**: Automatically formats your code.
+- Lightweight and feature-rich.
+- Install it from the [official website](https://code.visualstudio.com/).
+
+**Recommended extensions**:
+
+- **Node.js Extension Pack**: Adds debugging, IntelliSense, and tools for Node.js.
+- **ESLint**: Helps in identifying and fixing coding errors.
+- **Prettier**: Automatically formats your code.
 
 ## Version Control: Git
 
-    Version control helps you manage code changes effectively.
-        - Install Git from the official website.
-        - Set up Git in your project directory:
-         ```bash
-        git init
-        git config --global user.name "Your Name"
-        git config --global user.email "your.email@example.com"
-        ```
+Version control helps you manage code changes effectively.
+
+- Install Git from the official website.
+- Set up Git in your project directory:
+
+```bash
+git init
+git config --global user.name "Your Name"
+git config --global user.email "your.email@example.com"
+```
 
 ## Project Setup
 
-    Start by creating a new Node.js project:
+Start by creating a new Node.js project:
 
-    <Steps>
+<Steps>
 
-    1. **Download Node.js**:
+1. **Create a project directory**:
 
-        ```bash
-        mkdir my-node-project
-        cd my-node-project
-        ```
-    2. **Initialize the project**:
+   ```bash
+   mkdir my-node-project
+   cd my-node-project
+   ```
 
-        ```bash
-        npm init -y
-        ```
+2. **Initialize the project**:
 
-    </Steps>
+   ```bash
+   npm init -y
+   ```
+
+</Steps>
 
 ## Useful NPM Packages
 
-    Some essential packages to install right away:
-        - Express: A minimalist web framework to install use **npm install express**.
-        - Nodemon: Automatically restarts the server when you make changes use **npm install --save-dev nodemon**.
-        - dotenv: Manages environment variables **npm install dotenv**.
+Some essential packages to install right away:
+
+- **Express**: A minimalist web framework. To install use `npm install express`.
+- **Nodemon**: Automatically restarts the server when you make changes. Use `npm install --save-dev nodemon`.
+- **dotenv**: Manages environment variables. Use `npm install dotenv`.
 
 ## Folder Structure
 
@@ -236,17 +242,17 @@ A good folder structure keeps your code organized.
 
 <FileTree>
 
-- my-node-project
-  - node_modules Contains all project dependencies.
-    - .bin
+- my-node-project/
+  - node_modules/ Contains all project dependencies.
+    - .bin/
     - ... Other dependencies.
-  - config
+  - config/
     - db.js Configures and connects to the database.
-  - controllers
+  - controllers/
     - userController.js Contains API logic & operations.
-  - models
+  - models/
     - userModel.js Defines the schema and model for Database.
-  - routes
+  - routes/
     - route.js Defines and manages all application routes.
   - .env Stores environment variables like API keys.
   - index.js Main server entry point.
@@ -272,9 +278,9 @@ A good folder structure keeps your code organized.
 console.log("Hello, Node.js!");
 ```
 
-Inside your project folder, create a file called index.js, which will serve as your main application file. To set up a basic Express server, start by requiring the Express module and configuring a simple server. In the index.js file, import Express and define a route for the homepage that responds with a message. Finally, set the server to listen on a specified port, such as 3000, and log a message indicating that the server is running. This establishes the foundation for your Node.js application using Express.
+Inside your project folder, create a file called `index.js`, which will serve as your main application file. To set up a basic Express server, start by requiring the Express module and configuring a simple server. In the `index.js` file, import Express and define a route for the homepage that responds with a message. Finally, set the server to listen on a specified port, such as 3000, and log a message indicating that the server is running. This establishes the foundation for your Node.js application using Express.
 
-### First Node.js Project with express
+### First Node.js Project with Express
 
 <Tabs>
   <TabItem label="Dependencies">
@@ -294,24 +300,25 @@ app.listen(PORT, () => console.log(\`Server running on http://localhost:\${PORT}
   </TabItem>
 </Tabs>
 
-## Event Looping
+## Event Loop
 
 The event loop is one of the most important concepts in Node.js, enabling it to handle asynchronous operations and manage concurrency efficiently. At its core, the event loop allows Node.js to perform non-blocking I/O operations, even though JavaScript itself runs on a single thread.
+
 The event loop is what allows Node.js to perform efficiently. It can handle thousands of connections without creating new threads for each one. Instead, it manages tasks in the background (asynchronously) and only returns to them when necessary, minimizing resource usage.
 
 #### How Does It Work?
 
-1.  **Single Threaded Nature:**: Node.js runs JavaScript code on a single thread. This means only one piece of code executes at a time. However, through the event loop, Node.js can handle multiple tasks without waiting for one to finish before starting another.
-2.  **Asynchronous Operations**: Many operations in Node.js (like reading files, querying databases, or making HTTP requests) can take time. Instead of waiting for these tasks to complete, Node.js continues executing other code. This is where the event loop shines.
+1. **Single-Threaded Nature**: Node.js runs JavaScript code on a single thread. This means only one piece of code executes at a time. However, through the event loop, Node.js can handle multiple tasks without waiting for one to finish before starting another.
 
-3.  **The Phases of the Event Loop:**: The event loop has several phases where it checks for tasks to execute:
+2. **Asynchronous Operations**: Many operations in Node.js (like reading files, querying databases, or making HTTP requests) can take time. Instead of waiting for these tasks to complete, Node.js continues executing other code. This is where the event loop shines.
 
-        - **Timers**: Executes callbacks scheduled by setTimeout() or setInterval().
-        - **Pending Callbacks**: Handles I/O operations like network requests.
-        - **Idle/Prepare**: Internal Node.js operations.
-        - **Poll**: Retrieves new I/O events and executes I/O-related callbacks.
-        - **Check**: Executes callbacks from setImmediate()..
-        - **Close Callbacks**: Closes operations like file descriptors or sockets.
+3. **The Phases of the Event Loop**: The event loop has several phases where it checks for tasks to execute:
+   - **Timers**: Executes callbacks scheduled by `setTimeout()` or `setInterval()`.
+   - **Pending Callbacks**: Handles I/O operations like network requests.
+   - **Idle/Prepare**: Internal Node.js operations.
+   - **Poll**: Retrieves new I/O events and executes I/O-related callbacks.
+   - **Check**: Executes callbacks from `setImmediate()`.
+   - **Close Callbacks**: Closes operations like file descriptors or sockets.
 
 ## Callbacks, Promises, and Async/Await
 
@@ -384,8 +391,6 @@ To create a module, you define the logic you want to share in a JavaScript file.
 
 ```js
 //math.js
-
-const fs = require("fs").promises;
 function add(a, b) {
   return a + b;
 }
@@ -394,10 +399,11 @@ function add(a, b) {
 module.exports = { add };
 ```
 
-Here, the add function is exported using module.exports, which makes it available to other files.
+Here, the `add` function is exported using `module.exports`, which makes it available to other files.
 
 **Importing a Module**
-Once a module is created and exported, it can be imported and used in other files using the require function:
+
+Once a module is created and exported, it can be imported and used in other files using the `require` function:
 
 ```js
 //app.js
@@ -463,7 +469,7 @@ fs.readFile("example.txt", "utf8", (err, data) => {
 });
 ```
 
-The following above code snippet demonstrates using the fs module to read the contents of a file asynchronously.
+The following code snippet demonstrates using the `fs` module to read the contents of a file asynchronously.
 
 #### 2. HTTP
 
@@ -484,7 +490,7 @@ http
   });
 ```
 
-The following above code snippet demonstrates creating a basic HTTP server that responds with **"Hello, World!"** when accessed.
+The code snippet above demonstrates creating a basic HTTP server that responds with **"Hello, World!"** when accessed.
 
 #### 3. Events
 
@@ -505,7 +511,7 @@ eventEmitter.on("greet", () => {
 eventEmitter.emit("greet");
 ```
 
-The following above code snippet demonstrates using the `EventEmitter` module to create an event listener that logs **"Hello, World!"** when the "greet" event is emitted.
+The code snippet above demonstrates using the `EventEmitter` module to create an event listener that logs **"Hello, World!"** when the "greet" event is emitted.
 
 ## References
 
