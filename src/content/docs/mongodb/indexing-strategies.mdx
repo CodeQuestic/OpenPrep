@@ -1,6 +1,869 @@
 ---
-title: Indexing Strategies
+title: MongoDB Indexing Strategies
+description: Master MongoDB indexing techniques for optimal query performance and database efficiency
 ---
 
-## Indexing Strategies
+import { Steps } from "@astrojs/starlight/components";
 
+## Introduction to MongoDB Indexing
+
+Indexing is one of the most critical aspects of MongoDB performance optimization. A well-designed indexing strategy can transform slow queries into lightning-fast operations, while poor indexing can cripple even the most powerful hardware. MongoDB indexes are data structures that improve the speed of data retrieval operations on a collection at the cost of additional storage space and write performance overhead.
+
+Think of indexes like the index in a book - instead of reading every page to find information about a specific topic, you can use the index to jump directly to the relevant pages. Similarly, MongoDB indexes allow the database to quickly locate documents without scanning every document in a collection.
+
+### Key Benefits of Proper Indexing
+
+- **Query Performance**: Dramatically reduce query execution time from seconds to milliseconds
+- **Memory Efficiency**: Keep frequently accessed data in memory
+- **Scalability**: Maintain performance as data volume grows
+- **Resource Optimization**: Reduce CPU and I/O usage
+- **User Experience**: Ensure responsive application performance
+
+## Understanding Index Fundamentals
+
+<Steps>
+
+1. ### **How MongoDB Indexes Work**
+
+   MongoDB indexes use B-tree data structures that maintain sorted pointers to documents. When a query is executed, MongoDB's query optimizer determines whether an index can be used to satisfy the query efficiently.
+
+   **Index Structure**:
+
+   ```javascript
+   // Collection document
+   { _id: ObjectId("..."), name: "Alice", age: 30, city: "New York" }
+
+   // Index on 'name' field creates a sorted structure:
+   // Index Entry -> Document Location
+   // "Alice"     -> Document 1
+   // "Bob"       -> Document 3
+   // "Charlie"   -> Document 2
+   ```
+
+   **Query Execution Without Index**:
+
+   - Collection scan: O(n) complexity
+   - Examines every document in collection
+   - Performance degrades linearly with data size
+
+   **Query Execution With Index**:
+
+   - Index scan: O(log n) complexity
+   - Directly locates relevant documents
+   - Consistent performance regardless of collection size
+
+2. ### **Index Types Overview**
+
+   MongoDB supports various index types, each optimized for specific use cases:
+
+   **Primary Index Types**:
+
+   - **Single Field**: Index on one field
+   - **Compound**: Index on multiple fields
+   - **Multikey**: Automatically handles array values
+   - **Text**: Full-text search capabilities
+   - **Geospatial**: Location-based queries
+   - **Hashed**: Evenly distributed shard keys
+
+   **Specialized Index Types**:
+
+   - **Partial**: Index subset of documents
+   - **Sparse**: Skip documents missing indexed fields
+   - **TTL**: Automatically expire documents
+   - **Unique**: Enforce uniqueness constraints
+
+</Steps>
+
+## Core Indexing Strategies
+
+<Steps>
+
+1. ### **Single Field Indexes**
+
+   Single field indexes are the foundation of MongoDB indexing, created on individual document fields to optimize queries and sorting operations.
+
+   **Creating Single Field Indexes**:
+
+   ```javascript
+   // Create ascending index on email field
+   db.users.createIndex({ email: 1 });
+
+   // Create descending index on timestamp
+   db.events.createIndex({ timestamp: -1 });
+
+   // Create index with options
+   db.users.createIndex(
+     { username: 1 },
+     {
+       unique: true,
+       name: "unique_username_idx",
+       background: true,
+     }
+   );
+   ```
+
+   **Optimized Query Patterns**:
+
+   ```javascript
+   // Efficient queries using single field indexes
+
+   // Equality queries
+   db.users.find({ email: "alice@example.com" });
+
+   // Range queries
+   db.events.find({ timestamp: { $gte: ISODate("2023-01-01") } });
+
+   // Sorting operations
+   db.products.find().sort({ price: -1 });
+
+   // Prefix matching with regular expressions
+   db.users.find({ username: /^alice/ });
+   ```
+
+   **Performance Considerations**:
+
+   - Index selectivity: High cardinality fields perform better
+   - Query patterns: Match index sort order for optimal performance
+   - Write overhead: Each index adds overhead to insert/update operations
+
+2. ### **Compound Indexes**
+
+   Compound indexes span multiple fields and are essential for optimizing complex queries. The order of fields in compound indexes significantly impacts performance.
+
+   **Index Prefix Rule**:
+   A compound index can support queries on any prefix of its fields:
+
+   ```javascript
+   // Create compound index
+   db.users.createIndex({ status: 1, age: 1, city: 1 });
+
+   // Supported query patterns (index prefixes):
+   // 1. { status: ... }
+   // 2. { status: ..., age: ... }
+   // 3. { status: ..., age: ..., city: ... }
+
+   // NOT efficiently supported:
+   // { age: ... }           - skips first field
+   // { city: ... }          - skips first two fields
+   // { age: ..., city: ... } - skips first field
+   ```
+
+   **Field Ordering Strategies**:
+
+   **ESR Rule (Equality, Sort, Range)**:
+
+   1. **Equality**: Fields used in equality conditions first
+   2. **Sort**: Fields used for sorting second
+   3. **Range**: Fields used in range queries last
+
+   ```javascript
+   // Query: Find active users in NYC, aged 25-35, sorted by registration date
+   db.users
+     .find({
+       status: "active", // Equality
+       city: "NYC", // Equality
+       age: { $gte: 25, $lte: 35 }, // Range
+     })
+     .sort({ registrationDate: -1 }); // Sort
+
+   // Optimal compound index:
+   db.users.createIndex({
+     status: 1, // Equality
+     city: 1, // Equality
+     registrationDate: -1, // Sort
+     age: 1, // Range
+   });
+   ```
+
+   **Advanced Compound Index Examples**:
+
+   ```javascript
+   // E-commerce product catalog
+   db.products.createIndex({
+     category: 1, // Filter by category
+     featured: 1, // Filter by featured status
+     price: 1, // Sort/filter by price
+     rating: -1, // Sort by rating (descending)
+   });
+
+   // Time-series data
+   db.metrics.createIndex({
+     deviceId: 1, // Partition by device
+     timestamp: -1, // Sort by time (newest first)
+     metricType: 1, // Filter by metric type
+   });
+
+   // User activity logs
+   db.logs.createIndex({
+     userId: 1, // Filter by user
+     action: 1, // Filter by action type
+     timestamp: -1, // Sort by time
+   });
+   ```
+
+3. ### **Text Indexes**
+
+   Text indexes enable full-text search capabilities across string fields, supporting language-specific stemming, case-insensitive search, and relevance scoring.
+
+   **Creating Text Indexes**:
+
+   ```javascript
+   // Single field text index
+   db.articles.createIndex({ content: "text" });
+
+   // Multiple field text index
+   db.articles.createIndex({
+     title: "text",
+     content: "text",
+     tags: "text",
+   });
+
+   // Weighted text index (title is more important)
+   db.articles.createIndex(
+     {
+       title: "text",
+       content: "text",
+     },
+     {
+       weights: {
+         title: 10,
+         content: 1,
+       },
+       name: "article_text_idx",
+     }
+   );
+   ```
+
+   **Text Search Queries**:
+
+   ```javascript
+   // Basic text search
+   db.articles.find({ $text: { $search: "mongodb indexing" } });
+
+   // Phrase search
+   db.articles.find({ $text: { $search: '"database optimization"' } });
+
+   // Exclude terms
+   db.articles.find({ $text: { $search: "mongodb -sql" } });
+
+   // Search with score (relevance ranking)
+   db.articles
+     .find(
+       { $text: { $search: "mongodb performance" } },
+       { score: { $meta: "textScore" } }
+     )
+     .sort({ score: { $meta: "textScore" } });
+
+   // Language-specific search
+   db.articles.find({ $text: { $search: "base de données", $language: "fr" } });
+   ```
+
+   **Text Index Limitations**:
+
+   - Only one text index per collection
+   - Cannot be used with sort operations (except textScore)
+   - No support for partial word matching
+   - Limited language support for stemming
+
+4. ### **Geospatial Indexes**
+
+   MongoDB provides specialized indexes for location-based queries, supporting both 2D and spherical (Earth-like) coordinate systems.
+
+   **2dsphere Indexes (Recommended)**:
+
+   ```javascript
+   // Create 2dsphere index for GeoJSON data
+   db.places.createIndex({ location: "2dsphere" });
+
+   // Sample GeoJSON document
+   db.places.insertOne({
+     name: "Central Park",
+     location: {
+       type: "Point",
+       coordinates: [-73.9665, 40.7812], // [longitude, latitude]
+     },
+   });
+   ```
+
+   **Geospatial Query Examples**:
+
+   ```javascript
+   // Find nearby locations (within radius)
+   db.places.find({
+     location: {
+       $near: {
+         $geometry: {
+           type: "Point",
+           coordinates: [-73.9857, 40.7484], // Times Square
+         },
+         $maxDistance: 1000, // 1000 meters
+       },
+     },
+   });
+
+   // Find locations within polygon
+   db.places.find({
+     location: {
+       $geoWithin: {
+         $geometry: {
+           type: "Polygon",
+           coordinates: [
+             [
+               [-74.0, 40.7],
+               [-74.0, 40.8],
+               [-73.9, 40.8],
+               [-73.9, 40.7],
+               [-74.0, 40.7],
+             ],
+           ],
+         },
+       },
+     },
+   });
+
+   // Find intersecting areas
+   db.regions.find({
+     boundaries: {
+       $geoIntersects: {
+         $geometry: {
+           type: "Point",
+           coordinates: [-73.9857, 40.7484],
+         },
+       },
+     },
+   });
+   ```
+
+5. ### **Partial and Sparse Indexes**
+
+   These specialized indexes reduce storage requirements and improve performance by indexing only specific documents.
+
+   **Partial Indexes**:
+   Index only documents matching specified criteria:
+
+   ```javascript
+   // Index only active users
+   db.users.createIndex(
+     { email: 1 },
+     {
+       partialFilterExpression: {
+         status: "active",
+       },
+     }
+   );
+
+   // Index only high-value orders
+   db.orders.createIndex(
+     { customerId: 1, orderDate: -1 },
+     {
+       partialFilterExpression: {
+         totalAmount: { $gt: 100 },
+       },
+     }
+   );
+
+   // Index only recent documents
+   db.logs.createIndex(
+     { userId: 1, action: 1 },
+     {
+       partialFilterExpression: {
+         createdAt: {
+           $gte: new Date("2023-01-01"),
+         },
+       },
+     }
+   );
+   ```
+
+   **Sparse Indexes**:
+   Skip documents that don't contain the indexed field:
+
+   ```javascript
+   // Index only documents with phone number
+   db.users.createIndex({ phoneNumber: 1 }, { sparse: true });
+
+   // Compound sparse index
+   db.products.createIndex(
+     { category: 1, discount: 1 },
+     { sparse: true } // Skip products without discount
+   );
+   ```
+
+6. ### **TTL (Time To Live) Indexes**
+
+   TTL indexes automatically remove documents after a specified time period, perfect for managing temporary or time-sensitive data.
+
+   **Creating TTL Indexes**:
+
+   ```javascript
+   // Expire documents 30 days after creation
+   db.sessions.createIndex(
+     { createdAt: 1 },
+     { expireAfterSeconds: 2592000 } // 30 days in seconds
+   );
+
+   // Expire at specific date
+   db.notifications.createIndex({ expireAt: 1 }, { expireAfterSeconds: 0 });
+
+   // Sample documents
+   db.sessions.insertOne({
+     userId: "user123",
+     sessionToken: "abc123",
+     createdAt: new Date(), // Will expire in 30 days
+   });
+
+   db.notifications.insertOne({
+     message: "Special offer!",
+     expireAt: new Date("2023-12-31T23:59:59Z"),
+   });
+   ```
+
+   **TTL Index Considerations**:
+
+   - Only works on Date fields or arrays containing Dates
+   - MongoDB runs a background task every 60 seconds to remove expired documents
+   - Cannot be compound indexes
+   - Useful for sessions, logs, cache data, and temporary collections
+
+</Steps>
+
+## Index Performance Analysis
+
+<Steps>
+
+1. ### **Query Execution Plans**
+
+   Understanding execution plans is crucial for optimizing query performance and validating index effectiveness.
+
+   **Using explain() Method**:
+
+   ```javascript
+   // Basic execution plan
+   db.users.find({ email: "alice@example.com" }).explain();
+
+   // Detailed execution plan
+   db.users
+     .find({ status: "active", age: { $gte: 25 } })
+     .explain("executionStats");
+
+   // All available plans comparison
+   db.users.find({ city: "NYC" }).explain("allPlansExecution");
+   ```
+
+   **Key Metrics to Analyze**:
+
+   ```javascript
+   // Example execution plan output
+   {
+     "executionStats": {
+       "totalDocsExamined": 1,      // Documents scanned
+       "totalKeysExamined": 1,      // Index keys scanned
+       "executionTimeMillis": 0,    // Query execution time
+       "indexesUsed": ["email_1"],  // Which indexes were used
+       "stage": "IXSCAN",          // Index scan (good)
+       // vs "COLLSCAN"             // Collection scan (bad)
+     }
+   }
+   ```
+
+   **Performance Indicators**:
+
+   - **Good Performance**: `totalKeysExamined` ≈ `totalDocsExamined` ≈ `documents returned`
+   - **Poor Performance**: High ratio of examined to returned documents
+   - **Index Usage**: Stage should be `IXSCAN` not `COLLSCAN`
+
+2. ### **Index Usage Monitoring**
+
+   Regular monitoring helps identify unused indexes and optimization opportunities.
+
+   **Index Usage Statistics**:
+
+   ```javascript
+   // View index usage statistics
+   db.users.aggregate([{ $indexStats: {} }]);
+
+   // Find unused indexes
+   db.runCommand({ collStats: "users", indexDetails: true });
+
+   // Monitor slow operations
+   db.setProfilingLevel(2, { slowms: 100 });
+   db.system.profile.find().limit(5).sort({ ts: -1 }).pretty();
+   ```
+
+   **Index Maintenance Commands**:
+
+   ```javascript
+   // List all indexes
+   db.users.getIndexes();
+
+   // Get index sizes
+   db.users.stats().indexSizes;
+
+   // Rebuild indexes
+   db.users.reIndex();
+
+   // Drop unused index
+   db.users.dropIndex("unused_field_1");
+   ```
+
+</Steps>
+
+## Advanced Indexing Strategies
+
+<Steps>
+
+1. ### **Index Intersection**
+
+   MongoDB can use multiple indexes simultaneously to optimize complex queries through index intersection.
+
+   ```javascript
+   // Create separate indexes
+   db.products.createIndex({ category: 1 });
+   db.products.createIndex({ price: 1 });
+   db.products.createIndex({ rating: 1 });
+
+   // MongoDB can intersect indexes for this query
+   db.products.find({
+     category: "electronics",
+     price: { $lt: 500 },
+     rating: { $gte: 4.0 },
+   });
+
+   // Check if intersection is used
+   db.products
+     .find({
+       category: "electronics",
+       price: { $lt: 500 },
+       rating: { $gte: 4.0 },
+     })
+     .explain("executionStats");
+   ```
+
+2. ### **Index Hints**
+
+   Force MongoDB to use specific indexes when the query optimizer doesn't choose optimally.
+
+   ```javascript
+   // Force use of specific index
+   db.users.find({ name: "Alice", age: 30 }).hint({ name: 1 });
+
+   // Force collection scan (disable indexes)
+   db.users.find({ status: "active" }).hint({ $natural: 1 });
+
+   // Use index by name
+   db.products.find({ category: "electronics" }).hint("category_price_idx");
+   ```
+
+3. ### **Collation and Indexes**
+
+   Handle locale-specific sorting and comparison rules with collation-aware indexes.
+
+   ```javascript
+   // Create index with collation
+   db.users.createIndex(
+     { name: 1 },
+     {
+       collation: {
+         locale: "en",
+         strength: 2, // Case insensitive
+       },
+     }
+   );
+
+   // Query must use same collation
+   db.users.find({ name: "Alice" }).collation({ locale: "en", strength: 2 });
+   ```
+
+</Steps>
+
+## Indexing Best Practices
+
+<Steps>
+
+1. ### **Index Design Principles**
+
+   **Selectivity First**:
+
+   - Index highly selective fields first
+   - High cardinality = better performance
+   - Avoid indexing boolean fields alone
+
+   **Query Pattern Analysis**:
+
+   ```javascript
+   // Analyze actual query patterns
+   db.setProfilingLevel(2, { slowms: 0 });
+
+   // After collecting data, analyze common patterns
+   db.system.profile.aggregate([
+     { $group: { _id: "$command.filter", count: { $sum: 1 } } },
+     { $sort: { count: -1 } },
+   ]);
+   ```
+
+   **ESR Rule Application**:
+
+   ```javascript
+   // Bad: Range field first
+   db.orders.createIndex({ amount: 1, status: 1, customerId: 1 });
+
+   // Good: Equality fields first, range last
+   db.orders.createIndex({ status: 1, customerId: 1, amount: 1 });
+   ```
+
+2. ### **Index Maintenance**
+
+   **Regular Index Review**:
+
+   - Monitor index usage monthly
+   - Remove unused indexes
+   - Update indexes based on new query patterns
+
+   **Background Index Creation**:
+
+   ```javascript
+   // Create indexes in background (production safe)
+   db.users.createIndex({ email: 1 }, { background: true });
+   ```
+
+   **Index Size Management**:
+
+   ```javascript
+   // Monitor index sizes
+   db.users.stats().indexSizes;
+
+   // Total collection size vs index size ratio
+   db.users.stats().size / db.users.stats().totalIndexSize;
+   ```
+
+3. ### **Sharding Considerations**
+
+   **Shard Key Indexes**:
+
+   ```javascript
+   // Shard key must be indexed
+   sh.shardCollection("mydb.users", { userId: "hashed" });
+
+   // Compound shard key
+   sh.shardCollection("mydb.orders", { customerId: 1, orderDate: 1 });
+   ```
+
+   **Cross-Shard Query Optimization**:
+
+   - Include shard key in queries when possible
+   - Use targeted queries to avoid scatter-gather operations
+
+</Steps>
+
+## Common Indexing Pitfalls
+
+<Steps>
+
+1. ### **Over-Indexing**
+
+   **Problems**:
+
+   - Increased storage requirements
+   - Slower write operations
+   - Memory overhead
+
+   **Solutions**:
+
+   ```javascript
+   // Instead of multiple single-field indexes:
+   db.users.createIndex({ firstName: 1 });
+   db.users.createIndex({ lastName: 1 });
+   db.users.createIndex({ email: 1 });
+
+   // Use compound index for common query patterns:
+   db.users.createIndex({ email: 1, firstName: 1, lastName: 1 });
+   ```
+
+2. ### **Incorrect Field Order**
+
+   **Wrong Order**:
+
+   ```javascript
+   // Query: Find active users in specific city
+   db.users.find({ status: "active", city: "NYC" });
+
+   // Bad index (low selectivity first)
+   db.users.createIndex({ status: 1, city: 1 });
+   ```
+
+   **Correct Order**:
+
+   ```javascript
+   // Good index (high selectivity first)
+   db.users.createIndex({ city: 1, status: 1 });
+   ```
+
+3. ### **Ignoring Sort Operations**
+
+   **Inefficient**:
+
+   ```javascript
+   // Query with sort
+   db.products.find({ category: "electronics" }).sort({ price: -1 });
+
+   // Index doesn't support sort efficiently
+   db.products.createIndex({ category: 1 });
+   ```
+
+   **Efficient**:
+
+   ```javascript
+   // Index supports both filter and sort
+   db.products.createIndex({ category: 1, price: -1 });
+   ```
+
+</Steps>
+
+## Real-World Indexing Examples
+
+<Steps>
+
+1. ### **E-commerce Platform**
+
+   ```javascript
+   // Product catalog
+   db.products.createIndex({
+     category: 1, // Filter by category
+     subcategory: 1, // Filter by subcategory
+     price: 1, // Sort/filter by price
+     rating: -1, // Sort by rating (descending)
+   });
+
+   // User orders
+   db.orders.createIndex({
+     customerId: 1, // Customer lookup
+     status: 1, // Filter by status
+     createdAt: -1, // Sort by date (newest first)
+   });
+
+   // Inventory tracking
+   db.inventory.createIndex({
+     sku: 1, // Unique product identifier
+     warehouse: 1, // Filter by location
+     quantity: 1, // Filter by availability
+   });
+   ```
+
+2. ### **Social Media Application**
+
+   ```javascript
+   // User posts timeline
+   db.posts.createIndex({
+     authorId: 1, // Filter by author
+     visibility: 1, // Public/private filter
+     createdAt: -1, // Chronological order
+   });
+
+   // Friend connections
+   db.connections.createIndex({
+     userId: 1, // User lookup
+     status: 1, // Connection status
+     connectedAt: -1, // Connection date
+   });
+
+   // Content search
+   db.posts.createIndex(
+     {
+       content: "text",
+       tags: "text",
+     },
+     {
+       weights: { content: 1, tags: 5 },
+     }
+   );
+   ```
+
+3. ### **IoT Data Platform**
+
+   ```javascript
+   // Sensor readings
+   db.readings.createIndex({
+     deviceId: 1, // Partition by device
+     timestamp: -1, // Time-based queries
+     sensorType: 1, // Filter by sensor
+   });
+
+   // Device management
+   db.devices.createIndex({
+     location: "2dsphere", // Geospatial queries
+   });
+
+   // TTL for old data
+   db.readings.createIndex(
+     { timestamp: 1 },
+     { expireAfterSeconds: 7776000 } // 90 days
+   );
+   ```
+
+</Steps>
+
+## Performance Testing and Optimization
+
+### Benchmarking Strategies
+
+1. **Create Test Data**:
+
+   ```javascript
+   // Generate realistic test data
+   for (let i = 0; i < 1000000; i++) {
+     db.users.insertOne({
+       _id: i,
+       email: `user${i}@example.com`,
+       status: Math.random() > 0.8 ? "inactive" : "active",
+       city: cities[Math.floor(Math.random() * cities.length)],
+       age: Math.floor(Math.random() * 60) + 18,
+       createdAt: new Date(
+         Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000
+       ),
+     });
+   }
+   ```
+
+2. **Test Query Performance**:
+
+   ```javascript
+   // Measure query performance
+   let startTime = new Date();
+   db.users.find({ city: "NYC", status: "active" }).count();
+   let endTime = new Date();
+   print("Query time: " + (endTime - startTime) + "ms");
+   ```
+
+3. **A/B Test Index Strategies**:
+   Compare different indexing approaches using identical queries and measure the performance differences.
+
+## Conclusion
+
+Effective MongoDB indexing is both an art and a science. It requires understanding your data patterns, query requirements, and performance goals. The key to success lies in:
+
+- **Analyzing Query Patterns**: Understanding how your application queries data
+- **Strategic Index Design**: Creating indexes that support multiple query patterns
+- **Continuous Monitoring**: Regularly reviewing index performance and usage
+- **Iterative Improvement**: Refining indexes as application requirements evolve
+
+Remember that indexing is about finding the right balance between query performance, storage overhead, and write performance. Start with essential indexes for your most critical queries, then expand strategically based on actual usage patterns and performance requirements.
+
+## Additional Resources
+
+### MongoDB Documentation
+
+- [MongoDB Indexing Guide](https://docs.mongodb.com/manual/indexes/)
+- [Query Optimization](https://docs.mongodb.com/manual/core/query-optimization/)
+- [Index Building and Performance](https://docs.mongodb.com/manual/core/index-creation/)
+
+### Tools and Utilities
+
+- [MongoDB Compass](https://www.mongodb.com/products/compass) - Visual index analysis
+- [explain() Method](https://docs.mongodb.com/manual/reference/method/cursor.explain/) - Query execution analysis
+- [Database Profiler](https://docs.mongodb.com/manual/tutorial/manage-the-database-profiler/) - Performance monitoring
+
+### Advanced Topics
+
+- [Aggregation Pipeline Optimization](https://docs.mongodb.com/manual/core/aggregation-pipeline-optimization/)
+- [Sharding and Indexing](https://docs.mongodb.com/manual/core/sharding-shard-key/)
+- [Index Build Performance](https://docs.mongodb.com/manual/core/index-creation/#index-build-impact-on-database-performance)
