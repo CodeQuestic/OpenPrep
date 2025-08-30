@@ -116,7 +116,9 @@ setPosition({ x: event.clientX, y: event.clientY });
 };
 
 return (
-<div onMouseMove={handleMouseMove} style={{ height: '200px', border: '1px solid black' }}>
+<div
+onMouseMove={handleMouseMove}
+style={{ height: '200px', border: '1px solid black' }} >
 <p>Mouse position: ({position.x}, {position.y})</p>
 </div>
 );
@@ -323,7 +325,7 @@ export default PoolingExample;`}
       lang="jsx" 
       title="Pooling.jsx" 
     />
-    Calling \`event.persist()\` allows us to use the event properties even after the event handler has finished execution, which is useful for asynchronous operations.
+    Calling `event.persist()` allows us to use the event properties even after the event handler has finished execution, which is useful for asynchronous operations.
   </TabItem>
 </Tabs>
 

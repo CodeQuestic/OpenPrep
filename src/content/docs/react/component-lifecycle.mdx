@@ -18,13 +18,17 @@ React components go through three main phases:
 3. **Unmounting** - Component is being removed from the DOM
 
 ```
-┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
-│    MOUNTING     │───▶ │    UPDATING     │───▶│   UNMOUNTING   │
-│                 │     │                 │     │                 │
-│ • constructor   │     │ • render        │     │ • cleanup       │
-│ • render        │     │ • effects       │     │ • effects       │
-│ • effects       │     │ • updates       │     │                 │
-└─────────────────┘     └─────────────────┘     └─────────────────┘
+MOUNTING → UPDATING → UNMOUNTING
+
+MOUNTING:
+  • constructor → render → effects
+
+UPDATING:
+  • render → effects → state/prop updates
+
+UNMOUNTING:
+  • cleanup → effects cleanup
+
 ```
 
 ## Class Component Lifecycle Methods

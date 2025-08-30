@@ -37,7 +37,8 @@ npm install yup
 
 <Tabs>
   <TabItem label="ControlledInput">
-    <Code code={`import React, { useState } from 'react';
+    <Code 
+      code={`import React, { useState } from 'react';
 
 function ControlledInput() {
 const [name, setName] = useState('');
@@ -67,12 +68,16 @@ Name:
 );
 }
 
-export default ControlledInput;`} lang="jsx" title="ControlledInput.jsx" />
+export default ControlledInput;`}
+      lang="jsx" 
+      title="ControlledInput.jsx" 
+    />
     In this example, the `name` input is controlled by React's `useState` hook. Each change re-renders the form, reflecting the latest input.
   </TabItem>
   
   <TabItem label="ControlledSelect">
-    <Code code={`import React, { useState } from 'react';
+    <Code 
+      code={`import React, { useState } from 'react';
 
 function ControlledSelect() {
 const [selectedOption, setSelectedOption] = useState('apple');
@@ -97,12 +102,16 @@ Choose a fruit:
 );
 }
 
-export default ControlledSelect;`} lang="jsx" title="ControlledSelect.jsx" />
+export default ControlledSelect;`}
+      lang="jsx" 
+      title="ControlledSelect.jsx" 
+    />
     In this example, the `selectedOption` initializes the first option. The `value` prop binds the select element to the `selectedOption` state.
   </TabItem>
   
   <TabItem label="ControlledTextArea">
-    <Code code={`import React, { useState } from 'react';
+    <Code 
+      code={`import React, { useState } from 'react';
 
 function ControlledTextarea() {
 const [text, setText] = useState('Write your message here...');
@@ -127,7 +136,10 @@ Message:
 );
 }
 
-export default ControlledTextarea;`} lang="jsx" title="ControlledTextArea.jsx" />
+export default ControlledTextarea;`}
+      lang="jsx" 
+      title="ControlledTextArea.jsx" 
+    />
     In this example, the `text` initializes the state. The textarea's value is tied to the `text` state.
   </TabItem>
 </Tabs>
@@ -138,7 +150,8 @@ For forms with multiple inputs, you can use a single state object to manage all 
 
 <Tabs>
   <TabItem label="MultipleInputs">
-    <Code code={`import React, { useState } from 'react';
+    <Code 
+      code={`import React, { useState } from 'react';
 
 function MultipleInputForm() {
 const [formData, setFormData] = useState({
@@ -212,7 +225,10 @@ Subscribe to newsletter
 );
 }
 
-export default MultipleInputForm;`} lang="jsx" title="MultipleInputs.jsx" />
+export default MultipleInputForm;`}
+      lang="jsx" 
+      title="MultipleInputs.jsx" 
+    />
     This example shows how to handle multiple form inputs with a single state object and change handler.
   </TabItem>
 </Tabs>
@@ -223,7 +239,8 @@ Uncontrolled components store their own state internally and use refs to access 
 
 <Tabs>
   <TabItem label="UncontrolledForm">
-    <Code code={`import React, { useRef } from 'react';
+    <Code 
+      code={`import React, { useRef } from 'react';
 
 function UncontrolledForm() {
 const nameRef = useRef(null);
@@ -288,7 +305,10 @@ Message:
 );
 }
 
-export default UncontrolledForm;`} lang="jsx" title="UncontrolledForm.jsx" />
+export default UncontrolledForm;`}
+      lang="jsx" 
+      title="UncontrolledForm.jsx" 
+    />
     Uncontrolled components use refs to access form values and `defaultValue` instead of `value`.
   </TabItem>
 </Tabs>
@@ -301,7 +321,8 @@ Form validation ensures data integrity and provides user feedback. Here are diff
 
 <Tabs>
   <TabItem label="BasicValidation">
-    <Code code={`import React, { useState } from 'react';
+    <Code 
+      code={`import React, { useState } from 'react';
 
 function BasicValidationForm() {
 const [formData, setFormData] = useState({
@@ -416,7 +437,10 @@ style={{ borderColor: errors.email ? 'red' : '' }}
 );
 }
 
-export default BasicValidationForm;`} lang="jsx" title="BasicValidation.jsx" />
+export default BasicValidationForm;`}
+      lang="jsx" 
+      title="BasicValidation.jsx" 
+    />
     This example shows client-side validation with custom error handling and real-time feedback.
   </TabItem>
 </Tabs>
@@ -429,7 +453,8 @@ Formik is a popular library that simplifies form management in React:
 
 <Tabs>
   <TabItem label="FormikExample">
-    <Code code={`import React from 'react';
+    <Code 
+      code={`import React from 'react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 
 function FormikForm() {
@@ -490,7 +515,10 @@ setSubmitting(false);
 );
 }
 
-export default FormikForm;`} lang="jsx" title="FormikExample.jsx" />
+export default FormikForm;`}
+      lang="jsx" 
+      title="FormikExample.jsx" 
+    />
     Formik handles form state, validation, and submission with minimal boilerplate code.
   </TabItem>
 </Tabs>
@@ -501,7 +529,8 @@ React Hook Form is a performant library with minimal re-renders:
 
 <Tabs>
   <TabItem label="ReactHookForm">
-    <Code code={`import React from 'react';
+    <Code 
+      code={`import React from 'react';
 import { useForm } from 'react-hook-form';
 
 function ReactHookFormExample() {
@@ -593,7 +622,10 @@ message: 'First name cannot exceed 20 characters'
 );
 }
 
-export default ReactHookFormExample;`} lang="jsx" title="ReactHookForm.jsx" />
+export default ReactHookFormExample;`}
+      lang="jsx" 
+      title="ReactHookForm.jsx" 
+    />
     React Hook Form provides excellent performance with built-in validation and minimal re-renders.
   </TabItem>
 </Tabs>
