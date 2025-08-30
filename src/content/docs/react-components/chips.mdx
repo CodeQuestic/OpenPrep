@@ -1,8 +1,20 @@
 ---
 title: Chips
+description: A versatile React chips/tags component with deletion, linking capabilities, and multiple variants built with Tailwind CSS.
 ---
 
-The following chips component is used for displaying tags. It can be used as a single component and styled quite easily. It has some predefined variants and sizes so not much effort is required in most scenario but you can easily add your own depending on your needs. It also handles deletion and can act as a link flawlessly.
+A flexible chips component perfect for displaying tags, labels, categories, or any removable content pieces. This component supports multiple variants, sizes, deletion functionality, clickable links, and custom styling. Ideal for filter interfaces, tag systems, user selections, or any scenario where you need compact, interactive content badges.
+
+## Features
+
+- **Multiple Variants**: Different visual styles (default, primary, secondary, success, warning, danger)
+- **Size Options**: Small, medium, and large size variants
+- **Deletable**: Optional close button with custom delete handlers
+- **Clickable Links**: Can function as navigation links or clickable elements
+- **Icons Support**: Add leading or trailing icons to chips
+- **Custom Styling**: Complete control with Tailwind CSS classes
+- **Accessibility**: Proper ARIA attributes and keyboard navigation
+- **Animation**: Smooth hover and deletion transitions
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -23,3 +35,346 @@ import chips from "./codes/Chips/chips.txt?raw";
     <Code code={chips} lang="jsx" title="chips.jsx" />
   </TabItem>
 </Tabs>
+
+## Props
+
+| Prop        | Type                                                                          | Default     | Description                                   |
+| ----------- | ----------------------------------------------------------------------------- | ----------- | --------------------------------------------- |
+| `label`     | `string`                                                                      | `required`  | The text content of the chip                  |
+| `variant`   | `'default' \| 'primary' \| 'secondary' \| 'success' \| 'warning' \| 'danger'` | `'default'` | Visual variant of the chip                    |
+| `size`      | `'sm' \| 'md' \| 'lg'`                                                        | `'md'`      | Size of the chip                              |
+| `deletable` | `boolean`                                                                     | `false`     | Whether the chip can be deleted               |
+| `onDelete`  | `function`                                                                    | `undefined` | Function called when delete button is clicked |
+| `onClick`   | `function`                                                                    | `undefined` | Function called when chip is clicked          |
+| `href`      | `string`                                                                      | `undefined` | URL for link chips                            |
+| `icon`      | `ReactNode`                                                                   | `undefined` | Leading icon element                          |
+| `endIcon`   | `ReactNode`                                                                   | `undefined` | Trailing icon element                         |
+| `className` | `string`                                                                      | `''`        | Additional CSS classes                        |
+| `disabled`  | `boolean`                                                                     | `false`     | Whether the chip is disabled                  |
+
+## Usage Examples
+
+### Basic Chips
+
+```jsx
+function TagDisplay() {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      <Chip label="React" />
+      <Chip label="JavaScript" variant="primary" />
+      <Chip label="TypeScript" variant="secondary" />
+      <Chip label="Node.js" variant="success" />
+    </div>
+  );
+}
+```
+
+### Deletable Chips
+
+```jsx
+function TagManager() {
+  const [tags, setTags] = useState([
+    { id: 1, label: "Frontend" },
+    { id: 2, label: "Backend" },
+    { id: 3, label: "Database" },
+    { id: 4, label: "DevOps" },
+  ]);
+
+  const handleDelete = (tagId) => {
+    setTags(tags.filter((tag) => tag.id !== tagId));
+  };
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {tags.map((tag) => (
+        <Chip
+          key={tag.id}
+          label={tag.label}
+          deletable
+          onDelete={() => handleDelete(tag.id)}
+          variant="primary"
+        />
+      ))}
+    </div>
+  );
+}
+```
+
+### Chips with Icons
+
+```jsx
+function SkillChips() {
+  return (
+    <div className="flex gap-2 flex-wrap">
+      <Chip label="React" icon={<span>⚛️</span>} variant="primary" />
+      <Chip label="Node.js" icon={<span>🟢</span>} variant="success" />
+      <Chip
+        label="Database"
+        icon={<span>🗄️</span>}
+        endIcon={<span>✨</span>}
+        variant="secondary"
+      />
+    </div>
+  );
+}
+```
+
+### Different Sizes
+
+```jsx
+function SizeVariants() {
+  return (
+    <div className="space-y-4">
+      <div className="flex gap-2 items-center">
+        <span className="text-sm font-medium">Small:</span>
+        <Chip label="Small chip" size="sm" />
+        <Chip label="Deletable" size="sm" deletable onDelete={() => {}} />
+      </div>
+
+      <div className="flex gap-2 items-center">
+        <span className="text-sm font-medium">Medium:</span>
+        <Chip label="Medium chip" size="md" />
+        <Chip label="Deletable" size="md" deletable onDelete={() => {}} />
+      </div>
+
+      <div className="flex gap-2 items-center">
+        <span className="text-sm font-medium">Large:</span>
+        <Chip label="Large chip" size="lg" />
+        <Chip label="Deletable" size="lg" deletable onDelete={() => {}} />
+      </div>
+    </div>
+  );
+}
+```
+
+### Clickable and Link Chips
+
+```jsx
+function InteractiveChips() {
+  const handleChipClick = (label) => {
+    console.log(`Clicked: ${label}`);
+  };
+
+  return (
+    <div className="flex gap-2 flex-wrap">
+      {/* Clickable chips */}
+      <Chip
+        label="Click me"
+        onClick={() => handleChipClick("Click me")}
+        variant="primary"
+      />
+
+      {/* Link chips */}
+      <Chip
+        label="Visit React Docs"
+        href="https://reactjs.org"
+        variant="secondary"
+        endIcon={<span>🔗</span>}
+      />
+
+      {/* Filter chips */}
+      <Chip
+        label="Active Filter"
+        onClick={() => handleChipClick("Active Filter")}
+        deletable
+        onDelete={() => console.log("Remove filter")}
+        variant="success"
+      />
+    </div>
+  );
+}
+```
+
+### Status/Category Chips
+
+```jsx
+function StatusChips({ items }) {
+  const getVariant = (status) => {
+    switch (status) {
+      case "completed":
+        return "success";
+      case "in-progress":
+        return "warning";
+      case "pending":
+        return "secondary";
+      case "error":
+        return "danger";
+      default:
+        return "default";
+    }
+  };
+
+  return (
+    <div className="space-y-2">
+      {items.map((item) => (
+        <div
+          key={item.id}
+          className="flex items-center justify-between p-3 border rounded"
+        >
+          <span>{item.name}</span>
+          <Chip
+            label={item.status}
+            variant={getVariant(item.status)}
+            size="sm"
+          />
+        </div>
+      ))}
+    </div>
+  );
+}
+```
+
+### Filter Chips with Search
+
+```jsx
+function FilterableChips() {
+  const [selectedFilters, setSelectedFilters] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const availableFilters = [
+    "JavaScript",
+    "React",
+    "Vue",
+    "Angular",
+    "Node.js",
+    "Python",
+    "Django",
+    "Flask",
+    "Express",
+    "MongoDB",
+  ];
+
+  const filteredOptions = availableFilters.filter(
+    (filter) =>
+      filter.toLowerCase().includes(searchTerm.toLowerCase()) &&
+      !selectedFilters.includes(filter)
+  );
+
+  const addFilter = (filter) => {
+    setSelectedFilters([...selectedFilters, filter]);
+    setSearchTerm("");
+  };
+
+  const removeFilter = (filter) => {
+    setSelectedFilters(selectedFilters.filter((f) => f !== filter));
+  };
+
+  return (
+    <div className="space-y-4">
+      <div>
+        <input
+          type="text"
+          placeholder="Search filters..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Selected filters */}
+      {selectedFilters.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-2">Active Filters:</h4>
+          <div className="flex gap-2 flex-wrap">
+            {selectedFilters.map((filter) => (
+              <Chip
+                key={filter}
+                label={filter}
+                variant="primary"
+                deletable
+                onDelete={() => removeFilter(filter)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Available filters */}
+      {filteredOptions.length > 0 && (
+        <div>
+          <h4 className="text-sm font-medium mb-2">Available Filters:</h4>
+          <div className="flex gap-2 flex-wrap">
+            {filteredOptions.map((filter) => (
+              <Chip
+                key={filter}
+                label={filter}
+                variant="secondary"
+                onClick={() => addFilter(filter)}
+              />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+## Variant Styles
+
+### Visual Variants
+
+**Default**
+
+- Light gray background with dark text
+- Subtle and neutral appearance
+
+**Primary**
+
+- Blue color scheme
+- Used for important or primary actions
+
+**Secondary**
+
+- Purple/indigo color scheme
+- For secondary actions or categories
+
+**Success**
+
+- Green color scheme
+- Indicates positive status or completion
+
+**Warning**
+
+- Yellow/orange color scheme
+- For cautions or pending states
+
+**Danger**
+
+- Red color scheme
+- For errors or delete actions
+
+## Preview
+
+<iframe
+  src="https://stackblitz.com/edit/react-chips-component-demo?embed=1&file=src%2FChips.jsx&theme=dark&view=preview"
+  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+/>
+
+## Accessibility Features
+
+- **Keyboard Navigation**: Support for Tab, Enter, and Space key interactions
+- **ARIA Labels**: Proper `aria-label` attributes for delete buttons and interactive elements
+- **Focus Indicators**: Clear visual focus indicators for keyboard users
+- **Screen Reader Support**: Descriptive text for assistive technologies
+- **Role Attributes**: Appropriate `role` attributes for different chip types
+
+## Best Practices
+
+1. **Use consistent variants** - Stick to a variant system across your application
+2. **Provide clear labels** - Use descriptive, concise text that users can understand
+3. **Group related chips** - Organize chips logically when displaying multiple items
+4. **Handle deletion gracefully** - Provide confirmation for destructive actions when necessary
+5. **Limit chip length** - Keep labels short to maintain clean layouts
+6. **Consider mobile experience** - Ensure chips are appropriately sized for touch interaction
+7. **Use appropriate colors** - Match chip variants to your application's color scheme and meaning
+
+## Common Use Cases
+
+- **Tag systems** - Blog post tags, product categories
+- **Filters** - Search filters, data table filters
+- **Selection indicators** - Multi-select options, chosen items
+- **Status badges** - Order status, user roles, task status
+- **Skills/interests** - User profiles, resume building
+- **Navigation** - Breadcrumbs, quick navigation links

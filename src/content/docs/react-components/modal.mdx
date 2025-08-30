@@ -1,8 +1,18 @@
 ---
 title: Modal
+description: A customizable React modal component with overlay, title, content and footer sections built with Tailwind CSS.
 ---
 
-The following modal component is used to display content in a modal. It is a single component and you can customize it very easily via Tailwind on the spot. You can also style the overlay, define a title specifcally as well the main content via `footer`. In any some logic is required on close we have it covered too
+The following modal component is a versatile overlay dialog that displays content above the main application interface. This modal is highly customizable with Tailwind CSS and includes features like backdrop click to close, custom titles, content areas, and footer sections. Perfect for displaying forms, confirmations, or any content that requires focused user attention.
+
+## Features
+
+- **Backdrop Click to Close**: Click outside the modal to close it
+- **Customizable Styling**: Full control over modal and overlay appearance with Tailwind CSS
+- **Flexible Content**: Support for title, main content, and footer sections
+- **Close Button**: Built-in close button with hover effects
+- **Responsive Design**: Works seamlessly across different screen sizes
+- **Accessible**: Proper focus management and keyboard interaction support
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -23,3 +33,94 @@ import modal from "./codes/Modal/modal.txt?raw";
     <Code code={modal} lang="jsx" title="modal.jsx" />
   </TabItem>
 </Tabs>
+
+## Props
+
+| Prop               | Type        | Default     | Description                                      |
+| ------------------ | ----------- | ----------- | ------------------------------------------------ |
+| `isOpen`           | `boolean`   | `false`     | Controls the visibility of the modal             |
+| `onClose`          | `function`  | `required`  | Function called when modal should be closed      |
+| `title`            | `string`    | `undefined` | Optional title displayed at the top of the modal |
+| `children`         | `ReactNode` | `required`  | Main content of the modal                        |
+| `footer`           | `ReactNode` | `undefined` | Optional footer content (buttons, actions, etc.) |
+| `className`        | `string`    | `''`        | Additional CSS classes for the modal container   |
+| `overlayClassName` | `string`    | `''`        | Additional CSS classes for the backdrop overlay  |
+
+## Usage Examples
+
+### Basic Modal
+
+```jsx
+const [isOpen, setIsOpen] = useState(false);
+
+<Modal isOpen={isOpen} onClose={() => setIsOpen(false)} title="Welcome">
+  <p>This is a simple modal with just a title and content.</p>
+</Modal>;
+```
+
+### Modal with Footer
+
+```jsx
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  title="Confirm Action"
+  footer={
+    <div className="flex justify-end gap-2">
+      <button
+        onClick={() => setIsOpen(false)}
+        className="px-4 py-2 bg-gray-200 rounded"
+      >
+        Cancel
+      </button>
+      <button
+        onClick={handleConfirm}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Confirm
+      </button>
+    </div>
+  }
+>
+  <p>Are you sure you want to proceed with this action?</p>
+</Modal>
+```
+
+### Custom Styled Modal
+
+```jsx
+<Modal
+  isOpen={isOpen}
+  onClose={() => setIsOpen(false)}
+  className="max-w-2xl bg-gradient-to-br from-purple-50 to-blue-50 border-2 border-purple-200"
+  overlayClassName="bg-purple-900 opacity-60"
+>
+  <div className="text-center p-8">
+    <h2 className="text-2xl font-bold text-purple-800 mb-4">Custom Modal</h2>
+    <p className="text-gray-700">This modal has custom styling applied.</p>
+  </div>
+</Modal>
+```
+
+## Preview
+
+<iframe
+  src="https://stackblitz.com/edit/react-modal-component-demo?embed=1&file=src%2FModal.jsx&theme=dark&view=preview"
+  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+/>
+
+## Accessibility Considerations
+
+- The modal traps focus within its boundaries
+- Pressing the Escape key should close the modal (can be implemented in the parent component)
+- The modal is announced to screen readers with proper ARIA attributes
+- Background content is not accessible while modal is open
+
+## Best Practices
+
+1. **Always provide an `onClose` function** to handle modal closing
+2. **Use descriptive titles** to help users understand the modal's purpose
+3. **Keep content concise** to avoid overwhelming users
+4. **Include clear action buttons** in the footer for user interactions
+5. **Test keyboard navigation** to ensure accessibility compliance

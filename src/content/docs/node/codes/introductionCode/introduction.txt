@@ -1,8 +1,0 @@
-const express = require('express');
-const app = express();
-
-// method can be GET,PUT,DELETE,POST,UPDATE
-app.get('/', (req, res) => res.send('Hello, Node.js World!'));
-
-const PORT = 3000;
-app.listen(PORT, () => console.log(`Server running on http://localhost:${PORT}`));

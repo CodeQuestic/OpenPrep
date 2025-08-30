@@ -1,3 +1,789 @@
 ---
 title: Components in React
+description: Learn about React components - the building blocks of React applications. Understand functional and class components, props, composition, and best practices.
 ---
+
+import { Code } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## What are React Components?
+
+**Components** are the fundamental building blocks of React applications. They are independent, reusable pieces of code that return JSX elements to be rendered to the screen. Think of components as JavaScript functions that accept inputs (called "props") and return React elements that describe what should appear on the screen.
+
+Components allow you to split the UI into independent, reusable pieces, making your code more modular, maintainable, and easier to debug. Each component manages its own state and lifecycle, enabling you to build complex UIs by combining simple components together.
+
+```jsx
+// Simple component example
+function Welcome() {
+  return <h1>Hello, World!</h1>;
+}
+
+// Using the component
+function App() {
+  return (
+    <div>
+      <Welcome />
+      <Welcome />
+      <Welcome />
+    </div>
+  );
+}
+```
+
+## Types of Components
+
+React has two main types of components: **Functional Components** and **Class Components**. With the introduction of Hooks in React 16.8, functional components have become the preferred way to write components.
+
+### 1. Functional Components
+
+Functional components are JavaScript functions that return JSX. They're simpler, more concise, and easier to understand. With Hooks, they can now handle state and side effects just like class components.
+
+```jsx
+// Basic functional component
+function Greeting({ name }) {
+  return <h1>Hello, {name}!</h1>;
+}
+
+// Arrow function component
+const Greeting = ({ name }) => {
+  return <h1>Hello, {name}!</h1>;
+};
+
+// With hooks for state management
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    <div>
+      <p>You clicked {count} times</p>
+      <button onClick={() => setCount(count + 1)}>Click me</button>
+    </div>
+  );
+}
+```
+
+### 2. Class Components
+
+Class components are ES6 classes that extend `React.Component`. While still supported, they're less commonly used in modern React development.
+
+```jsx
+class Welcome extends React.Component {
+  render() {
+    return <h1>Hello, {this.props.name}!</h1>;
+  }
+}
+
+// Class component with state
+class Counter extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { count: 0 };
+  }
+
+  increment = () => {
+    this.setState({ count: this.state.count + 1 });
+  };
+
+  render() {
+    return (
+      <div>
+        <p>Count: {this.state.count}</p>
+        <button onClick={this.increment}>Increment</button>
+      </div>
+    );
+  }
+}
+```
+
+## Component Props
+
+**Props** (short for properties) are inputs to components. They're passed from parent components to child components and are read-only within the receiving component.
+
+### Basic Props Usage
+
+```jsx
+// Parent component passing props
+function App() {
+  return (
+    <div>
+      <UserProfile
+        name="John Doe"
+        age={30}
+        email="john@example.com"
+        isActive={true}
+      />
+    </div>
+  );
+}
+
+// Child component receiving props
+function UserProfile({ name, age, email, isActive }) {
+  return (
+    <div className="user-profile">
+      <h2>{name}</h2>
+      <p>Age: {age}</p>
+      <p>Email: {email}</p>
+      <span className={isActive ? "status-active" : "status-inactive"}>
+        {isActive ? "Active" : "Inactive"}
+      </span>
+    </div>
+  );
+}
+```
+
+### Props with Default Values
+
+```jsx
+// Using defaultProps (class components)
+class Button extends React.Component {
+  static defaultProps = {
+    color: "blue",
+    size: "medium",
+    disabled: false,
+  };
+
+  render() {
+    const { children, color, size, disabled } = this.props;
+    return (
+      <button className={`btn btn-${color} btn-${size}`} disabled={disabled}>
+        {children}
+      </button>
+    );
+  }
+}
+
+// Using default parameters (functional components)
+function Button({
+  children,
+  color = "blue",
+  size = "medium",
+  disabled = false,
+  onClick,
+}) {
+  return (
+    <button
+      className={`btn btn-${color} btn-${size}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Usage
+function App() {
+  return (
+    <div>
+      <Button>Default Button</Button>
+      <Button color="red" size="large">
+        Custom Button
+      </Button>
+    </div>
+  );
+}
+```
+
+### Props Validation with PropTypes
+
+```jsx
+import PropTypes from "prop-types";
+
+function UserCard({ name, age, email, hobbies, onEdit }) {
+  return (
+    <div className="user-card">
+      <h3>{name}</h3>
+      <p>Age: {age}</p>
+      <p>Email: {email}</p>
+      <div>
+        <h4>Hobbies:</h4>
+        <ul>
+          {hobbies.map((hobby, index) => (
+            <li key={index}>{hobby}</li>
+          ))}
+        </ul>
+      </div>
+      <button onClick={onEdit}>Edit Profile</button>
+    </div>
+  );
+}
+
+UserCard.propTypes = {
+  name: PropTypes.string.isRequired,
+  age: PropTypes.number.isRequired,
+  email: PropTypes.string.isRequired,
+  hobbies: PropTypes.arrayOf(PropTypes.string),
+  onEdit: PropTypes.func,
+};
+
+UserCard.defaultProps = {
+  hobbies: [],
+};
+```
+
+## Component Composition
+
+Component composition is the practice of combining simple components to build more complex ones. This promotes reusability and keeps components focused on a single responsibility.
+
+### Basic Composition
+
+```jsx
+// Simple components
+function Header({ title }) {
+  return (
+    <header className="header">
+      <h1>{title}</h1>
+    </header>
+  );
+}
+
+function Navigation({ items }) {
+  return (
+    <nav className="navigation">
+      <ul>
+        {items.map((item) => (
+          <li key={item.id}>
+            <a href={item.href}>{item.label}</a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
+function Footer({ year, company }) {
+  return (
+    <footer className="footer">
+      <p>
+        &copy; {year} {company}. All rights reserved.
+      </p>
+    </footer>
+  );
+}
+
+// Composed layout component
+function Layout({ title, navigationItems, children }) {
+  return (
+    <div className="layout">
+      <Header title={title} />
+      <Navigation items={navigationItems} />
+      <main className="content">{children}</main>
+      <Footer year={2024} company="My Company" />
+    </div>
+  );
+}
+
+// Usage
+function App() {
+  const navItems = [
+    { id: 1, href: "/home", label: "Home" },
+    { id: 2, href: "/about", label: "About" },
+    { id: 3, href: "/contact", label: "Contact" },
+  ];
+
+  return (
+    <Layout title="My Website" navigationItems={navItems}>
+      <h2>Welcome to my website!</h2>
+      <p>This is the main content area.</p>
+    </Layout>
+  );
+}
+```
+
+### Container and Presentational Components
+
+```jsx
+// Presentational component (focused on how things look)
+function TodoItem({ todo, onToggle, onDelete }) {
+  return (
+    <li className={`todo-item ${todo.completed ? "completed" : ""}`}>
+      <input
+        type="checkbox"
+        checked={todo.completed}
+        onChange={() => onToggle(todo.id)}
+      />
+      <span>{todo.text}</span>
+      <button onClick={() => onDelete(todo.id)}>Delete</button>
+    </li>
+  );
+}
+
+function TodoList({ todos, onToggle, onDelete }) {
+  return (
+    <ul className="todo-list">
+      {todos.map((todo) => (
+        <TodoItem
+          key={todo.id}
+          todo={todo}
+          onToggle={onToggle}
+          onDelete={onDelete}
+        />
+      ))}
+    </ul>
+  );
+}
+
+// Container component (focused on how things work)
+function TodoContainer() {
+  const [todos, setTodos] = useState([
+    { id: 1, text: "Learn React", completed: false },
+    { id: 2, text: "Build a project", completed: true },
+    { id: 3, text: "Deploy to production", completed: false },
+  ]);
+
+  const handleToggle = (id) => {
+    setTodos(
+      todos.map((todo) =>
+        todo.id === id ? { ...todo, completed: !todo.completed } : todo
+      )
+    );
+  };
+
+  const handleDelete = (id) => {
+    setTodos(todos.filter((todo) => todo.id !== id));
+  };
+
+  return (
+    <div className="todo-container">
+      <h2>My Todos</h2>
+      <TodoList todos={todos} onToggle={handleToggle} onDelete={handleDelete} />
+    </div>
+  );
+}
+```
+
+## Advanced Component Patterns
+
+### Higher-Order Components (HOCs)
+
+```jsx
+// HOC for adding loading functionality
+function withLoading(WrappedComponent) {
+  return function LoadingComponent(props) {
+    if (props.isLoading) {
+      return <div className="loading">Loading...</div>;
+    }
+    return <WrappedComponent {...props} />;
+  };
+}
+
+// Original component
+function UserList({ users }) {
+  return (
+    <ul>
+      {users.map((user) => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+
+// Enhanced component with loading capability
+const UserListWithLoading = withLoading(UserList);
+
+// Usage
+function App() {
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    fetchUsers().then((data) => {
+      setUsers(data);
+      setIsLoading(false);
+    });
+  }, []);
+
+  return <UserListWithLoading users={users} isLoading={isLoading} />;
+}
+```
+
+### Render Props Pattern
+
+```jsx
+// Component using render props
+function MouseTracker({ render }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (event) => {
+    setPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  return (
+    <div onMouseMove={handleMouseMove} style={{ height: "100vh" }}>
+      {render(position)}
+    </div>
+  );
+}
+
+// Usage with render prop
+function App() {
+  return (
+    <MouseTracker
+      render={({ x, y }) => (
+        <div>
+          <h1>Move your mouse around!</h1>
+          <p>
+            Current mouse position: ({x}, {y})
+          </p>
+        </div>
+      )}
+    />
+  );
+}
+
+// Alternative using children as function
+function MouseTracker({ children }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  const handleMouseMove = (event) => {
+    setPosition({
+      x: event.clientX,
+      y: event.clientY,
+    });
+  };
+
+  return (
+    <div onMouseMove={handleMouseMove} style={{ height: "100vh" }}>
+      {children(position)}
+    </div>
+  );
+}
+
+// Usage
+function App() {
+  return (
+    <MouseTracker>
+      {({ x, y }) => (
+        <div>
+          <h1>
+            Mouse position: ({x}, {y})
+          </h1>
+        </div>
+      )}
+    </MouseTracker>
+  );
+}
+```
+
+### Custom Hooks for Logic Reuse
+
+```jsx
+// Custom hook for form management
+function useForm(initialValues) {
+  const [values, setValues] = useState(initialValues);
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (name, value) => {
+    setValues((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleError = (name, error) => {
+    setErrors((prev) => ({
+      ...prev,
+      [name]: error,
+    }));
+  };
+
+  const reset = () => {
+    setValues(initialValues);
+    setErrors({});
+  };
+
+  return {
+    values,
+    errors,
+    handleChange,
+    handleError,
+    reset,
+  };
+}
+
+// Components using the custom hook
+function ContactForm() {
+  const { values, errors, handleChange, handleError, reset } = useForm({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Validation logic
+    if (!values.name) {
+      handleError("name", "Name is required");
+      return;
+    }
+    if (!values.email) {
+      handleError("email", "Email is required");
+      return;
+    }
+
+    // Submit logic
+    console.log("Form submitted:", values);
+    reset();
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <input
+          type="text"
+          placeholder="Name"
+          value={values.name}
+          onChange={(e) => handleChange("name", e.target.value)}
+        />
+        {errors.name && <span className="error">{errors.name}</span>}
+      </div>
+
+      <div>
+        <input
+          type="email"
+          placeholder="Email"
+          value={values.email}
+          onChange={(e) => handleChange("email", e.target.value)}
+        />
+        {errors.email && <span className="error">{errors.email}</span>}
+      </div>
+
+      <div>
+        <textarea
+          placeholder="Message"
+          value={values.message}
+          onChange={(e) => handleChange("message", e.target.value)}
+        />
+      </div>
+
+      <button type="submit">Send</button>
+    </form>
+  );
+}
+```
+
+## Component Best Practices
+
+### 1. Keep Components Small and Focused
+
+```jsx
+// ❌ Component doing too much
+function UserDashboard({ userId }) {
+  const [user, setUser] = useState(null);
+  const [posts, setPosts] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  // Lots of useEffect calls and logic...
+
+  return <div>{/* Lots of JSX... */}</div>;
+}
+
+// ✅ Broken down into smaller components
+function UserProfile({ user }) {
+  return (
+    <div className="user-profile">
+      <img src={user.avatar} alt={user.name} />
+      <h2>{user.name}</h2>
+      <p>{user.bio}</p>
+    </div>
+  );
+}
+
+function PostsList({ posts }) {
+  return (
+    <div className="posts-list">
+      {posts.map((post) => (
+        <PostItem key={post.id} post={post} />
+      ))}
+    </div>
+  );
+}
+
+function UserDashboard({ userId }) {
+  const { user, posts, loading } = useUserData(userId);
+
+  if (loading) return <LoadingSpinner />;
+
+  return (
+    <div className="dashboard">
+      <UserProfile user={user} />
+      <PostsList posts={posts} />
+    </div>
+  );
+}
+```
+
+### 2. Use Meaningful Component Names
+
+```jsx
+// ❌ Generic, unclear names
+function Comp1() {
+  /* ... */
+}
+function MyComponent() {
+  /* ... */
+}
+function Thing() {
+  /* ... */
+}
+
+// ✅ Descriptive, clear names
+function NavigationMenu() {
+  /* ... */
+}
+function UserProfileCard() {
+  /* ... */
+}
+function ShoppingCartItem() {
+  /* ... */
+}
+```
+
+### 3. Extract Reusable Components
+
+```jsx
+// ✅ Reusable button component
+function Button({
+  children,
+  variant = "primary",
+  size = "medium",
+  disabled = false,
+  onClick,
+}) {
+  const baseClasses = "btn";
+  const variantClasses = `btn-${variant}`;
+  const sizeClasses = `btn-${size}`;
+
+  return (
+    <button
+      className={`${baseClasses} ${variantClasses} ${sizeClasses}`}
+      disabled={disabled}
+      onClick={onClick}
+    >
+      {children}
+    </button>
+  );
+}
+
+// Usage across different components
+function LoginForm() {
+  return (
+    <form>
+      {/* form fields */}
+      <Button variant="primary" size="large">
+        Login
+      </Button>
+    </form>
+  );
+}
+
+function ProductCard({ product }) {
+  return (
+    <div className="product-card">
+      <h3>{product.name}</h3>
+      <p>{product.price}</p>
+      <Button variant="secondary" size="small">
+        Add to Cart
+      </Button>
+    </div>
+  );
+}
+```
+
+### 4. Use Props Destructuring
+
+```jsx
+// ❌ Accessing props via props object
+function UserCard(props) {
+  return (
+    <div>
+      <h3>{props.user.name}</h3>
+      <p>{props.user.email}</p>
+      <button onClick={props.onEdit}>Edit</button>
+    </div>
+  );
+}
+
+// ✅ Destructuring props for clarity
+function UserCard({ user, onEdit }) {
+  return (
+    <div>
+      <h3>{user.name}</h3>
+      <p>{user.email}</p>
+      <button onClick={onEdit}>Edit</button>
+    </div>
+  );
+}
+
+// ✅ Nested destructuring
+function UserCard({ user: { name, email, avatar }, onEdit, onDelete }) {
+  return (
+    <div className="user-card">
+      <img src={avatar} alt={name} />
+      <h3>{name}</h3>
+      <p>{email}</p>
+      <div>
+        <button onClick={onEdit}>Edit</button>
+        <button onClick={onDelete}>Delete</button>
+      </div>
+    </div>
+  );
+}
+```
+
+## Component Testing
+
+```jsx
+// Component to test
+function Counter({ initialCount = 0 }) {
+  const [count, setCount] = useState(initialCount);
+
+  return (
+    <div>
+      <span data-testid="count">{count}</span>
+      <button data-testid="increment" onClick={() => setCount(count + 1)}>
+        +
+      </button>
+      <button data-testid="decrement" onClick={() => setCount(count - 1)}>
+        -
+      </button>
+    </div>
+  );
+}
+
+// Test file (using Jest and React Testing Library)
+import { render, screen, fireEvent } from "@testing-library/react";
+import Counter from "./Counter";
+
+describe("Counter Component", () => {
+  test("renders with initial count", () => {
+    render(<Counter initialCount={5} />);
+    expect(screen.getByTestId("count")).toHaveTextContent("5");
+  });
+
+  test("increments count when increment button is clicked", () => {
+    render(<Counter />);
+    const incrementButton = screen.getByTestId("increment");
+    const countDisplay = screen.getByTestId("count");
+
+    fireEvent.click(incrementButton);
+    expect(countDisplay).toHaveTextContent("1");
+  });
+
+  test("decrements count when decrement button is clicked", () => {
+    render(<Counter initialCount={5} />);
+    const decrementButton = screen.getByTestId("decrement");
+    const countDisplay = screen.getByTestId("count");
+
+    fireEvent.click(decrementButton);
+    expect(countDisplay).toHaveTextContent("4");
+  });
+});
+```
+
+Components are the heart of React applications. By understanding how to create, compose, and manage components effectively, you'll be able to build maintainable, scalable, and reusable user interfaces. Remember to keep components focused, use props effectively, and leverage React's patterns and best practices for optimal development experience.

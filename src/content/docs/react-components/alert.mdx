@@ -1,8 +1,20 @@
 ---
 title: Alert
+description: A versatile React alert component with multiple variants, auto-dismiss functionality, and smooth animations using Framer Motion and Tailwind CSS.
 ---
 
-The following alert component is used to show success, error, warning and info or any other messages. It is a single component and highly versatile allowing you to define your own variants and you may set duration it appears for, `onClose` and if it should be dismissed automatically. You can style it in place via Tailwind and `className`.
+A comprehensive alert component designed to display important messages, notifications, and feedback to users. This component supports multiple alert types (success, error, warning, info), auto-dismiss functionality, custom icons, and smooth animations. Perfect for form validation feedback, system notifications, or any important messaging that requires user attention.
+
+## Features
+
+- **Multiple Alert Types**: Success, error, warning, info, and custom variants
+- **Auto-dismiss**: Configurable automatic dismissal with custom timing
+- **Manual Dismissal**: Close button for user-controlled dismissal
+- **Smooth Animations**: Enter and exit animations powered by Framer Motion
+- **Custom Icons**: Built-in icons with support for custom icon components
+- **Flexible Content**: Support for titles, descriptions, and action buttons
+- **Accessibility**: Screen reader support and keyboard navigation
+- **Responsive Design**: Adapts to different screen sizes and containers
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -25,10 +37,401 @@ import alert from "./codes/Alert/alert.txt?raw";
   </TabItem>
 </Tabs>
 
-### Preview
+## Props
+
+| Prop          | Type                                          | Default     | Description                                                 |
+| ------------- | --------------------------------------------- | ----------- | ----------------------------------------------------------- |
+| `type`        | `'success' \| 'error' \| 'warning' \| 'info'` | `'info'`    | The type of alert, affects styling and default icon         |
+| `title`       | `string`                                      | `undefined` | Optional title for the alert                                |
+| `message`     | `string \| ReactNode`                         | `required`  | The main alert content                                      |
+| `duration`    | `number`                                      | `0`         | Auto-dismiss duration in milliseconds (0 = no auto-dismiss) |
+| `dismissible` | `boolean`                                     | `true`      | Whether the alert can be manually dismissed                 |
+| `onClose`     | `function`                                    | `undefined` | Function called when alert is closed                        |
+| `icon`        | `ReactNode`                                   | `auto`      | Custom icon (uses default type-based icon if not provided)  |
+| `actions`     | `ReactNode`                                   | `undefined` | Action buttons or links to display                          |
+| `className`   | `string`                                      | `''`        | Additional CSS classes for custom styling                   |
+| `animate`     | `boolean`                                     | `true`      | Whether to use enter/exit animations                        |
+
+## Usage Examples
+
+### Basic Alert Types
+
+```jsx
+function AlertDemo() {
+  return (
+    <div className="space-y-4">
+      <Alert type="success" message="Operation completed successfully!" />
+
+      <Alert
+        type="error"
+        message="An error occurred while processing your request."
+      />
+
+      <Alert
+        type="warning"
+        message="Please review your settings before continuing."
+      />
+
+      <Alert
+        type="info"
+        message="New features are now available in the dashboard."
+      />
+    </div>
+  );
+}
+```
+
+### Alert with Title and Actions
+
+```jsx
+function FormAlert() {
+  const handleRetry = () => {
+    console.log("Retrying operation...");
+  };
+
+  const handleCancel = () => {
+    console.log("Operation cancelled");
+  };
+
+  return (
+    <Alert
+      type="error"
+      title="Form Submission Failed"
+      message="There were validation errors in your form. Please check the fields below and try again."
+      actions={
+        <div className="flex gap-2 mt-3">
+          <button
+            onClick={handleRetry}
+            className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+          >
+            Retry
+          </button>
+          <button
+            onClick={handleCancel}
+            className="px-3 py-1 bg-gray-200 text-gray-800 text-sm rounded hover:bg-gray-300"
+          >
+            Cancel
+          </button>
+        </div>
+      }
+    />
+  );
+}
+```
+
+### Auto-dismiss Alert
+
+```jsx
+function AutoDismissAlert() {
+  const [showAlert, setShowAlert] = useState(false);
+
+  const showSuccessAlert = () => {
+    setShowAlert(true);
+  };
+
+  return (
+    <div>
+      <button
+        onClick={showSuccessAlert}
+        className="px-4 py-2 bg-blue-500 text-white rounded"
+      >
+        Show Success Alert
+      </button>
+
+      {showAlert && (
+        <Alert
+          type="success"
+          message="File uploaded successfully!"
+          duration={3000} // Auto-dismiss after 3 seconds
+          onClose={() => setShowAlert(false)}
+        />
+      )}
+    </div>
+  );
+}
+```
+
+### Custom Icon Alert
+
+```jsx
+import { Heart, Star, Zap } from "lucide-react";
+
+function CustomIconAlerts() {
+  return (
+    <div className="space-y-4">
+      <Alert
+        type="info"
+        icon={<Heart className="w-5 h-5" />}
+        title="Thank you!"
+        message="Your feedback helps us improve our service."
+      />
+
+      <Alert
+        type="success"
+        icon={<Star className="w-5 h-5" />}
+        message="You've earned a new achievement badge!"
+      />
+
+      <Alert
+        type="warning"
+        icon={<Zap className="w-5 h-5" />}
+        message="High server load detected. Performance may be affected."
+      />
+    </div>
+  );
+}
+```
+
+### Non-dismissible Alert
+
+```jsx
+function PersistentAlert() {
+  return (
+    <Alert
+      type="warning"
+      title="Maintenance Mode"
+      message="The system will be under maintenance from 2:00 AM to 4:00 AM UTC."
+      dismissible={false}
+    />
+  );
+}
+```
+
+## Advanced Examples
+
+### Alert Manager with Queue
+
+```jsx
+function AlertManager() {
+  const [alerts, setAlerts] = useState([]);
+
+  const addAlert = (type, message, options = {}) => {
+    const id = Date.now();
+    const newAlert = {
+      id,
+      type,
+      message,
+      ...options,
+    };
+    setAlerts((prev) => [...prev, newAlert]);
+  };
+
+  const removeAlert = (id) => {
+    setAlerts((prev) => prev.filter((alert) => alert.id !== id));
+  };
+
+  const showSuccess = () =>
+    addAlert("success", "Operation successful!", { duration: 3000 });
+  const showError = () => addAlert("error", "Something went wrong!");
+  const showWarning = () =>
+    addAlert("warning", "Please check your input.", { duration: 5000 });
+
+  return (
+    <div>
+      <div className="flex gap-2 mb-4">
+        <button
+          onClick={showSuccess}
+          className="px-3 py-1 bg-green-500 text-white rounded"
+        >
+          Success
+        </button>
+        <button
+          onClick={showError}
+          className="px-3 py-1 bg-red-500 text-white rounded"
+        >
+          Error
+        </button>
+        <button
+          onClick={showWarning}
+          className="px-3 py-1 bg-yellow-500 text-white rounded"
+        >
+          Warning
+        </button>
+      </div>
+
+      <div className="space-y-2 max-w-md">
+        {alerts.map((alert) => (
+          <Alert
+            key={alert.id}
+            type={alert.type}
+            message={alert.message}
+            duration={alert.duration}
+            onClose={() => removeAlert(alert.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+### Form Validation Alerts
+
+```jsx
+function ContactForm() {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+  const [errors, setErrors] = useState({});
+  const [success, setSuccess] = useState(false);
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    else if (!/\S+@\S+\.\S+/.test(formData.email))
+      newErrors.email = "Email is invalid";
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    setSuccess(false);
+
+    if (validateForm()) {
+      // Simulate form submission
+      setTimeout(() => {
+        setSuccess(true);
+        setFormData({ name: "", email: "", message: "" });
+        setErrors({});
+      }, 1000);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSubmit} className="max-w-md space-y-4">
+      {success && (
+        <Alert
+          type="success"
+          title="Message Sent!"
+          message="Thank you for your message. We'll get back to you soon."
+          duration={5000}
+          onClose={() => setSuccess(false)}
+        />
+      )}
+
+      {Object.keys(errors).length > 0 && (
+        <Alert
+          type="error"
+          title="Please fix the following errors:"
+          message={
+            <ul className="mt-2 list-disc list-inside">
+              {Object.values(errors).map((error, index) => (
+                <li key={index} className="text-sm">
+                  {error}
+                </li>
+              ))}
+            </ul>
+          }
+        />
+      )}
+
+      {/* Form fields */}
+      <input
+        type="text"
+        placeholder="Your Name"
+        value={formData.name}
+        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <input
+        type="email"
+        placeholder="Your Email"
+        value={formData.email}
+        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+      />
+
+      <textarea
+        placeholder="Your Message"
+        value={formData.message}
+        onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
+        rows="4"
+      />
+
+      <button
+        type="submit"
+        className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+      >
+        Send Message
+      </button>
+    </form>
+  );
+}
+```
+
+## Alert Types and Styling
+
+### Success Alert
+
+- Green color scheme with checkmark icon
+- Used for successful operations, confirmations
+
+### Error Alert
+
+- Red color scheme with error/X icon
+- Used for failures, validation errors
+
+### Warning Alert
+
+- Yellow/orange color scheme with warning icon
+- Used for cautions, potential issues
+
+### Info Alert
+
+- Blue color scheme with info icon
+- Used for general information, tips
+
+## Preview
 
 <iframe
   src="https://stackblitz.com/edit/vitejs-vite-s4uj98?embed=1&file=src%2Fcomponents%2FAlert.jsx&hideNavigation=1&theme=dark&view=preview"
   style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+  sandbox="allow-scripts allow-same-origin allow-popups and-forms allow-modals"
 />
+
+## Accessibility Features
+
+- **ARIA Live Regions**: Alerts are announced to screen readers when they appear
+- **Keyboard Navigation**: Close buttons are keyboard accessible with Tab navigation
+- **Focus Management**: Proper focus handling when alerts appear/disappear
+- **High Contrast Support**: Works well with high contrast modes
+- **Screen Reader Labels**: Descriptive labels for icons and interactive elements
+
+## Best Practices
+
+1. **Use appropriate alert types** - Match the alert type with the message content and urgency
+2. **Keep messages concise** - Use clear, brief language that users can quickly understand
+3. **Provide clear actions** - Include relevant action buttons when users need to take steps
+4. **Use auto-dismiss wisely** - Only auto-dismiss non-critical messages
+5. **Position alerts strategically** - Place alerts where users expect to see feedback
+6. **Limit simultaneous alerts** - Avoid overwhelming users with too many alerts at once
+7. **Test accessibility** - Ensure alerts work well with screen readers and keyboard navigation
+
+## Animation Customization
+
+The alert component uses Framer Motion for smooth animations. You can customize the animation behavior:
+
+```jsx
+// Custom animation variants
+const customVariants = {
+  initial: { opacity: 0, y: -20, scale: 0.95 },
+  animate: { opacity: 1, y: 0, scale: 1 },
+  exit: { opacity: 0, y: -20, scale: 0.95 },
+};
+
+<Alert
+  type="success"
+  message="Custom animation!"
+  animate={true}
+  variants={customVariants}
+/>;
+```

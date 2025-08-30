@@ -5,29 +5,7 @@ title: Hooks in React
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-
-
-import DataFetchingComponent from './codes/hooksCode/useEffect/DataFetchingComponent.txt?raw';
-import useEffectUsage from './codes/hooksCode/useEffect/Usage.txt?raw';
-import useStateCounter from './codes/hooksCode/useState/Counter.txt?raw';
-import useStateUsage from './codes/hooksCode/useState/Usage.txt?raw';
-import UsageOne from './codes/hooksCode/Others/UsageOne.txt?raw';
-import UsageTwo from './codes/hooksCode/Others/UsageTwo.txt?raw';
-import Cleanup from './codes/hooksCode/Others/Cleanup.txt?raw';
-import useContextComponent from './codes/hooksCode/useContext/App.txt?raw';
-import useContextUsage from './codes/hooksCode/useContext/Usage.txt?raw';
-import useRefComponent from './codes/hooksCode/useRef/FocusInput.txt?raw';
-import useRefUsage from './codes/hooksCode/useRef/Usage.txt?raw';
-import useReducerComponent from './codes/hooksCode/useReducer/Counter.txt?raw';
-import useReducerUsage from './codes/hooksCode/useReducer/Usage.txt?raw';
-import ExpensiveComponent from './codes/hooksCode/useMemo/ExpensiveComponent.txt?raw';
-import useMemoUsage from './codes/hooksCode/useMemo/Usage.txt?raw';
-import useMemoApp from './codes/hooksCode/useMemo/App.txt?raw';
-import Counter from './codes/hooksCode/useCallBack/Counter.txt?raw';
-import useCallBackUsage from './codes/hooksCode/useCallBack/Usage.txt?raw';
-import CounterComponent from './codes/hooksCode/CustomHook/CounterComponent.txt?raw';
-import CustomHookUsage from './codes/hooksCode/CustomHook/Usage.txt?raw';
-import { Steps } from '@astrojs/starlight/components';
+import { Steps } from "@astrojs/starlight/components";
 
 ## Introduction to Hooks
 
@@ -35,9 +13,9 @@ React Hooks were introduced in React 16.8 to simplify how developers manage stat
 
 ### Pros of React Hooks
 
- - **Simplify Code** : With class components, developers had to deal with this, binding methods, and complex lifecycle methods. Hooks eliminate these issues by keeping everything in functional components, which are easier to write and maintain.
- - **Reuse Logic** : Before Hooks, reusing logic across components was challenging. Developers had to rely on patterns like higher-order components (HOCs) or render props, which made the code harder to follow. Hooks, especially custom hooks, enable the reuse of logic more naturally, without modifying the component tree structure.
- - **Clean Code** : Class components often resulted in code that mixed stateful logic with UI concerns. Hooks let developers separate different pieces of logic (e.g., managing form state, fetching data) into smaller, isolated functions, leading to better-organized code.
+- **Simplify Code** : With class components, developers had to deal with this, binding methods, and complex lifecycle methods. Hooks eliminate these issues by keeping everything in functional components, which are easier to write and maintain.
+- **Reuse Logic** : Before Hooks, reusing logic across components was challenging. Developers had to rely on patterns like higher-order components (HOCs) or render props, which made the code harder to follow. Hooks, especially custom hooks, enable the reuse of logic more naturally, without modifying the component tree structure.
+- **Clean Code** : Class components often resulted in code that mixed stateful logic with UI concerns. Hooks let developers separate different pieces of logic (e.g., managing form state, fetching data) into smaller, isolated functions, leading to better-organized code.
 
 ### Rules of Hooks
 
@@ -48,14 +26,14 @@ Hooks should only be called at the top level of your component, not inside loops
 ```jsx
 // Correct usage
 function MyComponent() {
-    const [count, setCount] = useState(0); // Hook at the top level
+  const [count, setCount] = useState(0); // Hook at the top level
 }
 
 // Incorrect usage
 function MyComponent() {
-    if (someCondition) {
-        useState(0); // Hook inside a condition – this will cause issues
-    }
+  if (someCondition) {
+    useState(0); // Hook inside a condition – this will cause issues
+  }
 }
 ```
 
@@ -66,12 +44,12 @@ Hooks should only be called inside functional components or custom hooks, not in
 ```jsx
 // Correct usage
 function MyComponent() {
-    const [count, setCount] = useState(0);
+  const [count, setCount] = useState(0);
 }
 
 // Incorrect usage
 function regularFunction() {
-    useState(0); // Can't call a Hook here
+  useState(0); // Can't call a Hook here
 }
 ```
 
@@ -86,17 +64,19 @@ React provides several hooks that allow you to handle common tasks like managing
 The useState hook is used to add state to functional components. Before hooks, only class components could have state. Now, with useState, any functional component can manage its own state.
 
 The useState hook allows you to declare a state variable and a function to update that state. When you call useState, you pass the initial state as an argument, and it returns an array with two elements:
- - The current state
- - A function that updates the state
+
+- The current state
+- A function that updates the state
 
 **Syntax of `useState`**
 
 ```jsx
 const [stateVariable, setStateVariable] = useState(initialValue);
 ```
- - `stateVariable` : This is the current value of the state.
- - `setStateVariable` : This is a function used to update the value of stateVariable.
- - `initialValue` : This is the starting value for the state.
+
+- `stateVariable` : This is the current value of the state.
+- `setStateVariable` : This is a function used to update the value of stateVariable.
+- `initialValue` : This is the starting value for the state.
 
 #### Example of `useState`
 
@@ -106,10 +86,26 @@ const [stateVariable, setStateVariable] = useState(initialValue);
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useStateUsage} lang="jsx" title="Syntax" />
+    <Code code={`const [stateVariable, setStateVariable] = useState(initialValue);`} lang="jsx" title="Syntax" />
   </TabItem>
   <TabItem label="Component">
-    <Code code={useStateCounter} lang="jsx" title="Counter.jsx" />
+    <Code code={`import React, { useState } from 'react';
+
+function Counter() {
+// Declare a state variable 'count' initialized to 0
+const [count, setCount] = useState(0);
+
+    return (
+        <div>
+            <p>You clicked {count} times</p>
+            <button onClick={() => setCount(count + 1)}>
+                Click me
+            </button>
+        </div>
+    );
+
+}`} lang="jsx" title="Counter.jsx" />
+
   </TabItem>
 </Tabs>
 
@@ -123,8 +119,8 @@ Sometimes, initializing state might involve a heavy calculation. You can pass a 
 
 ```jsx
 const [state, setState] = useState(() => {
-    // Complex calculation to determine the initial state
-    return someExpensiveCalculation();
+  // Complex calculation to determine the initial state
+  return someExpensiveCalculation();
 });
 ```
 
@@ -133,22 +129,23 @@ const [state, setState] = useState(() => {
 When updating state based on the current state (e.g., incrementing or toggling values), you can pass a function to setState. This ensures you’re working with the latest state value.
 
 ```jsx
-<button onClick={() => setCount(prevCount => prevCount + 1)}>
-    Increment
+<button onClick={() => setCount((prevCount) => prevCount + 1)}>
+  Increment
 </button>
 ```
 
 ### `useEffect` : Handling Side effects
 
 The `useEffect` hook is used to handle side effects in functional components. Common side effects include data fetching, subscriptions, and directly interacting with the DOM. Before hooks, these kinds of side effects were managed using lifecycle methods like `componentDidMount`, `componentDidUpdate`, and `componentWillUnmount` in class components. `useEffect` combines all of these into one unified API. Basically, it takes two arguments
- - A function where you define the side effect.
- - An optional dependency array that controls when the effect should run.
+
+- A function where you define the side effect.
+- An optional dependency array that controls when the effect should run.
 
 **Syntax of `useEffect`**
 
 ```jsx
 useEffect(() => {
-    // Code for the side effect
+  // Code for the side effect
 }, [dependencies]);
 ```
 
@@ -163,10 +160,33 @@ Dependency is an optional array that specifies when the effect should re-run. If
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useEffectUsage} lang="jsx" title="Syntax" />
+    <Code code={`useEffect(() => {
+    // Code for the side effect
+}, [dependencies]);`} lang="jsx" title="Syntax" />
   </TabItem>
   <TabItem label="Component">
-    <Code code={DataFetchingComponent} lang="jsx" title="DataFetchingComponent.jsx" />
+    <Code code={`import React, { useState, useEffect } from 'react';
+
+function DataFetchingComponent() {
+const [data, setData] = useState([]);
+
+    useEffect(() => {
+        // Fetch data from an API when the component mounts
+        fetch('https://api.example.com/data')
+            .then(response => response.json())
+            .then(data => setData(data));
+    }, []); // Empty array means this effect runs only once, when the component mounts
+
+    return (
+        <div>
+            {data.map(item => (
+                <p key={item.id}>{item.name}</p>
+            ))}
+        </div>
+    );
+
+}`} lang="jsx" title="DataFetchingComponent.jsx" />
+
   </TabItem>
 </Tabs>
 
@@ -178,8 +198,8 @@ You can control when an effect runs by adding dependencies. The effect will only
 
 ```jsx
 useEffect(() => {
-    // This effect runs when 'count' changes
-    console.log(`The count is now ${count}`);
+  // This effect runs when 'count' changes
+  console.log(`The count is now ${count}`);
 }, [count]); // Effect runs only when 'count' changes
 ```
 
@@ -189,13 +209,13 @@ Sometimes, side effects like subscriptions or timers need to be cleaned up to pr
 
 ```jsx
 useEffect(() => {
-    const timer = setInterval(() => {
-        console.log('This runs every second');
-    }, 1000);
-    // Cleanup the timer when the component unmounts
-    return () => {
-        clearInterval(timer);
-    };
+  const timer = setInterval(() => {
+    console.log("This runs every second");
+  }, 1000);
+  // Cleanup the timer when the component unmounts
+  return () => {
+    clearInterval(timer);
+  };
 }, []);
 ```
 
@@ -219,17 +239,16 @@ useContext allows a component to consume the nearest Context Provider’s value 
 
    ```js
    <MyContext.Provider value={someValue}>
-        <ChildComponent />
+     <ChildComponent />
    </MyContext.Provider>
    ```
-
 
 3. Use the useContext hook inside any component that needs the context value.
 
    ```js
    const value = useContext(MyContext);
    ```
-  
+
 </Steps>
 
 #### Example of `useContext`
@@ -240,10 +259,30 @@ useContext allows a component to consume the nearest Context Provider’s value 
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useContextUsage} lang="jsx" title="Syntax" />
+    <Code code={`const value = useContext(MyContext);
+
+// Create a context
+const ThemeContext = createContext();`} lang="jsx" title="Syntax" />
+
   </TabItem>
   <TabItem label="Component">
-    <Code code={useContextComponent} lang="jsx" title="App.jsx" />
+    <Code code={`import React, { createContext, useContext } from 'react';
+
+const MyContext = createContext('default value');
+
+function DisplayComponent() {
+const value = useContext(MyContext); // Access the context value
+return <p>Context Value: {value}</p>;
+}
+
+function App() {
+return (
+
+<MyContext.Provider value="Hello, World!">
+  <DisplayComponent />
+</MyContext.Provider>
+); }`} lang="jsx" title="App.jsx" />
+
   </TabItem>
 </Tabs>
 
@@ -271,10 +310,25 @@ const refContainer = useRef(initialValue);
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useRefUsage} lang="jsx" title="App.jsx" />
+    <Code code={`const ref = useRef(initialValue);`} lang="jsx" title="App.jsx" />
   </TabItem>
   <TabItem label="Component">
-    <Code code={useRefComponent} lang="jsx" title="FocusInput.jsx" />
+    <Code code={`import React, { useRef } from 'react';
+
+function FocusInput() {
+const inputRef = useRef(null); // Create a ref
+const focusInputField = () => {
+inputRef.current.focus(); // Access the input element and focus it
+};
+return (
+
+<div>
+  <input ref={inputRef} type="text" />
+  <button onClick={focusInputField}>Focus the input</button>
+</div>
+); }
+
+export default FocusInput;`} lang="jsx" title="FocusInput.jsx" />
   </TabItem>
 </Tabs>
 
@@ -283,8 +337,9 @@ const refContainer = useRef(initialValue);
 The `useReducer` hook is an alternative to `useState` for managing state, particularly when the state logic is complex or the state has multiple sub-values that need updating in various ways. It is often used in large-scale applications or for cases where `useState` would result in messy, hard-to-maintain code.
 
 `useReducer` is similar to the `reduce` function in JavaScript. It takes a reducer function and an initial state as arguments and returns:
- - The current state.
- - A dispatch function to send actions to the reducer.
+
+- The current state.
+- A dispatch function to send actions to the reducer.
 
 **Syntax of `useReducer`**
 
@@ -292,9 +347,9 @@ The `useReducer` hook is an alternative to `useState` for managing state, partic
 const [state, dispatch] = useReducer(reducerFunction, initialState);
 ```
 
- - `reducerFunction` : This is a function that takes the current state and an action, then returns the new state.
- - `initialState` : This is the initial value of the state.
- - `dispatch` : This function is used to send actions that update the state.
+- `reducerFunction` : This is a function that takes the current state and an action, then returns the new state.
+- `initialState` : This is the initial value of the state.
+- `dispatch` : This function is used to send actions that update the state.
 
 #### Example of `useReducer`
 
@@ -304,10 +359,35 @@ const [state, dispatch] = useReducer(reducerFunction, initialState);
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useReducerUsage} lang="jsx" title="App.jsx" />
+    <Code code={`const [state, dispatch] = useReducer(reducer, initialState, initFunction);`} lang="jsx" title="App.jsx" />
   </TabItem>
   <TabItem label="Component">
-    <Code code={useReducerComponent} lang="jsx" title="Counter.jsx" />
+    <Code code={`import React, { useReducer } from 'react';
+
+function counterReducer(state, action) {
+switch (action.type) {
+case 'increment':
+return { count: state.count + 1 };
+case 'decrement':
+return { count: state.count - 1 };
+default:
+return state;
+}
+}
+
+function Counter() {
+const [state, dispatch] = useReducer(counterReducer, { count: 0 });
+
+    return (
+        <div>
+            <p>Count: {state.count}</p>
+            <button onClick={() => dispatch({ type: 'increment' })}>+</button>
+            <button onClick={() => dispatch({ type: 'decrement' })}>-</button>
+        </div>
+    );
+
+}`} lang="jsx" title="Counter.jsx" />
+
   </TabItem>
 </Tabs>
 
@@ -316,18 +396,20 @@ In this example, useReducer manages simple increment and decrement actions for a
 ### `useMemo` : Memoizing Expensive Calculations
 
 The `useMemo` hook in React is used to memoize expensive calculations, so they are only recomputed when their dependencies change, rather than on every render. This can help improve performance by avoiding unnecessary re-calculations, especially in cases where the calculation is resource-intensive or when working with large data sets. It actually takes two arguments:
- - A function that returns the computed value.
- - An array of dependencies.
+
+- A function that returns the computed value.
+- An array of dependencies.
 
 **Syntax of `useMemo`**
 
 ```jsx
 const memoizedValue = useMemo(() => {
-    return computeExpensiveValue(a, b);
+  return computeExpensiveValue(a, b);
 }, [a, b]);
 ```
- - memoizedValue : The result of the computation.
- - computeExpensiveValue : The expensive function that only runs when dependencies (a, b) change.
+
+- memoizedValue : The result of the computation.
+- computeExpensiveValue : The expensive function that only runs when dependencies (a, b) change.
 
 #### Example of `useMemo`
 
@@ -337,13 +419,41 @@ const memoizedValue = useMemo(() => {
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useMemoUsage} lang="jsx" title="Syntax" />
+    <Code code={`const memoizedValue = useMemo(() => {
+    // computation
+    return value; // result of the computation
+}, [dependencies]);`} lang="jsx" title="Syntax" />
   </TabItem>
   <TabItem label="App">
-    <Code code={useMemoApp} lang="jsx" title="App.jsx" />
+    <Code code={`function App() {
+    const [a, setA] = useState(2);
+    const [b, setB] = useState(3);
+
+    return (
+        <div>
+            <ExpensiveComponent a={a} b={b} />
+            <button onClick={() => setA(a + 1)}>Increment A</button>
+            <button onClick={() => setB(b + 1)}>Increment B</button>
+        </div>
+    );
+
+}`} lang="jsx" title="App.jsx" />
+
   </TabItem>
   <TabItem label="Component">
-    <Code code={ExpensiveComponent} lang="jsx" title="ExpensiveComponent.jsx" />
+    <Code code={`import React, { useState, useMemo } from 'react';
+
+function ExpensiveComponent({ a, b }) {
+// Memoize the expensive calculation
+const expensiveCalculation = useMemo(() => {
+console.log('Calculating...');
+return a \* b;
+}, [a, b]);
+
+    return <p>Result: {expensiveCalculation}</p>;
+
+}`} lang="jsx" title="ExpensiveComponent.jsx" />
+
   </TabItem>
 </Tabs>
 
@@ -352,14 +462,15 @@ In this example, `expensiveCalculation` is only re-calculated when either `a` or
 ### `useCallback` : Memoizing Functions for Performance
 
 The `useCallback` hook is used to memoize functions so that they are not recreated on every render. This is particularly useful when passing functions as props to child components or as dependencies to other hooks (like `useEffect`), as it prevents unnecessary re-renders. This actually takes two arguments.
- - The function to memoize.
- - An array of dependencies.
+
+- The function to memoize.
+- An array of dependencies.
 
 **Syntax of `useCallback`**
 
 ```jsx
 const memoizedFunction = useCallback(() => {
-    // Function logic
+  // Function logic
 }, [dependencies]);
 ```
 
@@ -374,18 +485,47 @@ const memoizedFunction = useCallback(() => {
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={useCallBackUsage} lang="jsx" title="App.jsx" />
+    <Code code={`const memoizedCallback = useCallback(
+  () => {
+    // Function logic here
+  },
+  [dependencies]
+);`} lang="jsx" title="App.jsx" />
   </TabItem>
   <TabItem label="Component">
-    <Code code={Counter} lang="jsx" title="Counter.jsx" />
+    <Code code={`import React, { useState, useCallback } from 'react';
+
+function ChildComponent({ onClick }) {
+console.log('Child component rendered');
+return <button onClick={onClick}>Click Me</button>;
+}
+
+function Counter() {
+const [count, setCount] = useState(0);
+
+    const handleClick = useCallback(() => {
+        setCount((prevCount) => prevCount + 1);
+    }, []);
+
+    return (
+        <div>
+            <p>Count: {count}</p>
+            <ChildComponent onClick={handleClick} />
+        </div>
+    );
+
+}
+
+export default Counter;`} lang="jsx" title="Counter.jsx" />
   </TabItem>
 </Tabs>
 
 In this example,
- - The Counter component manages a count state using `useState`, and it includes a child component `ChildComponent` that takes an `onClick` handler as a prop.
- - The `ChildComponent` renders a button and logs to the console every time it re-renders.
- - The `handleClick` function inside `Counter` is wrapped with `useCallback`. This ensures that the function is memoized and won't be recreated on every render unless its dependencies change (in this case, the dependency array is empty, so it won't change).
- - Without `useCallback`, every render of Counter would create a new version of `handleClick`, which would cause `ChildComponent` to re-render unnecessarily. Using `useCallback` prevents this, as `handleClick` stays the same between renders.
+
+- The Counter component manages a count state using `useState`, and it includes a child component `ChildComponent` that takes an `onClick` handler as a prop.
+- The `ChildComponent` renders a button and logs to the console every time it re-renders.
+- The `handleClick` function inside `Counter` is wrapped with `useCallback`. This ensures that the function is memoized and won't be recreated on every render unless its dependencies change (in this case, the dependency array is empty, so it won't change).
+- Without `useCallback`, every render of Counter would create a new version of `handleClick`, which would cause `ChildComponent` to re-render unnecessarily. Using `useCallback` prevents this, as `handleClick` stays the same between renders.
 
 ## Custom Hooks
 
@@ -395,17 +535,17 @@ In React, Custom Hooks allow you to extract and reuse logic across multiple comp
 
 You should consider creating a Custom Hook when:
 
- - You have logic that is reused across multiple components. For example, fetching data, handling forms, managing local storage, or handling timers.
- - You want to keep your components cleaner and less cluttered. By moving logic to a custom hook, components can focus on UI-related tasks.
- - You need to separate concerns. Custom Hooks allow you to organize your code by concern, making it easier to test, modify, and maintain.
+- You have logic that is reused across multiple components. For example, fetching data, handling forms, managing local storage, or handling timers.
+- You want to keep your components cleaner and less cluttered. By moving logic to a custom hook, components can focus on UI-related tasks.
+- You need to separate concerns. Custom Hooks allow you to organize your code by concern, making it easier to test, modify, and maintain.
 
 #### Steps to create custom Hook
 
 A Custom Hook is essentially a function that:
 
- - Starts with the word use (to follow React's convention and allow it to use hooks inside).
- - Can call other hooks inside itself.
- - Returns values (or functions) that the component can use.
+- Starts with the word use (to follow React's convention and allow it to use hooks inside).
+- Can call other hooks inside itself.
+- Returns values (or functions) that the component can use.
 
 #### Example of Custom Hook
 
@@ -415,10 +555,57 @@ A Custom Hook is essentially a function that:
     <Code code={`npm install @astrojs/react react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="Usage">
-    <Code code={CustomHookUsage} lang="jsx" title="App.jsx" />
+    <Code code={`import { useState, useEffect } from 'react';
+
+function useCustomHook(/_ parameters _/) {
+// State and other hooks
+const [state, setState] = useState(initialValue);
+
+    useEffect(() => {
+        // Logic here
+
+        return () => {
+            // Cleanup if necessary
+        };
+    }, [dependencies]);
+
+    // Return state and functions to be used in components
+    return [state, setState];
+
+}`} lang="jsx" title="App.jsx" />
+
   </TabItem>
   <TabItem label="Component">
-    <Code code={CounterComponent} lang="jsx" title="CounterComponent.jsx" />
+    <Code code={`import { useState } from 'react';
+
+// Custom hook for counter
+function useCounter(initialValue = 0) {
+const [count, setCount] = useState(initialValue);
+
+    const increment = () => setCount(prevCount => prevCount + 1);
+    const decrement = () => setCount(prevCount => prevCount - 1);
+    const reset = () => setCount(initialValue);
+
+    return { count, increment, decrement, reset };
+
+}
+
+// Component using the custom hook
+function CounterComponent() {
+const { count, increment, decrement, reset } = useCounter(0);
+
+    return (
+        <div>
+            <h1>Count: {count}</h1>
+            <button onClick={increment}>Increment</button>
+            <button onClick={decrement}>Decrement</button>
+            <button onClick={reset}>Reset</button>
+        </div>
+    );
+
+}
+
+export default CounterComponent;`} lang="jsx" title="CounterComponent.jsx" />
   </TabItem>
 </Tabs>
 

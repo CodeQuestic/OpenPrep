@@ -1,8 +1,0 @@
-import React from 'react'
-function FunctionalExample() {
-  const handleClick = () => {
-    alert('Button clicked in Functional Component!');
-  };
-
-  return <button onClick={handleClick}>Click Me</button>;
-}

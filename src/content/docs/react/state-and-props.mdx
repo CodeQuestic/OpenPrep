@@ -2,25 +2,10 @@
 title: State and Props
 ---
 
-import { Steps } from '@astrojs/starlight/components';
+import { Steps } from "@astrojs/starlight/components";
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
-
-import localStateParentComponent from './codes/stateAndPropsCode/localState/ParentComponent.txt?raw';
-import localStateChildComponent from './codes/stateAndPropsCode/localState/ChildComponent.txt?raw';
-import updateStateParentComponent from './codes/stateAndPropsCode/updateState/ParentComponent.txt?raw';
-import updateStateChildComponent from './codes/stateAndPropsCode/updateState/ChildComponent.txt?raw';
-import propsParentComponent from './codes/stateAndPropsCode/props/ParentComponent.txt?raw';
-import propsProductList from './codes/stateAndPropsCode/props/ProductList.txt?raw';
-import propsProductItem from './codes/stateAndPropsCode/props/ProductItem.txt?raw';
-import liftingStateTemperatureInput from './codes/stateAndPropsCode/liftingState/TemperatureInput.txt?raw';
-import liftingStateTemperatureConverter from './codes/stateAndPropsCode/liftingState/TemperatureConverter.txt?raw';
-import contextAPIThemeProvider from './codes/stateAndPropsCode/contextAPI/ThemeProvider.txt?raw';
-import contextAPIToolbar from './codes/stateAndPropsCode/contextAPI/Toolbar.txt?raw';
-import contextAPIApp from './codes/stateAndPropsCode/contextAPI/App.txt?raw';
-
-
 
 React's state and props are essential for managing data and controlling the flow of information between components. This section provides an overview of these concepts and introduces best practices for managing and updating state in functional components.
 
@@ -29,6 +14,7 @@ React's state and props are essential for managing data and controlling the flow
 **State** represents a component's dynamic data that React tracks and responds to. It's stored locally within the component and can change over time, allowing React to re-render the component in response to these changes. State is crucial for managing data that updates over time, like user inputs, form data, or fetched API data.
 
 Some common examples of when state is used include:
+
 - **User Inputs**: Tracking form values (like text inputs or checkboxes).
 - **API Data**: Storing data fetched from an API.
 - **UI States**: Managing component visibility, toggling modes (dark/light theme), etc.
@@ -39,9 +25,9 @@ Some common examples of when state is used include:
 
 1. #### Enables Dynamic User Interface
 
-    State allows React components to respond to user actions and reflect real-time data changes without requiring a page reload. This ability to update only the changed parts of the UI creates a smoother, more responsive user experience.
+   State allows React components to respond to user actions and reflect real-time data changes without requiring a page reload. This ability to update only the changed parts of the UI creates a smoother, more responsive user experience.
 
-    **Example** : In a to-do list app, the state can manage the list of tasks. Adding, deleting, or completing a task only updates the affected parts of the UI instead of reloading the entire page.
+   **Example** : In a to-do list app, the state can manage the list of tasks. Adding, deleting, or completing a task only updates the affected parts of the UI instead of reloading the entire page.
 
 2. #### Maintains Data Consistency within Components
 
@@ -66,14 +52,13 @@ Some common examples of when state is used include:
    Modern applications often require real-time data syncing, such as live chat, notifications, or stock prices. State is crucial for displaying this live data accurately within components and keeping the UI up-to-date with each change.
 
    **Example** : In a messaging app, state can track incoming messages, online user status, and typing indicators. React automatically updates the UI to reflect these real-time changes, enhancing the user experience.
-  
-</Steps>
 
+</Steps>
 
 #### Example
 
 ```jsx
-import React, { useState } from 'react';
+import React, { useState } from "react";
 
 function Counter() {
   const [count, setCount] = useState(0);
@@ -86,6 +71,7 @@ function Counter() {
   );
 }
 ```
+
 In this example, `count` is the local state in the `Counter` component, which updates and causes the component to re-render each time the user clicks the button.
 
 ## Managing local state with `useState`
@@ -93,19 +79,21 @@ In this example, `count` is the local state in the `Counter` component, which up
 The useState hook is the primary tool for managing local state in React’s functional components. It takes an initial value as its argument and returns an array with the current state and a function to update that state.
 
 **Syntax**
+
 ```jsx
 const [state, setState] = useState(initialValue);
 ```
- - `state` : Holds the current state value.
- - `setState` : Function used to update the state
+
+- `state` : Holds the current state value.
+- `setState` : Function used to update the state
 
 ### Initializing State
 
 When you initialize state in a React component, you use the useState hook to set up a default value. The initial state value can be any valid JavaScript data type, depending on what the component needs to track:
 
- - Primitive Types: Strings, numbers, booleans.
- - Arrays: For managing lists, collections, or multiple values.
- - Objects: For managing multiple related properties within a single state object.
+- Primitive Types: Strings, numbers, booleans.
+- Arrays: For managing lists, collections, or multiple values.
+- Objects: For managing multiple related properties within a single state object.
 
 #### Example
 
@@ -115,10 +103,57 @@ When you initialize state in a React component, you use the useState hook to set
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="ParentComponent">
-    <Code code={localStateParentComponent} lang="jsx" title="ParentComponent.jsx" />
+    <Code
+      code={`import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+const [count, setCount] = useState(0);
+const [name, setName] = useState('');
+
+return (
+<div>
+<h1>Parent Component</h1>
+<p>Count: {count}</p>
+<p>Name: {name}</p>
+<button onClick={() => setCount(count + 1)}>Increment Count</button>
+<input
+type="text"
+value={name}
+onChange={(e) => setName(e.target.value)}
+placeholder="Enter name"
+/>
+
+      <ChildComponent count={count} name={name} />
+    </div>
+
+);
+}
+
+export default ParentComponent;`}
+      lang="jsx"
+      title="ParentComponent.jsx"
+    />
   </TabItem>
   <TabItem label="ChildComponent">
-    <Code code={localStateChildComponent} lang="jsx" title="ChildComponent.jsx" />
+    <Code
+      code={`import React from 'react';
+
+function ChildComponent({ count, name }) {
+return (
+<div>
+<h2>Child Component</h2>
+<p>Received count: {count}</p>
+<p>Received name: {name || 'No name provided'}</p>
+<p>Count is {count % 2 === 0 ? 'even' : 'odd'}</p>
+</div>
+);
+}
+
+export default ChildComponent;`}
+      lang="jsx"
+      title="ChildComponent.jsx"
+    />
   </TabItem>
 </Tabs>
 
@@ -146,16 +181,75 @@ In this example, a ParentComponent that tracks a `count` state is created. The `
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="ParentComponent">
-    <Code code={updateStateParentComponent} lang="jsx" title="ParentComponent.jsx" />
+    <Code
+      code={`import React, { useState } from 'react';
+import ChildComponent from './ChildComponent';
+
+function ParentComponent() {
+const [count, setCount] = useState(0);
+
+const incrementCount = () => {
+setCount(prevCount => prevCount + 1);
+};
+
+const resetCount = () => {
+setCount(0);
+};
+
+return (
+<div>
+<h1>Parent Component</h1>
+<p>Current count: {count}</p>
+<button onClick={resetCount}>Reset Count</button>
+
+      <ChildComponent
+        count={count}
+        onIncrement={incrementCount}
+      />
+    </div>
+
+);
+}
+
+export default ParentComponent;`}
+      lang="jsx"
+      title="ParentComponent.jsx"
+    />
   </TabItem>
   <TabItem label="ChildComponent">
-    <Code code={updateStateChildComponent} lang="jsx" title="ChildComponent.jsx" />
+    <Code
+      code={`import React from 'react';
+
+function ChildComponent({ count, onIncrement }) {
+const handleMultipleUpdates = () => {
+// Multiple state updates in the same event handler
+// React will batch these updates together
+onIncrement();
+onIncrement();
+onIncrement();
+};
+
+return (
+<div>
+<h2>Child Component</h2>
+<p>Count from parent: {count}</p>
+<button onClick={onIncrement}>Increment by 1</button>
+<button onClick={handleMultipleUpdates}>Increment by 3</button>
+<p>Count is {count >= 10 ? 'high' : 'low'}</p>
+</div>
+);
+}
+
+export default ChildComponent;`}
+      lang="jsx"
+      title="ChildComponent.jsx"
+    />
   </TabItem>
 </Tabs>
 
- - `ParentComponent` initializes a `count` state and defines the `incrementCount` function to update it.
- - `incrementCount` is passed down to `ChildComponent` as a prop, allowing the child to modify the parent’s state.
- - When the button in `ChildComponent` is clicked, `incrementCount` is triggered, incrementing `count` in `ParentComponent`.
+- `ParentComponent` initializes a `count` state and defines the `incrementCount` function to update it.
+- `incrementCount` is passed down to `ChildComponent` as a prop, allowing the child to modify the parent’s state.
+- When the button in `ChildComponent` is clicked, `incrementCount` is triggered, incrementing `count` in `ParentComponent`.
 
 This example demonstrates how functional updates (using `prevCount => prevCount + 1`) ensure accuracy even with multiple asynchronous interactions and prop drilling, where a parent function is passed to a child to modify the parent’s state. It’s a common technique when managing shared state between components.
 
@@ -164,9 +258,10 @@ This example demonstrates how functional updates (using `prevCount => prevCount 
 Props (short for "properties") allow React components to pass data from a parent to a child, facilitating data sharing and creating modular, reusable components. Props are read-only, meaning that data flows one-way from parent to child and cannot be modified by the child component directly.
 
 **Key points to note**
- - Props are immutable within the child component, which ensures that data flows in a single direction, preventing unexpected mutations.
- - By using props, components can be configured differently based on the data received, making them more versatile and reusable.
- - Props can carry any valid JavaScript data type—strings, numbers, arrays, objects, functions, etc.
+
+- Props are immutable within the child component, which ensures that data flows in a single direction, preventing unexpected mutations.
+- By using props, components can be configured differently based on the data received, making them more versatile and reusable.
+- Props can carry any valid JavaScript data type—strings, numbers, arrays, objects, functions, etc.
 
 #### Example
 
@@ -176,20 +271,105 @@ Props (short for "properties") allow React components to pass data from a parent
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="ParentComponent">
-    <Code code={propsParentComponent} lang="jsx" title="ParentComponent.jsx" />
+    <Code 
+      code={`import React from 'react';
+import ProductList from './ProductList';
+
+function App() {
+const products = [
+{ id: 1, name: 'Laptop', price: 999, category: 'Electronics' },
+{ id: 2, name: 'Phone', price: 599, category: 'Electronics' },
+{ id: 3, name: 'Book', price: 20, category: 'Education' }
+];
+
+return (
+<div className="app">
+<h1>Product Catalog</h1>
+<ProductList items={products} />
+</div>
+);
+}
+
+export default App;`}
+      lang="jsx" 
+      title="ParentComponent.jsx" 
+    />
   </TabItem>
   <TabItem label="ProductList">
-    <Code code={propsProductList} lang="jsx" title="ProductList.jsx" />
+    <Code 
+      code={`import React from 'react';
+import ProductItem from './ProductItem';
+
+function ProductList({ items }) {
+if (!items || items.length === 0) {
+return <p>No products available</p>;
+}
+
+return (
+<div className="product-list">
+<h2>Available Products ({items.length})</h2>
+<div className="products-grid">
+{items.map(product => (
+<ProductItem
+key={product.id}
+product={product}
+onSelect={() => console.log('Selected:', product.name)}
+/>
+))}
+</div>
+</div>
+);
+}
+
+export default ProductList;`}
+      lang="jsx" 
+      title="ProductList.jsx" 
+    />
   </TabItem>
-    <TabItem label="ProductItem">
-    <Code code={propsProductItem} lang="jsx" title="ProductItem.jsx" />
+  <TabItem label="ProductItem">
+    <Code 
+      code={`import React from 'react';
+
+function ProductItem({ product, onSelect }) {
+const { id, name, price, category } = product;
+const isExpensive = price > 500;
+
+return (
+<div className={\`product-item \${isExpensive ? 'expensive' : 'affordable'}\`}>
+<div className="product-header">
+<h3>{name}</h3>
+<span className="category">{category}</span>
+</div>
+<div className="product-details">
+<p className="price">$\{price}</p>
+<p className="product-id">ID: {id}</p>
+</div>
+<div className="product-actions">
+<button 
+          onClick={onSelect}
+          className="select-btn"
+        >
+Select Product
+</button>
+{isExpensive && (
+<span className="premium-badge">Premium</span>
+)}
+</div>
+</div>
+);
+}
+
+export default ProductItem;`}
+      lang="jsx" 
+      title="ProductItem.jsx" 
+    />
   </TabItem>
 </Tabs>
 
- - `ParentComponent` passes an array of products as a `prop` to ProductList.
- - `ProductList` iterates over `items` and renders each product using ProductItem, passing each product object as a prop.
- - `ProductItem` receives each `product` object and displays its details.
-This example illustrates how props can handle complex data structures, allowing for structured, nested components.
+- `ParentComponent` passes an array of products as a `prop` to ProductList.
+- `ProductList` iterates over `items` and renders each product using ProductItem, passing each product object as a prop.
+- `ProductItem` receives each `product` object and displays its details.
+  This example illustrates how props can handle complex data structures, allowing for structured, nested components.
 
 ## Lifting State Up in React
 
@@ -201,11 +381,11 @@ By lifting state up, you can manage data in one place and pass it down via props
 
 Lifting state is especially useful in scenarios where:
 
- - **Components Need Shared Access to Data** : If two or more sibling components require the same data or need to respond to changes in that data, lifting state up provides a clear, unified source of truth.
+- **Components Need Shared Access to Data** : If two or more sibling components require the same data or need to respond to changes in that data, lifting state up provides a clear, unified source of truth.
 
- - **Multiple Components Need to Modify State** : When more than one component needs to modify a piece of data, lifting state up allows all changes to happen in the parent component, which then propagates the updated data to each child.
+- **Multiple Components Need to Modify State** : When more than one component needs to modify a piece of data, lifting state up allows all changes to happen in the parent component, which then propagates the updated data to each child.
 
- - **Avoiding Prop Drilling** : When state is lifted up, the need to pass data down through multiple intermediary components can be minimized, simplifying component structure and making the data flow more straightforward.
+- **Avoiding Prop Drilling** : When state is lifted up, the need to pass data down through multiple intermediary components can be minimized, simplifying component structure and making the data flow more straightforward.
 
 #### Example
 
@@ -215,14 +395,123 @@ Lifting state is especially useful in scenarios where:
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="TemperatureInput">
-    <Code code={liftingStateTemperatureInput} lang="jsx" title="TemperatureInput.jsx" />
+    <Code
+      code={`import React from 'react';
+
+const scaleNames = {
+c: 'Celsius',
+f: 'Fahrenheit'
+};
+
+function TemperatureInput({ scale, temperature, onTemperatureChange }) {
+const handleChange = (e) => {
+onTemperatureChange(e.target.value);
+};
+
+return (
+<fieldset>
+<legend>Enter temperature in {scaleNames[scale]}:</legend>
+<input
+type="number"
+value={temperature}
+onChange={handleChange}
+placeholder={\`Temperature in \${scaleNames[scale]}\`}
+className="temperature-input"
+/>
+</fieldset>
+);
+}
+
+export default TemperatureInput;`}
+      lang="jsx"
+      title="TemperatureInput.jsx"
+    />
   </TabItem>
   <TabItem label="TemperatureConverter">
-    <Code code={liftingStateTemperatureConverter} lang="jsx" title="TemperatureConverter.jsx" />
+    <Code
+      code={`import React, { useState } from 'react';
+import TemperatureInput from './TemperatureInput';
+
+function toCelsius(fahrenheit) {
+return (fahrenheit - 32) \* 5 / 9;
+}
+
+function toFahrenheit(celsius) {
+return (celsius \* 9 / 5) + 32;
+}
+
+function tryConvert(temperature, convert) {
+const input = parseFloat(temperature);
+if (Number.isNaN(input)) {
+return '';
+}
+const output = convert(input);
+const rounded = Math.round(output \* 1000) / 1000;
+return rounded.toString();
+}
+
+function BoilingVerdict({ celsius }) {
+if (celsius >= 100) {
+return <p className="boiling">The water would boil.</p>;
+}
+return <p className="not-boiling">The water would not boil.</p>;
+}
+
+function TemperatureConverter() {
+const [temperature, setTemperature] = useState('');
+const [scale, setScale] = useState('c');
+
+const handleCelsiusChange = (temperature) => {
+setScale('c');
+setTemperature(temperature);
+};
+
+const handleFahrenheitChange = (temperature) => {
+setScale('f');
+setTemperature(temperature);
+};
+
+const celsius = scale === 'f' ? tryConvert(temperature, toCelsius) : temperature;
+const fahrenheit = scale === 'c' ? tryConvert(temperature, toFahrenheit) : temperature;
+
+return (
+<div className="temperature-converter">
+<h2>Temperature Converter</h2>
+<TemperatureInput
+        scale="c"
+        temperature={celsius}
+        onTemperatureChange={handleCelsiusChange}
+      />
+<TemperatureInput
+        scale="f"
+        temperature={fahrenheit}
+        onTemperatureChange={handleFahrenheitChange}
+      />
+<BoilingVerdict celsius={parseFloat(celsius)} />
+
+      <div className="conversion-info">
+        <p>Current scale: {scale === 'c' ? 'Celsius' : 'Fahrenheit'}</p>
+        {temperature && (
+          <p>
+            {temperature}° {scale === 'c' ? 'C' : 'F'} = {' '}
+            {scale === 'c' ? fahrenheit : celsius}° {scale === 'c' ? 'F' : 'C'}
+          </p>
+        )}
+      </div>
+    </div>
+
+);
+}
+
+export default TemperatureConverter;`}
+      lang="jsx"
+      title="TemperatureConverter.jsx"
+    />
   </TabItem>
 </Tabs>
 
 In this example,
+
 - `TemperatureConverter` (Parent): This component holds the `temperature` state and handles all logic related to temperature conversion. It tracks the temperature value and its scale (Celsius or Fahrenheit).
 
 - `TemperatureInput` (Child): This component renders an input for entering the temperature in a specific scale (Celsius or Fahrenheit). It receives `temperature` and `onTemperatureChange` as props from the parent.
@@ -237,7 +526,7 @@ Prop drilling in React refers to the process of passing down data (props) from a
 
 ### Alternative : Context API
 
-The Context API provides a way to avoid prop drilling by creating a context that allows components to access shared data without needing props.  It provides a way to pass data through the component tree without having to pass props down manually at every level.
+The Context API provides a way to avoid prop drilling by creating a context that allows components to access shared data without needing props. It provides a way to pass data through the component tree without having to pass props down manually at every level.
 
 #### Example
 
@@ -247,20 +536,186 @@ The Context API provides a way to avoid prop drilling by creating a context that
     <Code code={`npm install react react-dom`} lang="shell" />
   </TabItem>
   <TabItem label="ThemeProvider">
-    <Code code={contextAPIThemeProvider} lang="jsx" title="ThemeProvider.jsx" />
+    <Code 
+      code={`import React, { createContext, useContext, useState } from 'react';
+
+// Create the context
+const ThemeContext = createContext();
+
+// Create a custom hook for using the theme context
+export const useTheme = () => {
+const context = useContext(ThemeContext);
+if (!context) {
+throw new Error('useTheme must be used within a ThemeProvider');
+}
+return context;
+};
+
+// ThemeProvider component
+export const ThemeProvider = ({ children }) => {
+const [theme, setTheme] = useState('light');
+
+const toggleTheme = () => {
+setTheme(prevTheme => prevTheme === 'light' ? 'dark' : 'light');
+};
+
+const themeStyles = {
+light: {
+backgroundColor: '#ffffff',
+color: '#000000',
+border: '1px solid #ddd'
+},
+dark: {
+backgroundColor: '#333333',
+color: '#ffffff',
+border: '1px solid #555'
+}
+};
+
+const contextValue = {
+theme,
+toggleTheme,
+themeStyles: themeStyles[theme]
+};
+
+return (
+<ThemeContext.Provider value={contextValue}>
+<div style={themeStyles[theme]} className="theme-wrapper">
+{children}
+</div>
+</ThemeContext.Provider>
+);
+};`}
+lang="jsx"
+title="ThemeProvider.jsx"
+/>
+
   </TabItem>
   <TabItem label="Toolbar">
-    <Code code={contextAPIToolbar} lang="jsx" title="ToolBar.jsx" />
+    <Code 
+      code={`import React from 'react';
+import { useTheme } from './ThemeProvider';
+
+function Button({ onClick, children, variant = 'primary' }) {
+const { themeStyles } = useTheme();
+
+const buttonStyles = {
+...themeStyles,
+padding: '8px 16px',
+margin: '4px',
+border: variant === 'primary' ? '2px solid #007bff' : '2px solid #6c757d',
+borderRadius: '4px',
+cursor: 'pointer',
+fontSize: '14px'
+};
+
+return (
+<button style={buttonStyles} onClick={onClick}>
+{children}
+</button>
+);
+}
+
+function Toolbar() {
+const { theme, toggleTheme } = useTheme();
+
+const toolbarStyles = {
+display: 'flex',
+justifyContent: 'space-between',
+alignItems: 'center',
+padding: '16px',
+borderBottom: '2px solid',
+marginBottom: '16px'
+};
+
+return (
+<div style={toolbarStyles}>
+<h2>My App Toolbar</h2>
+
+      <div className="toolbar-actions">
+        <Button onClick={() => console.log('Save clicked')}>
+          Save
+        </Button>
+        <Button onClick={() => console.log('Load clicked')} variant="secondary">
+          Load
+        </Button>
+        <Button onClick={toggleTheme}>
+          Switch to {theme === 'light' ? 'Dark' : 'Light'} Theme
+        </Button>
+      </div>
+
+      <div className="theme-indicator">
+        Current theme: <strong>{theme}</strong>
+      </div>
+    </div>
+
+);
+}
+
+export default Toolbar;`} 
+      lang="jsx" 
+      title="ToolBar.jsx" 
+    />
   </TabItem>
-    <TabItem label="App">
-    <Code code={contextAPIApp} lang="jsx" title="App.jsx" />
+  <TabItem label="App">
+    <Code 
+      code={`import React from 'react';
+import { ThemeProvider } from './ThemeProvider';
+import Toolbar from './Toolbar';
+
+function Content() {
+return (
+<div style={{ padding: '20px' }}>
+<h1>Welcome to My App</h1>
+<p>
+This is an example of using React Context API for theme management.
+The theme state is shared across all components without prop drilling.
+</p>
+
+      <div className="features">
+        <h3>App Features:</h3>
+        <ul>
+          <li>Global theme switching (Light/Dark)</li>
+          <li>Context API for state management</li>
+          <li>Custom hooks for accessing context</li>
+          <li>Styled components based on theme</li>
+        </ul>
+      </div>
+
+      <div className="demo-section">
+        <h3>Demo Section</h3>
+        <p>
+          Try switching the theme using the button in the toolbar above.
+          Notice how all components automatically update their styling.
+        </p>
+      </div>
+    </div>
+
+);
+}
+
+function App() {
+return (
+<ThemeProvider>
+<div className="app">
+<Toolbar />
+<Content />
+</div>
+</ThemeProvider>
+);
+}
+
+export default App;`} 
+      lang="jsx" 
+      title="App.jsx" 
+    />
   </TabItem>
 </Tabs>
 
 In this example,
- - `ThemeContext` : Holds the global theme state and provides the theme and toggle function to other components.
- - `ThemeProvider` : Wraps the app and makes theme data available to all child components.
- - We define a context using `createContext()` and set up a `ThemeProvider` component. `ThemeProvider` holds the theme state and `toggleTheme` function, which will switch between light and dark themes. The `ThemeContext.Provider` wraps `{children}`, making `theme` and `toggleTheme` available to any component within its tree.
 
+- `ThemeContext` : Holds the global theme state and provides the theme and toggle function to other components.
+- `ThemeProvider` : Wraps the app and makes theme data available to all child components.
+- We define a context using `createContext()` and set up a `ThemeProvider` component. `ThemeProvider` holds the theme state and `toggleTheme` function, which will switch between light and dark themes. The `ThemeContext.Provider` wraps `{children}`, making `theme` and `toggleTheme` available to any component within its tree.
 
- While the Context API is a powerful tool for managing global state in small to medium-sized React applications, state management libraries like Redux, MobX, or Zustand can offer additional advantages when dealing with complex state logic and performance-sensitive applications.
+While the Context API is a powerful tool for managing global state in small to medium-sized React applications, state management libraries like Redux, MobX, or Zustand can offer additional advantages when dealing with complex state logic and performance-sensitive applications.

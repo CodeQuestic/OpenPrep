@@ -1,3 +1,565 @@
 ---
 title: JSX (JavaScript XML)
+description: Learn JSX syntax, expressions, attributes, and best practices for writing React components with this powerful JavaScript extension.
 ---
+
+import { Code } from "@astrojs/starlight/components";
+import { Steps } from "@astrojs/starlight/components";
+import { Tabs, TabItem } from "@astrojs/starlight/components";
+
+## What is JSX?
+
+**JSX (JavaScript XML)** is a syntax extension for JavaScript that allows you to write HTML-like code within JavaScript. Developed by Facebook for React, JSX makes it easier to create and visualize the structure of your user interface components. While JSX looks similar to HTML, it's actually syntactic sugar that gets transpiled into regular JavaScript function calls.
+
+```jsx
+// JSX syntax
+const element = <h1>Hello, World!</h1>;
+
+// Transpiles to regular JavaScript
+const element = React.createElement("h1", null, "Hello, World!");
+```
+
+JSX enables you to combine the power of JavaScript with the familiar structure of HTML, making React components more readable and maintainable.
+
+## Key Features of JSX
+
+### 1. HTML-like Syntax in JavaScript
+
+JSX allows you to write markup that looks like HTML but lives within your JavaScript code:
+
+```jsx
+function Welcome() {
+  return (
+    <div>
+      <h1>Welcome to React</h1>
+      <p>This is JSX in action!</p>
+    </div>
+  );
+}
+```
+
+### 2. JavaScript Expressions
+
+You can embed JavaScript expressions within JSX using curly braces `{}`:
+
+```jsx
+function Greeting({ name, age }) {
+  const isAdult = age >= 18;
+
+  return (
+    <div>
+      <h1>Hello, {name}!</h1>
+      <p>You are {age} years old.</p>
+      {isAdult ? <p>You are an adult.</p> : <p>You are a minor.</p>}
+    </div>
+  );
+}
+```
+
+### 3. Component Composition
+
+JSX makes it easy to compose components together:
+
+```jsx
+function App() {
+  return (
+    <div>
+      <Header />
+      <MainContent />
+      <Footer />
+    </div>
+  );
+}
+```
+
+## JSX Syntax Rules
+
+<Steps>
+
+1. ### Single Root Element
+
+   JSX expressions must have one parent element (or use React Fragments):
+
+   ```jsx
+   // ❌ Invalid - Multiple root elements
+   return (
+     <h1>Title</h1>
+     <p>Paragraph</p>
+   );
+
+   // ✅ Valid - Single root element
+   return (
+     <div>
+       <h1>Title</h1>
+       <p>Paragraph</p>
+     </div>
+   );
+
+   // ✅ Valid - Using React Fragment
+   return (
+     <>
+       <h1>Title</h1>
+       <p>Paragraph</p>
+     </>
+   );
+   ```
+
+2. ### Self-Closing Tags
+
+   Elements without children must be self-closed:
+
+   ```jsx
+   // ❌ Invalid
+   <img src="image.jpg">
+   <br>
+   <input type="text">
+
+   // ✅ Valid
+   <img src="image.jpg" />
+   <br />
+   <input type="text" />
+   ```
+
+3. ### CamelCase Attributes
+
+   HTML attributes are written in camelCase:
+
+   ```jsx
+   // HTML
+   <div class="container" tabindex="0">
+   <input readonly maxlength="10">
+
+   // JSX
+   <div className="container" tabIndex="0">
+   <input readOnly maxLength="10" />
+   ```
+
+4. ### Reserved Keywords
+
+   Some HTML attributes use different names in JSX:
+
+   ```jsx
+   // className instead of class
+   <div className="my-class" />
+
+   // htmlFor instead of for
+   <label htmlFor="email-input">Email:</label>
+   <input id="email-input" type="email" />
+   ```
+
+</Steps>
+
+## JavaScript Expressions in JSX
+
+JSX becomes powerful when you embed JavaScript expressions:
+
+### Variables and Functions
+
+```jsx
+function UserProfile({ user }) {
+  const fullName = `${user.firstName} ${user.lastName}`;
+  const formatDate = (date) => new Date(date).toLocaleDateString();
+
+  return (
+    <div>
+      <h1>{fullName}</h1>
+      <p>Member since: {formatDate(user.joinDate)}</p>
+      <p>Posts: {user.posts.length}</p>
+    </div>
+  );
+}
+```
+
+### Conditional Rendering
+
+```jsx
+function WeatherWidget({ weather }) {
+  return (
+    <div>
+      <h2>Weather Today</h2>
+      {weather ? (
+        <div>
+          <p>Temperature: {weather.temp}°C</p>
+          <p>Condition: {weather.condition}</p>
+        </div>
+      ) : (
+        <p>Loading weather data...</p>
+      )}
+
+      {/* Short-circuit evaluation */}
+      {weather && weather.alerts && (
+        <div className="alert">
+          <strong>Weather Alert:</strong> {weather.alerts}
+        </div>
+      )}
+    </div>
+  );
+}
+```
+
+### Lists and Arrays
+
+```jsx
+function TodoList({ todos }) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <li key={todo.id} className={todo.completed ? "completed" : ""}>
+          {todo.text}
+        </li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Styling in JSX
+
+### CSS Classes
+
+```jsx
+function Button({ variant, size, children }) {
+  const baseClass = "btn";
+  const variantClass = `btn-${variant}`;
+  const sizeClass = `btn-${size}`;
+
+  return (
+    <button className={`${baseClass} ${variantClass} ${sizeClass}`}>
+      {children}
+    </button>
+  );
+}
+
+// Using template literals for dynamic classes
+function Alert({ type, message }) {
+  return (
+    <div className={`alert alert-${type} ${type === "error" ? "urgent" : ""}`}>
+      {message}
+    </div>
+  );
+}
+```
+
+### Inline Styles
+
+```jsx
+function ProgressBar({ progress, color = "blue" }) {
+  const containerStyle = {
+    width: "100%",
+    backgroundColor: "#e0e0e0",
+    borderRadius: "4px",
+    overflow: "hidden",
+  };
+
+  const barStyle = {
+    width: `${progress}%`,
+    backgroundColor: color,
+    height: "20px",
+    transition: "width 0.3s ease",
+  };
+
+  return (
+    <div style={containerStyle}>
+      <div style={barStyle}></div>
+    </div>
+  );
+}
+```
+
+## Event Handling in JSX
+
+```jsx
+function InteractiveButton() {
+  const [count, setCount] = useState(0);
+
+  const handleClick = (event) => {
+    console.log("Button clicked!", event);
+    setCount(count + 1);
+  };
+
+  const handleMouseEnter = () => {
+    console.log("Mouse entered button");
+  };
+
+  return (
+    <button
+      onClick={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onDoubleClick={() => setCount(0)}
+      style={{ padding: "10px 20px" }}
+    >
+      Clicked {count} times
+    </button>
+  );
+}
+```
+
+## Advanced JSX Patterns
+
+### Fragments
+
+```jsx
+// Long form
+function UserInfo() {
+  return (
+    <React.Fragment>
+      <h2>User Information</h2>
+      <p>Some user details...</p>
+    </React.Fragment>
+  );
+}
+
+// Short form (requires React 16.2+)
+function UserInfo() {
+  return (
+    <>
+      <h2>User Information</h2>
+      <p>Some user details...</p>
+    </>
+  );
+}
+
+// With keys (useful in lists)
+function DefinitionList({ items }) {
+  return (
+    <dl>
+      {items.map((item) => (
+        <React.Fragment key={item.id}>
+          <dt>{item.term}</dt>
+          <dd>{item.definition}</dd>
+        </React.Fragment>
+      ))}
+    </dl>
+  );
+}
+```
+
+### Render Props Pattern
+
+```jsx
+function MouseTracker({ render }) {
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+
+  useEffect(() => {
+    const handleMouseMove = (event) => {
+      setPosition({ x: event.clientX, y: event.clientY });
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    return () => document.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return render(position);
+}
+
+// Usage
+function App() {
+  return (
+    <MouseTracker
+      render={({ x, y }) => (
+        <h1>
+          Mouse position: ({x}, {y})
+        </h1>
+      )}
+    />
+  );
+}
+```
+
+## JSX vs HTML Differences
+
+| HTML                 | JSX                      | Reason                                      |
+| -------------------- | ------------------------ | ------------------------------------------- |
+| `class`              | `className`              | `class` is a reserved keyword in JavaScript |
+| `for`                | `htmlFor`                | `for` is a reserved keyword in JavaScript   |
+| `tabindex`           | `tabIndex`               | JSX uses camelCase                          |
+| `onclick`            | `onClick`                | JSX uses camelCase                          |
+| `<input>`            | `<input />`              | JSX requires self-closing tags              |
+| `style="color: red"` | `style={{color: 'red'}}` | JSX uses objects for inline styles          |
+
+## Best Practices
+
+### 1. Keep JSX Clean and Readable
+
+```jsx
+// ❌ Hard to read
+function UserCard({ user }) {
+  return (
+    <div className="card">
+      <div className="header">
+        <img src={user.avatar} alt={user.name} />
+        <div className="info">
+          <h3>{user.name}</h3>
+          <p>{user.email}</p>
+        </div>
+      </div>
+      <div className="stats">
+        <span>Posts: {user.postCount}</span>
+        <span>Followers: {user.followerCount}</span>
+      </div>
+    </div>
+  );
+}
+
+// ✅ Clean and readable
+function UserCard({ user }) {
+  return (
+    <div className="card">
+      <div className="header">
+        <img src={user.avatar} alt={user.name} />
+        <div className="info">
+          <h3>{user.name}</h3>
+          <p>{user.email}</p>
+        </div>
+      </div>
+      <div className="stats">
+        <span>Posts: {user.postCount}</span>
+        <span>Followers: {user.followerCount}</span>
+      </div>
+    </div>
+  );
+}
+```
+
+### 2. Extract Complex Logic
+
+```jsx
+// ❌ Complex logic in JSX
+function ProductCard({ product }) {
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p
+        className={
+          product.inStock && product.price < 100 && product.rating > 4
+            ? "great-deal"
+            : product.inStock
+            ? "available"
+            : "out-of-stock"
+        }
+      >
+        {product.inStock
+          ? `$${product.price} - ${product.rating} stars`
+          : "Out of Stock"}
+      </p>
+    </div>
+  );
+}
+
+// ✅ Logic extracted to variables
+function ProductCard({ product }) {
+  const isGreatDeal =
+    product.inStock && product.price < 100 && product.rating > 4;
+  const statusClass = isGreatDeal
+    ? "great-deal"
+    : product.inStock
+    ? "available"
+    : "out-of-stock";
+  const displayText = product.inStock
+    ? `$${product.price} - ${product.rating} stars`
+    : "Out of Stock";
+
+  return (
+    <div>
+      <h3>{product.name}</h3>
+      <p className={statusClass}>{displayText}</p>
+    </div>
+  );
+}
+```
+
+### 3. Use Meaningful Component Names
+
+```jsx
+// ❌ Generic names
+function Comp1({ data }) {
+  return (
+    <div>
+      {data.map((item) => (
+        <Comp2 key={item.id} item={item} />
+      ))}
+    </div>
+  );
+}
+
+// ✅ Descriptive names
+function ProductList({ products }) {
+  return (
+    <div>
+      {products.map((product) => (
+        <ProductCard key={product.id} product={product} />
+      ))}
+    </div>
+  );
+}
+```
+
+## Common JSX Mistakes and Solutions
+
+### 1. Forgetting Keys in Lists
+
+```jsx
+// ❌ Missing keys
+function TodoList({ todos }) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <li>{todo.text}</li> // Missing key
+      ))}
+    </ul>
+  );
+}
+
+// ✅ With proper keys
+function TodoList({ todos }) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <li key={todo.id}>{todo.text}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### 2. Using Array Index as Key
+
+```jsx
+// ❌ Using array index (can cause issues)
+function TodoList({ todos }) {
+  return (
+    <ul>
+      {todos.map((todo, index) => (
+        <li key={index}>{todo.text}</li>
+      ))}
+    </ul>
+  );
+}
+
+// ✅ Using unique identifier
+function TodoList({ todos }) {
+  return (
+    <ul>
+      {todos.map((todo) => (
+        <li key={todo.id}>{todo.text}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+### 3. Incorrect Boolean Rendering
+
+```jsx
+// ❌ May render "0" instead of nothing
+function NotificationCount({ count }) {
+  return <div>{count && <span className="badge">{count}</span>}</div>;
+}
+
+// ✅ Explicit boolean check
+function NotificationCount({ count }) {
+  return <div>{count > 0 && <span className="badge">{count}</span>}</div>;
+}
+```
+
+JSX is a powerful tool that makes React development more intuitive and productive. By understanding its syntax, rules, and best practices, you can write clean, maintainable React applications that are both functional and easy to understand.

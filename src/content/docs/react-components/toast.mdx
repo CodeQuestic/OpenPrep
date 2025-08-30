@@ -1,8 +1,20 @@
 ---
 title: Toast
+description: A flexible React toast notification component with multiple positions, styles, and auto-dismiss functionality using Tailwind CSS.
 ---
 
-You can use this single component to push notifications to your users and choose from multiple sizes, colors, styles, and positions. You can the example usage below, the component can be used as a single component and style it extensively by yourself if you desire.
+A versatile toast notification component that provides user feedback through temporary messages. This component supports multiple notification types (success, error, warning, info), positioning options, auto-dismiss functionality, and custom styling. Perfect for displaying success confirmations, error messages, or any temporary notifications that require user attention without blocking the interface.
+
+## Features
+
+- **Multiple Notification Types**: Success, error, warning, and info variants with distinct styling
+- **Flexible Positioning**: Top/bottom and left/center/right positioning options
+- **Auto-dismiss**: Configurable automatic dismissal with custom timing
+- **Manual Dismissal**: Close button for user-controlled dismissal
+- **Smooth Animations**: Slide-in and fade-out transitions
+- **Stacking Support**: Multiple toasts can be displayed simultaneously
+- **Custom Styling**: Full customization with Tailwind CSS classes
+- **Accessibility**: Screen reader support and keyboard navigation
 
 import { Card } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
@@ -23,3 +35,207 @@ import toast from "./codes/Toast/toast.txt?raw";
     <Code code={toast} lang="jsx" title="toast.jsx" />
   </TabItem>
 </Tabs>
+
+## Props
+
+| Prop        | Type                                                                                              | Default       | Description                                                 |
+| ----------- | ------------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------- |
+| `message`   | `string`                                                                                          | `required`    | The text content of the toast notification                  |
+| `type`      | `'success' \| 'error' \| 'warning' \| 'info'`                                                     | `'info'`      | The type of notification, affects styling and icon          |
+| `position`  | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'top-right'` | Position where toast appears on screen                      |
+| `duration`  | `number`                                                                                          | `5000`        | Auto-dismiss duration in milliseconds (0 = no auto-dismiss) |
+| `onClose`   | `function`                                                                                        | `required`    | Function called when toast is closed                        |
+| `isVisible` | `boolean`                                                                                         | `true`        | Controls the visibility of the toast                        |
+| `className` | `string`                                                                                          | `''`          | Additional CSS classes for custom styling                   |
+
+## Usage Examples
+
+### Basic Toast Notifications
+
+```jsx
+const [toasts, setToasts] = useState([]);
+
+const showSuccessToast = () => {
+  const id = Date.now();
+  setToasts((prev) => [
+    ...prev,
+    {
+      id,
+      message: "Operation completed successfully!",
+      type: "success",
+    },
+  ]);
+};
+
+const showErrorToast = () => {
+  const id = Date.now();
+  setToasts((prev) => [
+    ...prev,
+    {
+      id,
+      message: "An error occurred. Please try again.",
+      type: "error",
+    },
+  ]);
+};
+
+// Render toasts
+{
+  toasts.map((toast) => (
+    <Toast
+      key={toast.id}
+      message={toast.message}
+      type={toast.type}
+      onClose={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
+    />
+  ));
+}
+```
+
+### Positioned Toasts
+
+```jsx
+// Top-left position
+<Toast
+  message="Saved to drafts"
+  type="info"
+  position="top-left"
+  onClose={handleClose}
+/>
+
+// Bottom-center position
+<Toast
+  message="Form submitted successfully"
+  type="success"
+  position="bottom-center"
+  onClose={handleClose}
+/>
+```
+
+### Custom Duration and No Auto-dismiss
+
+```jsx
+// Quick toast (2 seconds)
+<Toast
+  message="Copied to clipboard"
+  type="success"
+  duration={2000}
+  onClose={handleClose}
+/>
+
+// Persistent toast (manual dismiss only)
+<Toast
+  message="Check your internet connection"
+  type="warning"
+  duration={0}
+  onClose={handleClose}
+/>
+```
+
+### Toast Manager Hook
+
+```jsx
+// Custom hook for managing toasts
+function useToast() {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (message, type = "info", options = {}) => {
+    const id = Date.now();
+    const newToast = { id, message, type, ...options };
+    setToasts((prev) => [...prev, newToast]);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const clearAllToasts = () => {
+    setToasts([]);
+  };
+
+  return { toasts, addToast, removeToast, clearAllToasts };
+}
+
+// Usage in component
+function App() {
+  const { toasts, addToast, removeToast } = useToast();
+
+  return (
+    <div>
+      <button onClick={() => addToast("Hello World!", "success")}>
+        Show Success Toast
+      </button>
+
+      <div className="toast-container">
+        {toasts.map((toast) => (
+          <Toast
+            key={toast.id}
+            {...toast}
+            onClose={() => removeToast(toast.id)}
+          />
+        ))}
+      </div>
+    </div>
+  );
+}
+```
+
+## Styling Variants
+
+### Toast Types
+
+**Success Toast**
+
+- Green background with checkmark icon
+- Used for successful operations
+
+**Error Toast**
+
+- Red background with error icon
+- Used for error messages and failures
+
+**Warning Toast**
+
+- Yellow/orange background with warning icon
+- Used for cautions and important notices
+
+**Info Toast**
+
+- Blue background with info icon
+- Used for general information and tips
+
+### Custom Styling
+
+```jsx
+<Toast
+  message="Custom styled toast"
+  type="info"
+  className="bg-purple-500 border-2 border-purple-700 text-white shadow-2xl"
+  onClose={handleClose}
+/>
+```
+
+## Preview
+
+<iframe
+  src="https://stackblitz.com/edit/react-toast-notifications-demo?embed=1&file=src%2FToast.jsx&theme=dark&view=preview"
+  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
+  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
+/>
+
+## Best Practices
+
+1. **Use appropriate types** - Match toast type with the message context
+2. **Keep messages concise** - Use clear, brief messages that users can quickly read
+3. **Position consistently** - Use the same position throughout your application
+4. **Limit simultaneous toasts** - Avoid overwhelming users with too many notifications
+5. **Provide manual dismissal** - Always include a close button for accessibility
+6. **Test on mobile** - Ensure toasts are readable and accessible on small screens
+7. **Consider timing** - Use appropriate auto-dismiss timing based on message importance
+
+## Accessibility Features
+
+- **ARIA Live Regions**: Toasts are announced to screen readers
+- **Keyboard Navigation**: Close buttons are keyboard accessible
+- **High Contrast**: Color choices work well with high contrast modes
+- **Focus Management**: Focus is properly managed when toasts appear/disappear

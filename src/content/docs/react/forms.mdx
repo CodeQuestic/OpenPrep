@@ -2,28 +2,23 @@
 title: React Forms
 ---
 
-import { Steps } from '@astrojs/starlight/components';
+import { Steps } from "@astrojs/starlight/components";
 import { Tabs, TabItem } from "@astrojs/starlight/components";
 import { Code } from "@astrojs/starlight/components";
 
-import controlledinput from './codes/forms/controlled/ControlledInput.txt?raw';
-import controlledselect from './codes/forms/controlled/ControlledSelect.txt?raw';
-import controlledtextarea from './codes/forms/controlled/ControlledTextarea.txt?raw';
-import formik from './codes/forms/validation/Formik.txt?raw';
-import hookss from './codes/forms/validation/Hooks.txt?raw';
-
-Forms are essential in web applications for collecting user input, handling interactions, and submitting data. In React, form management can be handled through **controlled components**, **uncontrolled components**, and **form validation** techniques, each with unique benefits. This guide covers these concepts with examples, helping you choose the best approach for your project.
+Forms are essential in web applications for collecting user input, handling interactions, and submitting data. In React, form management can be handled through **controlled components**, **uncontrolled components**, and **form validation** techniques.
 
 ## Prerequisites
 
 Before diving in, you should have:
+
 - Basic understanding of React and its hooks
 - Familiarity with HTML forms
 - Node.js and npm installed
 
 For form validation libraries, you'll need to install:
 
-```bash 
+```bash
 # For Formik
 npm install formik
 
@@ -32,399 +27,629 @@ npm install react-hook-form
 
 # For Yup validation
 npm install yup
-
 ```
 
 ## Controlled Components
 
-**Controlled components** in React use state to control form elements, updating in real time as users type. This approach allows for immediate data management and validation directly within the component’s state.
+**Controlled components** are form elements where React controls their state through component state and event handlers. The input's value is always derived from the React state, making it predictable and easier to manage.
 
-### Steps
-<Steps>
-1. **Define State for Form Inputs**
-    - Each form element (e.g., input, select or textarea) requires a **state** to store its value.
-2. **Update State on User Input**
-    - Use event handlers to update state and re-render the component with each change.
-</Steps>
-
-### Examples: Controlled Form Component
+### Basic Controlled Components
 
 <Tabs>
-  <TabItem label="Dependencies">
-    Install the following libraries. Assuming you have installed
-    <Code code={`npm install react react-dom`} lang="shell" />
-  </TabItem>
   <TabItem label="ControlledInput">
-    <Code code={controlledinput} lang="jsx" title="ControlledInput.jsx" />
-    In this example, the `name` input is controlled by React’s `useState` hook. Each change re-renders the form, reflecting the latest input.
-  </TabItem>
-   <TabItem label="ControlledSelect">
-    <Code code={controlledselect} lang="jsx" title="ControlledSelect.jsx" />
-    In this example, the `selectedOption` initializes the first option. The `value` prop binds the select element to the `selectedOption` state, updating it on change.
-  </TabItem>
-  <TabItem label="ControlledTextArea">
-    <Code code={controlledtextarea} lang="jsx" title="ControlledTextArea.jsx" />
-    In this example, the `text` initializes the state. The textarea’s value is tied to the `text` state.
-  </TabItem>
-</Tabs>
+    <Code 
+      code={`import React, { useState } from 'react';
 
-### Benefits of Controlled Components
+function ControlledInput() {
+  const [name, setName] = useState('');
 
-1. Immediate access to form data
-2. Ability to implement instant validation
-3. Conditional rendering based on form state
-4. Easier implementation of form logic
+  const handleChange = (event) => {
+    setName(event.target.value);
+  };
 
-## Uncontrolled Components
-
-**Uncontrolled components** in React are form elements that manage their own state internally rather than relying on React's state. This means that the input values are managed via **refs** (references) instead of the component's state. Uncontrolled components are useful when you want to avoid unnecessary re-renders or when you need to integrate with non-React code that relies on the DOM.
-
-### Key Concepts
-
-- **Refs**: Use `React.createRef()` or the `useRef` hook to create a reference to a DOM element.
-- **Direct Access**: Access the input's value directly from the DOM instead of keeping it in the component's state.
-
-### Steps
-
-<Steps>
-1. **Create a Ref**: Initialize a ref using `useRef` or `createRef`.
-2. **Attach the Ref to the Input**: Use the `ref` attribute on the form input elements.
-3. **Access the Value**: Use the ref to access the input value when needed, usually upon form submission.
-</Steps>
-
-### Example: Uncontrolled Form Component
-```bash title="UncontrolledForm.jsx"
-import React, { useRef } from 'react';
-
-function UncontrolledForm() {
-  const nameRef = useRef(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    alert(`A name was submitted: ${nameRef.current.value}`);
-    // You can access the value directly from the ref
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    alert(\`Hello, \${name}!\`);
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Name:</label>
-      <input type="text" ref={nameRef} />
+      <label>
+        Name:
+        <input
+          type="text"
+          value={name}
+          onChange={handleChange}
+          placeholder="Enter your name"
+        />
+      </label>
       <button type="submit">Submit</button>
     </form>
   );
 }
-```
 
-In this example, the nameRef is created using the useRef hook and attached to the input element. Upon form submission, the value can be accessed directly from nameRef.current.value, allowing you to handle the form input without using state.
+export default ControlledInput;`}
+      lang="jsx" 
+      title="ControlledInput.jsx" 
+    />
+    In this example, the `name` input is controlled by React's `useState` hook. Each change re-renders the form, reflecting the latest input.
+  </TabItem>
+  
+  <TabItem label="ControlledSelect">
+    <Code 
+      code={`import React, { useState } from 'react';
 
-### Benefits of Uncontrolled Components
-1. Less Boilerplate: Less code is needed for handling state, especially for simple forms.
-2. Direct DOM Access: Useful for integrating with third-party libraries or handling non-React components.
+function ControlledSelect() {
+  const [selectedOption, setSelectedOption] = useState('apple');
 
-### When to Use Uncontrolled Components
-Uncontrolled components are suitable when:
+  const handleChange = (event) => {
+    setSelectedOption(event.target.value);
+  };
 
-1. You have a simple form and don't need to react to every input change.
-2. You need to interact with legacy code or libraries that require direct DOM manipulation.
-3. You want to optimize performance in scenarios with many form elements.
+  return (
+    <form>
+      <label>
+        Choose a fruit:
+        <select value={selectedOption} onChange={handleChange}>
+          <option value="apple">Apple</option>
+          <option value="banana">Banana</option>
+          <option value="orange">Orange</option>
+          <option value="grape">Grape</option>
+        </select>
+      </label>
+      <p>You selected: {selectedOption}</p>
+    </form>
+  );
+}
 
-## Form validation
-Form validation is a crucial aspect of web applications that ensures the integrity and correctness of user inputs. In React, there are several approaches to validate forms, including manual validation techniques and the use of popular libraries. This guide will delve into these approaches, their advantages, and their disadvantages.
+export default ControlledSelect;`}
+      lang="jsx" 
+      title="ControlledSelect.jsx" 
+    />
+    In this example, the `selectedOption` initializes the first option. The `value` prop binds the select element to the `selectedOption` state.
+  </TabItem>
+  
+  <TabItem label="ControlledTextArea">
+    <Code 
+      code={`import React, { useState } from 'react';
 
-### Manual Validation Techniques
+function ControlledTextarea() {
+  const [text, setText] = useState('Write your message here...');
 
-Manual validation involves checking input values directly within your React component, typically using state to store form data and validate it before submission.
+  const handleChange = (event) => {
+    setText(event.target.value);
+  };
 
-#### Example: Manual Validation
+  return (
+    <form>
+      <label>
+        Message:
+        <textarea
+          value={text}
+          onChange={handleChange}
+          rows="4"
+          cols="50"
+        />
+      </label>
+      <p>Character count: {text.length}</p>
+    </form>
+  );
+}
 
-Here’s an example of a simple form with manual validation:
+export default ControlledTextarea;`}
+      lang="jsx" 
+      title="ControlledTextArea.jsx" 
+    />
+    In this example, the `text` initializes the state. The textarea's value is tied to the `text` state.
+  </TabItem>
+</Tabs>
 
-```bash title="MaualValidation.jsx"
-import React, { useState } from 'react';
+## Multiple Controlled Inputs
 
-function ManualValidationForm() {
-  const [name, setName] = useState('');
-  const [error, setError] = useState('');
+For forms with multiple inputs, you can use a single state object to manage all form fields:
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    if (name.trim() === '') {
-      setError('Name is required');
-    } else {
-      setError('');
-      alert(`Form submitted: ${name}`);
+<Tabs>
+  <TabItem label="MultipleInputs">
+    <Code 
+      code={`import React, { useState } from 'react';
+
+function MultipleInputForm() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    subscribe: false
+  });
+
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
+    setFormData(prevData => ({
+      ...prevData,
+      [name]: type === 'checkbox' ? checked : value
+    }));
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log('Form Data:', formData);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          First Name:
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Last Name:
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            name="subscribe"
+            checked={formData.subscribe}
+            onChange={handleChange}
+          />
+          Subscribe to newsletter
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default MultipleInputForm;`}
+      lang="jsx" 
+      title="MultipleInputs.jsx" 
+    />
+    This example shows how to handle multiple form inputs with a single state object and change handler.
+  </TabItem>
+</Tabs>
+
+## Uncontrolled Components
+
+Uncontrolled components store their own state internally and use refs to access their values when needed. This approach is closer to traditional HTML forms.
+
+<Tabs>
+  <TabItem label="UncontrolledForm">
+    <Code 
+      code={`import React, { useRef } from 'react';
+
+function UncontrolledForm() {
+  const nameRef = useRef(null);
+  const emailRef = useRef(null);
+  const messageRef = useRef(null);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const formData = {
+      name: nameRef.current.value,
+      email: emailRef.current.value,
+      message: messageRef.current.value
+    };
+
+    console.log('Form Data:', formData);
+
+    // Reset form
+    nameRef.current.value = '';
+    emailRef.current.value = '';
+    messageRef.current.value = '';
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <div>
+        <label>
+          Name:
+          <input
+            type="text"
+            ref={nameRef}
+            defaultValue=""
+            placeholder="Enter your name"
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Email:
+          <input
+            type="email"
+            ref={emailRef}
+            defaultValue=""
+            placeholder="Enter your email"
+          />
+        </label>
+      </div>
+      <div>
+        <label>
+          Message:
+          <textarea
+            ref={messageRef}
+            defaultValue=""
+            rows="4"
+            placeholder="Enter your message"
+          />
+        </label>
+      </div>
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+export default UncontrolledForm;`}
+      lang="jsx" 
+      title="UncontrolledForm.jsx" 
+    />
+    Uncontrolled components use refs to access form values and `defaultValue` instead of `value`.
+  </TabItem>
+</Tabs>
+
+## Form Validation
+
+Form validation ensures data integrity and provides user feedback. Here are different approaches to validation in React forms.
+
+### Basic Validation
+
+<Tabs>
+  <TabItem label="BasicValidation">
+    <Code 
+      code={`import React, { useState } from 'react';
+
+function BasicValidationForm() {
+  const [formData, setFormData] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
+  const [errors, setErrors] = useState({});
+
+  const validateForm = () => {
+    const newErrors = {};
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!formData.email) {
+      newErrors.email = 'Email is required';
+    } else if (!emailRegex.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email';
+    }
+
+    // Password validation
+    if (!formData.password) {
+      newErrors.password = 'Password is required';
+    } else if (formData.password.length < 6) {
+      newErrors.password = 'Password must be at least 6 characters';
+    }
+
+    // Confirm password validation
+    if (formData.password !== formData.confirmPassword) {
+      newErrors.confirmPassword = 'Passwords do not match';
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (validateForm()) {
+      console.log('Form is valid:', formData);
+      alert('Form submitted successfully!');
     }
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <label>Name:</label>
-      <input
-        type="text"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <button type="submit">Submit</button>
+      <div>
+        <label>
+          Email:
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            style={{ borderColor: errors.email ? 'red' : '' }}
+          />
+        </label>
+        {errors.email && <span style={{ color: 'red' }}>{errors.email}</span>}
+      </div>
+
+      <div>
+        <label>
+          Password:
+          <input
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            style={{ borderColor: errors.password ? 'red' : '' }}
+          />
+        </label>
+        {errors.password && <span style={{ color: 'red' }}>{errors.password}</span>}
+      </div>
+
+      <div>
+        <label>
+          Confirm Password:
+          <input
+            type="password"
+            name="confirmPassword"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+            style={{ borderColor: errors.confirmPassword ? 'red' : '' }}
+          />
+        </label>
+        {errors.confirmPassword && <span style={{ color: 'red' }}>{errors.confirmPassword}</span>}
+      </div>
+
+      <button type="submit">Register</button>
     </form>
   );
 }
-```
 
-#### Pros and Cons of Manual Validation
-**Pros**:
-
-Simplicity: Easy to implement for simple forms with minimal validation requirements.
-Full Control: You have complete control over the validation logic and error handling.
-
-**Cons**:
-
-Scalability: As forms become more complex, managing validation can lead to cumbersome code.
-Reusability: Difficult to reuse validation logic across multiple forms.
-
-### Using Libraries for Form Validation
-Libraries like Formik, React Hook Form, and Yup provide robust solutions for managing form state and validation.
-
-#### Examples
-<Tabs>
-  <TabItem label="Dependencies">
-    Install the following libraries. Assuming you have installed
-    <Code code={`# For Formik
-npm install formik
-
-# For React Hook Form
-npm install react-hook-form
-
-# For Yup validation
-npm install yup`} lang="shell" />
-  </TabItem>
-  <TabItem label="Formik">
-    <Code code={formik} lang="jsx" title="Formik.jsx" />
-    Formik is a popular library that simplifies form handling, including validation.
-  </TabItem>
-   <TabItem label="Hooks">
-    <Code code={hookss} lang="jsx" title="Hooks.jsx" />
-    React Hook Form is another efficient library for managing forms in React.
+export default BasicValidationForm;`}
+      lang="jsx" 
+      title="BasicValidation.jsx" 
+    />
+    This example shows client-side validation with custom error handling and real-time feedback.
   </TabItem>
 </Tabs>
 
+## Popular Form Libraries
 
-#### Pros and Cons of Using Libraries
-**Pros**:
+### Using Formik
 
-1. Simplified Logic: Libraries handle much of the boilerplate code, allowing you to focus on your application’s logic.
-2. Built-in Validation: Libraries like Formik and Yup provide schema-based validation, making it easy to manage complex rules.
-3. Performance Optimization: Libraries like React Hook Form optimize rendering and state management, reducing unnecessary re-renders.
-4. Reusability: Create reusable form components and validation schemas, promoting DRY (Don't Repeat Yourself) principles.
+Formik is a popular library that simplifies form management in React:
 
-**Cons**:
+<Tabs>
+  <TabItem label="FormikExample">
+    <Code 
+      code={`import React from 'react';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
 
-1. Learning Curve: New libraries require time to learn, especially if you’re unfamiliar with their APIs.
-2. Dependency Overhead: Adding additional libraries can increase bundle size and project complexity.
-3. Less Control: While libraries offer convenience, they may abstract away some control over how forms behave and validate.
-
-### Comparison of Approaches
-
-| Feature               | Manual Validation                        | Formik/React Hook Form                     |
-|----------------------|-----------------------------------------|--------------------------------------------|
-| **Ease of Use**      | Simple for small forms                  | More complex setup but easier for larger forms |
-| **Scalability**      | Difficult to scale                      | Highly scalable                             |
-| **Reusability**      | Low                                     | High (can create reusable components)      |
-| **Validation**       | Manual checks                           | Integrated validation with schema support   |
-| **Performance**      | Can be inefficient with many inputs     | Optimized for performance, only updates on changes |
-
-## Handling Form Submissions in React
-
-Handling form submissions is a critical aspect of web applications that allows you to collect user input and send it to a back-end service or API. This guide covers best practices for both controlled and uncontrolled components in React, ensuring you can efficiently manage form submissions.
-
-### Overview
-
-When working with forms in React, it's essential to understand how to:
-
-- Prevent the default form submission behavior.
-- Collect form data effectively.
-- Send the collected data to a back-end service or API.
-
-### Preventing Default Form Submission
-
-In React, when a form is submitted, the default behavior is to reload the page. To prevent this, you can use the `preventDefault()` method within the form's submit event handler.
-
-#### Example: Preventing Default Form Submission 
-``` bash
-import React, { useState, useRef } from 'react';
-
-function ControlledForm() {
-  const [name, setName] = useState("");
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    console.log("Submitted Name:", name);
-    // You can add your form submission logic here (e.g., API call)
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name">Name:</label>
-      <input
-        type="text"
-        id="name"
-        value={name}
-        onChange={(e) => setName(e.target.value)}
-      />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-
-function UncontrolledForm() {
-  const nameRef = useRef(null);
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission
-    console.log("Submitted Name:", nameRef.current.value);
-    // You can add your form submission logic here (e.g., API call)
-  };
-
-  return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="name">Name:</label>
-      <input type="text" id="name" ref={nameRef} />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-
-export default function FormExample() {
+function FormikForm() {
   return (
     <div>
-      <h2>Controlled Form</h2>
-      <ControlledForm />
-      <h2>Uncontrolled Form</h2>
-      <UncontrolledForm />
+      <h2>Sign Up Form</h2>
+      <Formik
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+        }}
+        validate={values => {
+          const errors = {};
+          if (!values.email) {
+            errors.email = 'Required';
+          } else if (!/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)) {
+            errors.email = 'Invalid email address';
+          }
+          if (!values.firstName) {
+            errors.firstName = 'Required';
+          }
+          if (!values.lastName) {
+            errors.lastName = 'Required';
+          }
+          return errors;
+        }}
+        onSubmit={(values, { setSubmitting }) => {
+          setTimeout(() => {
+            alert(JSON.stringify(values, null, 2));
+            setSubmitting(false);
+          }, 400);
+        }}
+      >
+        <Form>
+          <div>
+            <label htmlFor="firstName">First Name</label>
+            <Field name="firstName" type="text" />
+            <ErrorMessage name="firstName" component="div" style={{ color: 'red' }} />
+          </div>
+
+          <div>
+            <label htmlFor="lastName">Last Name</label>
+            <Field name="lastName" type="text" />
+            <ErrorMessage name="lastName" component="div" style={{ color: 'red' }} />
+          </div>
+
+          <div>
+            <label htmlFor="email">Email Address</label>
+            <Field name="email" type="email" />
+            <ErrorMessage name="email" component="div" style={{ color: 'red' }} />
+          </div>
+
+          <button type="submit">Submit</button>
+        </Form>
+      </Formik>
     </div>
   );
 }
-```
 
-### Collecting Form Data in Controlled Components
+export default FormikForm;`}
+      lang="jsx" 
+      title="FormikExample.jsx" 
+    />
+    Formik handles form state, validation, and submission with minimal boilerplate code.
+  </TabItem>
+</Tabs>
 
-Controlled components use React's state to manage form inputs. Here's how to handle form submissions in controlled components:
+### Using React Hook Form
 
-#### Example: Controlled Form Submission
+React Hook Form is a performant library with minimal re-renders:
 
-```bash
-import React, { useState } from 'react';
+<Tabs>
+  <TabItem label="ReactHookForm">
+    <Code 
+      code={`import React from 'react';
+import { useForm } from 'react-hook-form';
 
-function ControlledForm() {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
+function ReactHookFormExample() {
+  const {
+    register,
+    handleSubmit,
+    watch,
+    formState: { errors },
+  } = useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
-    const formData = { name, email };
-    
-    // Send formData to a back-end API
-    console.log('Form submitted:', formData);
-    // Example of sending data with fetch
-    // fetch('https://api.example.com/submit', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => console.log('Success:', data))
-    //   .catch((error) => console.error('Error:', error));
+  const onSubmit = (data) => {
+    console.log('Form Data:', data);
+    alert('Form submitted successfully!');
   };
 
+  const watchedPassword = watch('password');
+
   return (
-    <form onSubmit={handleSubmit}>
-      <label>Name:</label>
-      <input type="text" value={name} onChange={(e) => setName(e.target.value)} />
-      <br />
-      <label>Email:</label>
-      <input type="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <br />
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div>
+        <label>
+          First Name:
+          <input
+            type="text"
+            {...register('firstName', {
+              required: 'First name is required',
+              maxLength: {
+                value: 20,
+                message: 'First name cannot exceed 20 characters'
+              }
+            })}
+          />
+        </label>
+        {errors.firstName && <span style={{ color: 'red' }}>{errors.firstName.message}</span>}
+      </div>
+
+      <div>
+        <label>
+          Email:
+          <input
+            type="email"
+            {...register('email', {
+              required: 'Email is required',
+              pattern: {
+                value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+                message: 'Invalid email address'
+              }
+            })}
+          />
+        </label>
+        {errors.email && <span style={{ color: 'red' }}>{errors.email.message}</span>}
+      </div>
+
+      <div>
+        <label>
+          Password:
+          <input
+            type="password"
+            {...register('password', {
+              required: 'Password is required',
+              minLength: {
+                value: 6,
+                message: 'Password must be at least 6 characters'
+              }
+            })}
+          />
+        </label>
+        {errors.password && <span style={{ color: 'red' }}>{errors.password.message}</span>}
+      </div>
+
+      <div>
+        <label>
+          Confirm Password:
+          <input
+            type="password"
+            {...register('confirmPassword', {
+              required: 'Please confirm your password',
+              validate: (value) =>
+                value === watchedPassword || 'Passwords do not match'
+            })}
+          />
+        </label>
+        {errors.confirmPassword && <span style={{ color: 'red' }}>{errors.confirmPassword.message}</span>}
+      </div>
+
       <button type="submit">Submit</button>
     </form>
   );
 }
-```
 
-### Collecting Form Data in Uncontrolled Components
-Uncontrolled components use refs to access form inputs directly. Here’s how to handle form submissions in uncontrolled components:
+export default ReactHookFormExample;`}
+      lang="jsx" 
+      title="ReactHookForm.jsx" 
+    />
+    React Hook Form provides excellent performance with built-in validation and minimal re-renders.
+  </TabItem>
+</Tabs>
 
-#### Example: Uncontrolled Form submission
-```bash
-import React, { useRef } from 'react';
+## Best Practices
 
-function UncontrolledForm() {
-  const nameRef = useRef(null);
-  const emailRef = useRef(null);
+### Form State Management
 
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission
-    const formData = {
-      name: nameRef.current.value,
-      email: emailRef.current.value,
-    };
+- **Use controlled components** for forms that need real-time validation or formatting
+- **Use uncontrolled components** for simple forms where you only need the final values
+- **Consider form libraries** like Formik or React Hook Form for complex forms
 
-    // Send formData to a back-end API
-    console.log('Form submitted:', formData);
-    // Example of sending data with fetch
-    // fetch('https://api.example.com/submit', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json',
-    //   },
-    //   body: JSON.stringify(formData),
-    // })
-    //   .then((response) => response.json())
-    //   .then((data) => console.log('Success:', data))
-    //   .catch((error) => console.error('Error:', error));
-  };
+### Validation Strategies
 
-  return (
-    <form onSubmit={handleSubmit}>
-      <label>Name:</label>
-      <input type="text" ref={nameRef} />
-      <br />
-      <label>Email:</label>
-      <input type="email" ref={emailRef} />
-      <br />
-      <button type="submit">Submit</button>
-    </form>
-  );
-}
-```
+- **Client-side validation** for immediate user feedback
+- **Server-side validation** for security and data integrity
+- **Schema-based validation** using libraries like Yup for consistent rules
 
-### Best Practices for Handling Form Submissions
-1. Prevent Default Behavior: Always prevent the default form submission behavior using e.preventDefault() to avoid page reloads.
-2. Validate Input Data: Before sending data to your API, validate the input fields to ensure they meet your requirements (e.g., required fields, valid email format).
-3. Use a State Management Solution: For larger applications, consider using a state management solution (like Redux or Context API) to manage form state.
-4. Handle Errors Gracefully: Implement error handling for your API requests to provide feedback to users in case of failures.
-5. Provide User Feedback: Show loading indicators or success/error messages after form submission to enhance user experience.
+### Performance Optimization
 
-### Sending Data to a Back-end Service
-Once you have collected the form data, you can send it to a back-end service using the fetch API or a library like Axios. Here’s an example of how to send a POST request:
+- **Debounce validation** for expensive operations
+- **Use React.memo** for form components that don't need frequent re-renders
+- **Minimize re-renders** by using libraries like React Hook Form
 
-```bash
-fetch('https://api.example.com/submit', {
-  method: 'POST',
-  headers: {
-    'Content-Type': 'application/json',
-  },
-  body: JSON.stringify(formData),
-})
-  .then((response) => response.json())
-  .then((data) => console.log('Success:', data))
-  .catch((error) => console.error('Error:', error));
-```
+## Key Takeaways
 
-## Related Resources
+- **Controlled components** give you full control over form state and enable real-time features
+- **Uncontrolled components** are simpler but offer less control
+- **Form validation** should be implemented on both client and server sides
+- **Form libraries** can significantly reduce boilerplate code for complex forms
+- **Performance considerations** are important for large forms with many inputs
 
-- [React Documentation - Forms](https://react.dev/reference/react-dom/components/form)
-- [React Hook Form Documentation](https://react-hook-form.com/)
-- [Formik Documentation](https://formik.org/)
-- [MDN Forms Guide](https://developer.mozilla.org/en-US/docs/Learn/Forms)
+Forms in React can range from simple to complex, but understanding these fundamental concepts will help you choose the right approach for your specific needs.

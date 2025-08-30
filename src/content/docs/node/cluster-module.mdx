@@ -2,6 +2,8 @@
 title: Cluster Module
 ---
 
+import { Code } from "@astrojs/starlight/components";
+
 Node.js is inherently single-threaded, which means it processes one task at a time. This design can be a limitation for applications requiring heavy computation or high concurrency, as only one CPU core is utilized. The Cluster module addresses this by allowing you to fork multiple instances of your application that can run across multiple CPU cores.
 
 ## Significance
@@ -19,13 +21,13 @@ To maximize the performance of your Node.js applications, the Cluster module all
    const os = require("os");
    ```
 
-2. **Check for Master Process**: The master process is responsible for initializing and managing worker processes. To check if the current process is the master, use `cluster.isMaster`.
+2. **Check for Primary Process**: The primary process is responsible for initializing and managing worker processes. To check if the current process is the primary, use `cluster.isPrimary`.
 
 3. **Fork Workers**: Use `os.cpus().length` to get the number of CPU cores, then use `cluster.fork()` to create a worker process for each core.
 
 4. **Set Up Worker Events**: Workers can handle HTTP requests or other tasks. Each worker can independently handle tasks or share the load with other workers.
 
-5. **Monitor and Restart Workers**: To ensure reliability, listen for `exit` events from workers. If a worker crashes, the master process can restart it.
+5. **Monitor and Restart Workers**: To ensure reliability, listen for `exit` events from workers. If a worker crashes, the primary process can restart it.
 
 #### Example Code
 
@@ -36,7 +38,7 @@ const cluster = require("cluster");
 const http = require("http");
 const os = require("os");
 
-if (cluster.isMaster) {
+if (cluster.isPrimary) {
   // Fork workers based on CPU core count
   for (let i = 0; i < os.cpus().length; i++) {
     cluster.fork();
@@ -64,7 +66,7 @@ Node.js automatically balances the incoming load across worker processes in a cl
 ### Default Load Balancing
 
 - Node.js uses a round-robin approach to distribute incoming connections among workers.
-- The master process listens on a designated port, forwarding each connection to an available worker.
+- The primary process listens on a designated port, forwarding each connection to an available worker.
 
 ### Reverse Proxy Load Balancers
 
@@ -77,7 +79,7 @@ For larger applications, an external load balancer, like **Nginx** or **HAProxy*
 
 Node.js supports connection sharing among workers, ensuring that requests are evenly distributed and that no single worker is overloaded.
 
-- With connection sharing, the master process manages which worker receives each new connection, optimizing resource utilization across workers.
+- With connection sharing, the primary process manages which worker receives each new connection, optimizing resource utilization across workers.
 
 Using these load balancing techniques ensures that your application can handle high traffic and scales efficiently across multiple CPU cores.
 
@@ -87,7 +89,7 @@ In a clustered Node.js environment, each worker process operates independently, 
 
 ### Messaging System
 
-- Workers communicate with the master process using `process.send()` to send messages and `process.on('message')` to listen for messages.
+- Workers communicate with the primary process using `process.send()` to send messages and `process.on('message')` to listen for messages.
 - Messages can be simple strings or complex data objects like JSON, enabling flexible data exchange between processes.
 
 ### State Sharing
@@ -101,22 +103,22 @@ Each worker runs in its own memory space, which means they don’t share memory 
 Inter-process communication is useful in scenarios where:
 
 - **Cache Updates**: Workers need to inform each other of changes to a shared cache.
-- **Task Coordination**: Workers coordinate tasks by communicating through the master process, ensuring efficient task distribution.
+- **Task Coordination**: Workers coordinate tasks by communicating through the primary process, ensuring efficient task distribution.
 
 ### Example Code
 
-In the following example, a worker sends a message to the master, and the master listens for and logs this message:
+In the following example, a worker sends a message to the primary, and the primary listens for and logs this message:
 
 ```javascript
-// Worker sends a message to the master
-if (!cluster.isMaster) {
+// Worker sends a message to the primary
+if (!cluster.isPrimary) {
   process.send({ msg: "Hello from worker" });
 }
 
-// Master listens for messages from workers
+// Primary listens for messages from workers
 cluster.on("message", (worker, message) => {
   console.log(
-    `Master received message from worker ${worker.id}: ${message.msg}`
+    `Primary received message from worker ${worker.id}: ${message.msg}`
   );
 });
 ```
