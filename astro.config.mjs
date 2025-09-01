@@ -46,10 +46,6 @@ export default defineConfig({
               slug: "react-components/alert",
             },
             {
-              label: "Breadcrumb",
-              slug: "react-components/breadcrumb",
-            },
-            {
               label: "Button Group",
               slug: "react-components/button-group",
             },
@@ -58,44 +54,12 @@ export default defineConfig({
               slug: "react-components/buttons",
             },
             {
-              label: "Chips",
-              slug: "react-components/chips",
-            },
-            {
-              label: "Dropdowns",
-              slug: "react-components/dropdown",
-            },
-            {
-              label: "Input",
-              slug: "react-components/input",
-            },
-            {
-              label: "Lightbox",
-              slug: "react-components/lightbox",
-            },
-            {
               label: "Modal",
               slug: "react-components/modal",
             },
             {
-              label: "Navigation Bar",
-              slug: "react-components/navbar",
-            },
-            {
-              label: "Popovers",
-              slug: "react-components/popover",
-            },
-            {
-              label: "Social Buttons",
-              slug: "react-components/social-buttons",
-            },
-            {
               label: "Star Rating",
               slug: "react-components/star-rating",
-            },
-            {
-              label: "Tabs",
-              slug: "react-components/tabs",
             },
             {
               label: "Testimonials",
