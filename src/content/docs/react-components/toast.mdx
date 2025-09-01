@@ -1,147 +1,196 @@
 ---
 title: Toast
-description: A flexible React toast notification component with multiple positions, styles, and auto-dismiss functionality using Tailwind CSS.
+description: A modern toast notification component built with React and Tailwind CSS for displaying temporary messages and alerts.
 ---
 
-A versatile toast notification component that provides user feedback through temporary messages. This component supports multiple notification types (success, error, warning, info), positioning options, auto-dismiss functionality, and custom styling. Perfect for displaying success confirmations, error messages, or any temporary notifications that require user attention without blocking the interface.
+A flexible toast notification system for displaying temporary messages, alerts, and feedback. Built with React and styled with Tailwind CSS with multiple positioning options and auto-dismiss functionality.
 
-## Features
-
-- **Multiple Notification Types**: Success, error, warning, and info variants with distinct styling
-- **Flexible Positioning**: Top/bottom and left/center/right positioning options
-- **Auto-dismiss**: Configurable automatic dismissal with custom timing
-- **Manual Dismissal**: Close button for user-controlled dismissal
-- **Smooth Animations**: Slide-in and fade-out transitions
-- **Stacking Support**: Multiple toasts can be displayed simultaneously
-- **Custom Styling**: Full customization with Tailwind CSS classes
-- **Accessibility**: Screen reader support and keyboard navigation
-
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
-
-import toastApp from "./codes/Toast/toastApp.txt?raw";
-import toast from "./codes/Toast/toast.txt?raw";
-
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries required. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={toastApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={toast} lang="jsx" title="toast.jsx" />
-  </TabItem>
-</Tabs>
-
-## Props
-
-| Prop        | Type                                                                                              | Default       | Description                                                 |
-| ----------- | ------------------------------------------------------------------------------------------------- | ------------- | ----------------------------------------------------------- |
-| `message`   | `string`                                                                                          | `required`    | The text content of the toast notification                  |
-| `type`      | `'success' \| 'error' \| 'warning' \| 'info'`                                                     | `'info'`      | The type of notification, affects styling and icon          |
-| `position`  | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'top-right'` | Position where toast appears on screen                      |
-| `duration`  | `number`                                                                                          | `5000`        | Auto-dismiss duration in milliseconds (0 = no auto-dismiss) |
-| `onClose`   | `function`                                                                                        | `required`    | Function called when toast is closed                        |
-| `isVisible` | `boolean`                                                                                         | `true`        | Controls the visibility of the toast                        |
-| `className` | `string`                                                                                          | `''`          | Additional CSS classes for custom styling                   |
-
-## Usage Examples
-
-### Basic Toast Notifications
+## Component Code
 
 ```jsx
-const [toasts, setToasts] = useState([]);
+import React, { useState, useEffect } from "react";
+import {
+  CheckCircleIcon,
+  ExclamationTriangleIcon,
+  InformationCircleIcon,
+  XCircleIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
 
-const showSuccessToast = () => {
-  const id = Date.now();
-  setToasts((prev) => [
-    ...prev,
-    {
-      id,
-      message: "Operation completed successfully!",
-      type: "success",
-    },
-  ]);
+const Toast = ({
+  message,
+  type = "info",
+  duration = 5000,
+  position = "top-right",
+  onClose,
+  showIcon = true,
+  className = "",
+}) => {
+  const [isVisible, setIsVisible] = useState(true);
+  const [isEntering, setIsEntering] = useState(true);
+
+  useEffect(() => {
+    // Entry animation
+    const enterTimer = setTimeout(() => setIsEntering(false), 100);
+
+    // Auto dismiss
+    if (duration > 0) {
+      const dismissTimer = setTimeout(() => {
+        handleClose();
+      }, duration);
+
+      return () => {
+        clearTimeout(enterTimer);
+        clearTimeout(dismissTimer);
+      };
+    }
+
+    return () => clearTimeout(enterTimer);
+  }, [duration]);
+
+  const handleClose = () => {
+    setIsVisible(false);
+    setTimeout(() => {
+      onClose?.();
+    }, 300);
+  };
+
+  const getPositionStyles = () => {
+    const positions = {
+      "top-left": "top-4 left-4",
+      "top-center": "top-4 left-1/2 transform -translate-x-1/2",
+      "top-right": "top-4 right-4",
+      "bottom-left": "bottom-4 left-4",
+      "bottom-center": "bottom-4 left-1/2 transform -translate-x-1/2",
+      "bottom-right": "bottom-4 right-4",
+    };
+    return positions[position] || positions["top-right"];
+  };
+
+  const getTypeStyles = () => {
+    switch (type) {
+      case "success":
+        return "bg-green-50 border-green-200 text-green-800";
+      case "error":
+        return "bg-red-50 border-red-200 text-red-800";
+      case "warning":
+        return "bg-yellow-50 border-yellow-200 text-yellow-800";
+      case "info":
+      default:
+        return "bg-blue-50 border-blue-200 text-blue-800";
+    }
+  };
+
+  const getIcon = () => {
+    const iconClass = "w-5 h-5 flex-shrink-0";
+
+    switch (type) {
+      case "success":
+        return <CheckCircleIcon className={`${iconClass} text-green-500`} />;
+      case "error":
+        return <XCircleIcon className={`${iconClass} text-red-500`} />;
+      case "warning":
+        return (
+          <ExclamationTriangleIcon className={`${iconClass} text-yellow-500`} />
+        );
+      case "info":
+      default:
+        return (
+          <InformationCircleIcon className={`${iconClass} text-blue-500`} />
+        );
+    }
+  };
+
+  const getAnimationStyles = () => {
+    if (!isVisible) {
+      return "opacity-0 translate-y-2 scale-95";
+    }
+    if (isEntering) {
+      return "opacity-0 translate-y-2 scale-95";
+    }
+    return "opacity-100 translate-y-0 scale-100";
+  };
+
+  return (
+    <div
+      className={`
+        fixed ${getPositionStyles()} z-50 max-w-sm w-full mx-auto
+        transition-all duration-300 ease-out
+        ${getAnimationStyles()}
+      `}
+    >
+      <div
+        className={`
+          ${getTypeStyles()}
+          flex items-start p-4 rounded-lg border shadow-lg
+          ${className}
+        `}
+        role="alert"
+        aria-live="polite"
+      >
+        {showIcon && <div className="mr-3 mt-0.5">{getIcon()}</div>}
+
+        <div className="flex-1 text-sm font-medium">{message}</div>
+
+        <button
+          onClick={handleClose}
+          className="ml-3 flex-shrink-0 p-1 rounded-md hover:bg-black hover:bg-opacity-10 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
+          aria-label="Close notification"
+        >
+          <XMarkIcon className="w-4 h-4" />
+        </button>
+      </div>
+    </div>
+  );
 };
 
-const showErrorToast = () => {
-  const id = Date.now();
-  setToasts((prev) => [
-    ...prev,
-    {
-      id,
-      message: "An error occurred. Please try again.",
-      type: "error",
-    },
-  ]);
+// Toast Container Component for managing multiple toasts
+const ToastContainer = ({ toasts = [], position = "top-right" }) => {
+  const getContainerStyles = () => {
+    const positions = {
+      "top-left": "top-4 left-4",
+      "top-center": "top-4 left-1/2 transform -translate-x-1/2",
+      "top-right": "top-4 right-4",
+      "bottom-left": "bottom-4 left-4",
+      "bottom-center": "bottom-4 left-1/2 transform -translate-x-1/2",
+      "bottom-right": "bottom-4 right-4",
+    };
+    return positions[position] || positions["top-right"];
+  };
+
+  return (
+    <div
+      className={`fixed ${getContainerStyles()} z-50 space-y-3 max-w-sm w-full`}
+    >
+      {toasts.map((toast) => (
+        <Toast key={toast.id} {...toast} />
+      ))}
+    </div>
+  );
 };
 
-// Render toasts
-{
-  toasts.map((toast) => (
-    <Toast
-      key={toast.id}
-      message={toast.message}
-      type={toast.type}
-      onClose={() => setToasts((prev) => prev.filter((t) => t.id !== toast.id))}
-    />
-  ));
-}
+export { Toast, ToastContainer };
+export default Toast;
 ```
 
-### Positioned Toasts
+## Usage Example
 
 ```jsx
-// Top-left position
-<Toast
-  message="Saved to drafts"
-  type="info"
-  position="top-left"
-  onClose={handleClose}
-/>
+import React, { useState } from "react";
+import Toast, { ToastContainer } from "./Toast";
 
-// Bottom-center position
-<Toast
-  message="Form submitted successfully"
-  type="success"
-  position="bottom-center"
-  onClose={handleClose}
-/>
-```
-
-### Custom Duration and No Auto-dismiss
-
-```jsx
-// Quick toast (2 seconds)
-<Toast
-  message="Copied to clipboard"
-  type="success"
-  duration={2000}
-  onClose={handleClose}
-/>
-
-// Persistent toast (manual dismiss only)
-<Toast
-  message="Check your internet connection"
-  type="warning"
-  duration={0}
-  onClose={handleClose}
-/>
-```
-
-### Toast Manager Hook
-
-```jsx
-// Custom hook for managing toasts
-function useToast() {
+const App = () => {
   const [toasts, setToasts] = useState([]);
 
   const addToast = (message, type = "info", options = {}) => {
-    const id = Date.now();
-    const newToast = { id, message, type, ...options };
+    const id = Date.now() + Math.random();
+    const newToast = {
+      id,
+      message,
+      type,
+      onClose: () => removeToast(id),
+      ...options,
+    };
     setToasts((prev) => [...prev, newToast]);
   };
 
@@ -153,89 +202,378 @@ function useToast() {
     setToasts([]);
   };
 
-  return { toasts, addToast, removeToast, clearAllToasts };
-}
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">Toast Notifications</h1>
+
+      {/* Demo Buttons */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Try Different Toast Types</h2>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() =>
+              addToast("Operation completed successfully!", "success")
+            }
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            Success Toast
+          </button>
+          <button
+            onClick={() =>
+              addToast(
+                "An error occurred while processing your request.",
+                "error"
+              )
+            }
+            className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+          >
+            Error Toast
+          </button>
+          <button
+            onClick={() =>
+              addToast(
+                "Please review your settings before continuing.",
+                "warning"
+              )
+            }
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+          >
+            Warning Toast
+          </button>
+          <button
+            onClick={() =>
+              addToast(
+                "New features are now available in your dashboard.",
+                "info"
+              )
+            }
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            Info Toast
+          </button>
+        </div>
+      </div>
+
+      {/* Position Examples */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Different Positions</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <button
+            onClick={() =>
+              addToast("Top Left Toast", "info", { position: "top-left" })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Top Left
+          </button>
+          <button
+            onClick={() =>
+              addToast("Top Center Toast", "info", { position: "top-center" })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Top Center
+          </button>
+          <button
+            onClick={() =>
+              addToast("Top Right Toast", "info", { position: "top-right" })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Top Right
+          </button>
+          <button
+            onClick={() =>
+              addToast("Bottom Left Toast", "info", { position: "bottom-left" })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Bottom Left
+          </button>
+          <button
+            onClick={() =>
+              addToast("Bottom Center Toast", "info", {
+                position: "bottom-center",
+              })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Bottom Center
+          </button>
+          <button
+            onClick={() =>
+              addToast("Bottom Right Toast", "info", {
+                position: "bottom-right",
+              })
+            }
+            className="px-3 py-2 bg-gray-500 text-white rounded hover:bg-gray-600 text-sm"
+          >
+            Bottom Right
+          </button>
+        </div>
+      </div>
+
+      {/* Duration Examples */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Custom Duration</h2>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={() =>
+              addToast("Quick toast (2s)", "success", { duration: 2000 })
+            }
+            className="px-4 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600"
+          >
+            2 Second Toast
+          </button>
+          <button
+            onClick={() =>
+              addToast("Persistent toast (no auto-dismiss)", "warning", {
+                duration: 0,
+              })
+            }
+            className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600"
+          >
+            Persistent Toast
+          </button>
+          <button
+            onClick={() =>
+              addToast("Long toast (10s)", "info", { duration: 10000 })
+            }
+            className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600"
+          >
+            10 Second Toast
+          </button>
+        </div>
+      </div>
+
+      {/* Clear All Button */}
+      {toasts.length > 0 && (
+        <div className="pt-4 border-t">
+          <button
+            onClick={clearAllToasts}
+            className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+          >
+            Clear All Toasts ({toasts.length})
+          </button>
+        </div>
+      )}
+
+      {/* Toast Container */}
+      <ToastContainer toasts={toasts} position="top-right" />
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+### Toast Component
+
+| Prop        | Type                                                                                              | Default       | Description                                   |
+| ----------- | ------------------------------------------------------------------------------------------------- | ------------- | --------------------------------------------- |
+| `message`   | `string \| ReactNode`                                                                             | `required`    | Toast content/message                         |
+| `type`      | `'success' \| 'error' \| 'warning' \| 'info'`                                                     | `'info'`      | Toast type affecting color and icon           |
+| `duration`  | `number`                                                                                          | `5000`        | Auto-dismiss time in ms (0 = no auto-dismiss) |
+| `position`  | `'top-left' \| 'top-center' \| 'top-right' \| 'bottom-left' \| 'bottom-center' \| 'bottom-right'` | `'top-right'` | Screen position                               |
+| `onClose`   | `function`                                                                                        | `undefined`   | Callback when toast is closed                 |
+| `showIcon`  | `boolean`                                                                                         | `true`        | Whether to show type icon                     |
+| `className` | `string`                                                                                          | `''`          | Additional CSS classes                        |
+
+### ToastContainer Component
+
+| Prop       | Type                 | Default       | Description                          |
+| ---------- | -------------------- | ------------- | ------------------------------------ |
+| `toasts`   | `Array<ToastObject>` | `[]`          | Array of toast configurations        |
+| `position` | `string`             | `'top-right'` | Position for all toasts in container |
+
+## Features
+
+- ✅ **Multiple Types**: Success, error, warning, info with distinct styling
+- ✅ **Flexible Positioning**: 6 different screen positions
+- ✅ **Auto-dismiss**: Configurable duration with smooth animations
+- ✅ **Manual Close**: Click to dismiss with close button
+- ✅ **Smooth Animations**: CSS transitions for enter/exit effects
+- ✅ **Stacking Support**: Multiple toasts with proper spacing
+- ✅ **Accessibility**: ARIA attributes and keyboard navigation
+
+## Toast Types
+
+- **Success**: Green theme with checkmark - for confirmations and successful operations
+- **Error**: Red theme with X icon - for failures and critical issues
+- **Warning**: Yellow theme with triangle - for cautions and important notices
+- **Info**: Blue theme with info icon - for general information and tips
+
+## Common Patterns
+
+### API Response Handling
+
+```jsx
+const handleApiCall = async () => {
+  try {
+    await apiCall();
+    addToast("Data saved successfully!", "success");
+  } catch (error) {
+    addToast("Failed to save data. Please try again.", "error");
+  }
+};
+```
+
+### Form Submission
+
+```jsx
+const handleSubmit = async (formData) => {
+  addToast("Submitting form...", "info", { duration: 0 });
+
+  try {
+    await submitForm(formData);
+    removeToast(loadingToastId);
+    addToast("Form submitted successfully!", "success");
+  } catch (error) {
+    removeToast(loadingToastId);
+    addToast("Submission failed. Please try again.", "error");
+  }
+};
+```
+
+### User Actions
+
+```jsx
+const handleCopy = () => {
+  navigator.clipboard.writeText(textToCopy);
+  addToast("Copied to clipboard!", "success", { duration: 2000 });
+};
+
+const handleDelete = () => {
+  deleteItem();
+  addToast("Item deleted successfully", "success");
+};
+```
+
+## Advanced Usage
+
+### Toast Manager Hook
+
+```jsx
+// Custom hook for managing toasts
+const useToast = () => {
+  const [toasts, setToasts] = useState([]);
+
+  const addToast = (message, type = "info", options = {}) => {
+    const id = Date.now() + Math.random();
+    const toast = {
+      id,
+      message,
+      type,
+      onClose: () => removeToast(id),
+      ...options,
+    };
+    setToasts((prev) => [...prev, toast]);
+    return id;
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
+
+  const clearAll = () => {
+    setToasts([]);
+  };
+
+  return { toasts, addToast, removeToast, clearAll };
+};
 
 // Usage in component
-function App() {
-  const { toasts, addToast, removeToast } = useToast();
+const MyComponent = () => {
+  const { toasts, addToast, clearAll } = useToast();
 
   return (
     <div>
       <button onClick={() => addToast("Hello World!", "success")}>
-        Show Success Toast
+        Show Toast
       </button>
-
-      <div className="toast-container">
-        {toasts.map((toast) => (
-          <Toast
-            key={toast.id}
-            {...toast}
-            onClose={() => removeToast(toast.id)}
-          />
-        ))}
-      </div>
+      <ToastContainer toasts={toasts} />
     </div>
   );
-}
+};
 ```
 
-## Styling Variants
+### Different Positions Example
 
-### Toast Types
+```jsx
+// Bottom-left positioning
+<Toast
+  message="Settings saved"
+  type="success"
+  position="bottom-left"
+  duration={3000}
+/>
 
-**Success Toast**
-
-- Green background with checkmark icon
-- Used for successful operations
-
-**Error Toast**
-
-- Red background with error icon
-- Used for error messages and failures
-
-**Warning Toast**
-
-- Yellow/orange background with warning icon
-- Used for cautions and important notices
-
-**Info Toast**
-
-- Blue background with info icon
-- Used for general information and tips
+// Top-center for important announcements
+<Toast
+  message="System maintenance in 5 minutes"
+  type="warning"
+  position="top-center"
+  duration={0} // Persistent
+/>
+```
 
 ### Custom Styling
 
 ```jsx
+// Dark theme toast
 <Toast
-  message="Custom styled toast"
+  message="Dark theme enabled"
   type="info"
-  className="bg-purple-500 border-2 border-purple-700 text-white shadow-2xl"
-  onClose={handleClose}
+  className="bg-gray-800 border-gray-700 text-gray-100"
+/>
+
+// Large toast
+<Toast
+  message="Important announcement"
+  type="warning"
+  className="text-base p-6 max-w-md"
 />
 ```
 
-## Preview
+## Installation
 
-<iframe
-  src="https://stackblitz.com/edit/react-toast-notifications-demo?embed=1&file=src%2FToast.jsx&theme=dark&view=preview"
-  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-/>
+Install Heroicons for the toast icons:
+
+```bash
+npm install @heroicons/react
+```
+
+## Positioning Options
+
+- **Top**: `top-left`, `top-center`, `top-right`
+- **Bottom**: `bottom-left`, `bottom-center`, `bottom-right`
+
+Each position is fixed and appears in the appropriate corner or center of the screen.
 
 ## Best Practices
 
-1. **Use appropriate types** - Match toast type with the message context
-2. **Keep messages concise** - Use clear, brief messages that users can quickly read
-3. **Position consistently** - Use the same position throughout your application
-4. **Limit simultaneous toasts** - Avoid overwhelming users with too many notifications
-5. **Provide manual dismissal** - Always include a close button for accessibility
-6. **Test on mobile** - Ensure toasts are readable and accessible on small screens
-7. **Consider timing** - Use appropriate auto-dismiss timing based on message importance
+1. **Choose appropriate types** - Match toast type with message importance
+2. **Use reasonable durations** - 3-5 seconds for most messages
+3. **Keep messages concise** - Toast space is limited, be brief
+4. **Don't overuse** - Avoid showing too many toasts simultaneously
+5. **Position consistently** - Use the same position throughout your app
+6. **Provide manual close** - Always allow users to dismiss toasts
+7. **Test on mobile** - Ensure toasts don't interfere with mobile navigation
 
 ## Accessibility Features
 
-- **ARIA Live Regions**: Toasts are announced to screen readers
-- **Keyboard Navigation**: Close buttons are keyboard accessible
-- **High Contrast**: Color choices work well with high contrast modes
-- **Focus Management**: Focus is properly managed when toasts appear/disappear
+- **ARIA Live Regions**: Screen readers announce new toasts
+- **Keyboard Navigation**: Close button is keyboard accessible
+- **Focus Management**: Doesn't interfere with page focus flow
+- **High Contrast**: Works well with accessibility themes
+- **Screen Reader Labels**: Descriptive close button labels
+
+## Notes
+
+- Toasts are positioned fixed and appear above all other content
+- Multiple toasts stack vertically with proper spacing
+- Smooth CSS animations for professional appearance
+- No external dependencies except Heroicons
+- Easy to integrate with existing state management systems

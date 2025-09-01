@@ -1,140 +1,183 @@
 ---
 title: Accordion
-description: A collapsible content component with smooth animations using Framer Motion and Tailwind CSS.
+description: A modern, accessible accordion component built with React and Tailwind CSS.
 ---
 
-The following accordion component provides an elegant way to display collapsible content sections. Built with Framer Motion for smooth animations and styled with Tailwind CSS, this component is perfect for FAQs, documentation sections, or any content that needs to be organized in an expandable format. Each accordion item can be toggled independently, making it ideal for organizing large amounts of information in a compact space.
+A responsive and accessible accordion component that allows users to expand and collapse content sections. Perfect for FAQs, feature lists, and organizing content in a compact space.
 
-## Features
+## Component Code
 
-- **Smooth Animations**: Powered by Framer Motion for fluid expand/collapse animations
-- **Multiple Items**: Support for arrays of accordion items with title and content
-- **Independent Toggle**: Each accordion item can be opened/closed independently
-- **Customizable Styling**: Full control over appearance with Tailwind CSS classes
-- **Keyboard Accessible**: Proper focus management and keyboard navigation
-- **Mobile Responsive**: Works seamlessly on all device sizes
+```jsx
+import React, { useState } from "react";
+import { ChevronDownIcon } from "@heroicons/react/24/outline";
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+const Accordion = ({ items, allowMultiple = true, className = "" }) => {
+  const [openItems, setOpenItems] = useState(new Set());
 
-import accordionApp from "./codes/Accordion/accordionApp.txt?raw";
-import accordion from "./codes/Accordion/accordion.txt?raw";
+  const toggleItem = (index) => {
+    const newOpenItems = new Set(openItems);
 
-<Tabs>
-  <TabItem label="Dependencies">
-    Install the following libraries. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-    <Code code={`npm install framer-motion`} lang="shell" />
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={accordionApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={accordion} lang="jsx" title="Accordion.jsx" />
-  </TabItem>
-</Tabs>
+    if (allowMultiple) {
+      if (newOpenItems.has(index)) {
+        newOpenItems.delete(index);
+      } else {
+        newOpenItems.add(index);
+      }
+    } else {
+      if (newOpenItems.has(index)) {
+        newOpenItems.clear();
+      } else {
+        newOpenItems.clear();
+        newOpenItems.add(index);
+      }
+    }
+
+    setOpenItems(newOpenItems);
+  };
+
+  return (
+    <div className={`space-y-2 ${className}`}>
+      {items.map((item, index) => (
+        <div
+          key={index}
+          className="border border-gray-200 rounded-lg overflow-hidden shadow-sm"
+        >
+          <button
+            onClick={() => toggleItem(index)}
+            className="w-full px-6 py-4 text-left bg-white hover:bg-gray-50 focus:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-inset transition-colors duration-200 flex items-center justify-between"
+            aria-expanded={openItems.has(index)}
+            aria-controls={`accordion-content-${index}`}
+          >
+            <span className="text-gray-900 font-medium">{item.title}</span>
+            <ChevronDownIcon
+              className={`w-5 h-5 text-gray-500 transition-transform duration-200 ${
+                openItems.has(index) ? "rotate-180" : ""
+              }`}
+            />
+          </button>
+
+          <div
+            id={`accordion-content-${index}`}
+            className={`transition-all duration-300 ease-in-out ${
+              openItems.has(index)
+                ? "max-h-96 opacity-100"
+                : "max-h-0 opacity-0"
+            } overflow-hidden`}
+          >
+            <div className="px-6 py-4 bg-gray-50 text-gray-700 border-t border-gray-200">
+              {item.content}
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+};
+
+export default Accordion;
+```
+
+## Usage Example
+
+```jsx
+import React from "react";
+import Accordion from "./Accordion";
+
+const App = () => {
+  const faqItems = [
+    {
+      title: "What is React?",
+      content:
+        "React is a JavaScript library for building user interfaces. It allows you to create reusable UI components and manage application state efficiently.",
+    },
+    {
+      title: "How do I get started with React?",
+      content:
+        "You can start by creating a new React app using Create React App or Vite. Then learn about components, JSX, and state management.",
+    },
+    {
+      title: "What are React Hooks?",
+      content:
+        "Hooks are functions that let you use state and other React features in functional components. Common hooks include useState, useEffect, and useContext.",
+    },
+    {
+      title: "How do I style React components?",
+      content:
+        "You can style React components using CSS modules, styled-components, Tailwind CSS, or traditional CSS files.",
+    },
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8 text-gray-900">
+        Frequently Asked Questions
+      </h1>
+      <Accordion items={faqItems} />
+    </div>
+  );
+};
+
+export default App;
+```
 
 ## Props
 
-| Prop            | Type                                         | Default    | Description                                           |
-| --------------- | -------------------------------------------- | ---------- | ----------------------------------------------------- |
-| `items`         | `Array<{title: string, content: ReactNode}>` | `required` | Array of accordion items with title and content       |
-| `className`     | `string`                                     | `''`       | Additional CSS classes for the accordion container    |
-| `itemClassName` | `string`                                     | `''`       | Additional CSS classes for individual accordion items |
-| `allowMultiple` | `boolean`                                    | `true`     | Whether multiple items can be open simultaneously     |
+| Prop            | Type                                      | Default    | Description                                         |
+| --------------- | ----------------------------------------- | ---------- | --------------------------------------------------- |
+| `items`         | `Array<{title: string, content: string}>` | `required` | Array of accordion items with title and content     |
+| `allowMultiple` | `boolean`                                 | `true`     | Whether multiple items can be open at the same time |
+| `className`     | `string`                                  | `''`       | Additional CSS classes for the accordion container  |
 
-## Usage Examples
+## Features
 
-### Basic Accordion
+- ✅ **Responsive Design**: Works perfectly on all screen sizes
+- ✅ **Smooth Animations**: CSS transitions for expand/collapse actions
+- ✅ **Keyboard Accessible**: Full keyboard navigation support
+- ✅ **Customizable**: Easy to modify styles and behavior
+- ✅ **Multiple or Single Mode**: Control whether multiple items can be open
+- ✅ **Clean Design**: Modern, minimal styling with Tailwind CSS
 
-```jsx
-const faqItems = [
-  {
-    title: "What is React?",
-    content:
-      "React is a JavaScript library for building user interfaces, particularly web applications.",
-  },
-  {
-    title: "How do I install React?",
-    content:
-      "You can create a new React app using 'npx create-react-app my-app' or use Vite with 'npm create vite@latest my-app -- --template react'.",
-  },
-  {
-    title: "What are React Hooks?",
-    content:
-      "Hooks are functions that let you use state and other React features in functional components.",
-  },
-];
+## Installation
 
-<Accordion items={faqItems} />;
+First, make sure you have Tailwind CSS installed in your project. Then install Heroicons for the chevron icon:
+
+```bash
+npm install @heroicons/react
 ```
 
-### Single Item Open Accordion
+If you prefer not to use Heroicons, you can replace the `ChevronDownIcon` with any other icon or even a simple Unicode character like `▼`.
+
+## Customization
+
+### Different Styles
 
 ```jsx
-const steps = [
-  {
-    title: "Step 1: Setup",
-    content:
-      "Install the necessary dependencies and set up your project structure.",
-  },
-  {
-    title: "Step 2: Configuration",
-    content: "Configure your build tools and environment variables.",
-  },
-  {
-    title: "Step 3: Development",
-    content: "Start developing your application with the configured setup.",
-  },
-];
-
-<Accordion items={steps} allowMultiple={false} className="max-w-2xl mx-auto" />;
-```
-
-### Custom Styled Accordion
-
-```jsx
+// Bordered style
 <Accordion
   items={items}
-  className="bg-gray-50 rounded-lg p-4"
-  itemClassName="border-l-4 border-blue-500 bg-white"
+  className="border-2 border-gray-300 rounded-xl"
+/>
+
+// Card style with shadow
+<Accordion
+  items={items}
+  className="shadow-lg rounded-xl bg-white"
+/>
+
+// Colored theme
+<Accordion
+  items={items}
+  className="bg-blue-50 border border-blue-200 rounded-lg"
 />
 ```
 
-## Preview
+### Without Icons
 
-<iframe
-  src="https://stackblitz.com/edit/react-accordion-component-demo?embed=1&file=src%2FAccordion.jsx&theme=dark&view=preview"
-  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-/>
+If you want to remove the chevron icon, simply remove the `ChevronDownIcon` import and the icon element from the button.
 
-## Animation Details
+## Notes
 
-The accordion uses Framer Motion's `AnimatePresence` and `motion.div` to provide smooth animations:
-
-- **Height Animation**: Content smoothly expands and collapses with height transitions
-- **Opacity Transition**: Content fades in and out during state changes
-- **Icon Rotation**: Chevron icons rotate to indicate expanded/collapsed state
-- **Custom Timing**: Configurable animation duration and easing curves
-
-## Accessibility Features
-
-- **ARIA Attributes**: Proper `aria-expanded`, `aria-controls`, and `aria-labelledby` attributes
-- **Keyboard Navigation**: Full keyboard support with Enter/Space key activation
-- **Focus Management**: Proper focus indicators and logical tab order
-- **Screen Reader Support**: Descriptive labels and state announcements
-
-## Best Practices
-
-1. **Keep titles concise** - Use clear, descriptive titles for accordion items
-2. **Organize content logically** - Group related information together
-3. **Limit nesting** - Avoid deeply nested accordion structures
-4. **Use consistent styling** - Maintain visual consistency across all items
-5. **Test with screen readers** - Ensure accessibility compliance
-6. **Consider mobile experience** - Ensure touch targets are appropriately sized
-   src="https://stackblitz.com/edit/vitejs-vite-ummale?embed=1&file=src%2Fcomponents%2FAccordion.jsx&hideNavigation=1&theme=dark&view=preview"
-   style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-   sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-   />
+- The component uses `max-h-96` for the expanded state - adjust this based on your content length
+- Smooth transitions are handled with Tailwind's `transition-all` and `duration-300`
+- The component is fully controlled by React state with no external dependencies except Heroicons
+- Accessibility features are built-in with proper ARIA attributes

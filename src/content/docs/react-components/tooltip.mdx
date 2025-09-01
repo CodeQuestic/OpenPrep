@@ -3,228 +3,590 @@ title: Tooltip
 description: A versatile React tooltip component with hover/click triggers, multiple positions, and customizable styling using Tailwind CSS.
 ---
 
-A highly customizable tooltip component that provides contextual information on hover or click interactions. This component supports multiple positioning options, trigger methods, custom styling, and delay configurations. Perfect for enhancing user experience by providing helpful hints, explanations, or additional information without cluttering the interface.
+A flexible tooltip component for displaying contextual information on hover or click. Built with React and styled with Tailwind CSS with smart positioning and smooth animations.
 
-## Features
+## Component Code
 
-- **Multiple Trigger Methods**: Hover or click activation
-- **Flexible Positioning**: Top, bottom, left, right with auto-positioning
-- **Customizable Delay**: Configurable show/hide delays for better UX
-- **Rich Content Support**: Text, HTML, or React components as tooltip content
-- **Responsive Design**: Adapts to screen edges and viewport constraints
-- **Accessibility**: ARIA attributes and keyboard navigation support
-- **Custom Styling**: Full control with Tailwind CSS classes
-- **Arrow Indicator**: Optional arrow pointing to the trigger element
+```jsx
+import React, { useState, useRef, useEffect } from "react";
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+const Tooltip = ({
+  children,
+  content,
+  position = "top",
+  trigger = "hover",
+  delay = 500,
+  className = "",
+  contentClassName = "",
+  arrow = true,
+  disabled = false,
+  maxWidth = "max-w-xs",
+}) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const [actualPosition, setActualPosition] = useState(position);
+  const tooltipRef = useRef(null);
+  const triggerRef = useRef(null);
+  const timeoutRef = useRef(null);
 
-import tooltipApp from "./codes/Tooltip/tooltipApp.txt?raw";
-import tooltip from "./codes/Tooltip/tooltip.txt?raw";
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
 
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries required. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={tooltipApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={tooltip} lang="jsx" title="tooltip.jsx" />
-  </TabItem>
-</Tabs>
+  const showTooltip = () => {
+    if (disabled) return;
+
+    if (delay > 0) {
+      timeoutRef.current = setTimeout(() => {
+        setIsVisible(true);
+        updatePosition();
+      }, delay);
+    } else {
+      setIsVisible(true);
+      updatePosition();
+    }
+  };
+
+  const hideTooltip = () => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setIsVisible(false);
+  };
+
+  const toggleTooltip = () => {
+    if (isVisible) {
+      hideTooltip();
+    } else {
+      showTooltip();
+    }
+  };
+
+  const updatePosition = () => {
+    if (!tooltipRef.current || !triggerRef.current) return;
+
+    const triggerRect = triggerRef.current.getBoundingClientRect();
+    const tooltipRect = tooltipRef.current.getBoundingClientRect();
+    const viewport = {
+      width: window.innerWidth,
+      height: window.innerHeight,
+    };
+
+    let newPosition = position;
+
+    // Check if tooltip would overflow and adjust position
+    switch (position) {
+      case "top":
+        if (triggerRect.top - tooltipRect.height < 10) {
+          newPosition = "bottom";
+        }
+        break;
+      case "bottom":
+        if (triggerRect.bottom + tooltipRect.height > viewport.height - 10) {
+          newPosition = "top";
+        }
+        break;
+      case "left":
+        if (triggerRect.left - tooltipRect.width < 10) {
+          newPosition = "right";
+        }
+        break;
+      case "right":
+        if (triggerRect.right + tooltipRect.width > viewport.width - 10) {
+          newPosition = "left";
+        }
+        break;
+    }
+
+    setActualPosition(newPosition);
+  };
+
+  const getPositionStyles = () => {
+    const positions = {
+      top: "bottom-full left-1/2 transform -translate-x-1/2 mb-2",
+      bottom: "top-full left-1/2 transform -translate-x-1/2 mt-2",
+      left: "right-full top-1/2 transform -translate-y-1/2 mr-2",
+      right: "left-full top-1/2 transform -translate-y-1/2 ml-2",
+      "top-left": "bottom-full right-0 mb-2",
+      "top-right": "bottom-full left-0 mb-2",
+      "bottom-left": "top-full right-0 mt-2",
+      "bottom-right": "top-full left-0 mt-2",
+    };
+    return positions[actualPosition] || positions.top;
+  };
+
+  const getArrowStyles = () => {
+    if (!arrow) return "";
+
+    const arrows = {
+      top: "absolute top-full left-1/2 transform -translate-x-1/2 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900",
+      bottom:
+        "absolute bottom-full left-1/2 transform -translate-x-1/2 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900",
+      left: "absolute left-full top-1/2 transform -translate-y-1/2 border-t-4 border-b-4 border-l-4 border-transparent border-l-gray-900",
+      right:
+        "absolute right-full top-1/2 transform -translate-y-1/2 border-t-4 border-b-4 border-r-4 border-transparent border-r-gray-900",
+      "top-left":
+        "absolute top-full right-2 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900",
+      "top-right":
+        "absolute top-full left-2 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900",
+      "bottom-left":
+        "absolute bottom-full right-2 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900",
+      "bottom-right":
+        "absolute bottom-full left-2 border-l-4 border-r-4 border-b-4 border-transparent border-b-gray-900",
+    };
+    return arrows[actualPosition] || arrows.top;
+  };
+
+  const triggerProps = {
+    ref: triggerRef,
+    className: `relative inline-block ${className}`,
+  };
+
+  if (trigger === "hover") {
+    triggerProps.onMouseEnter = showTooltip;
+    triggerProps.onMouseLeave = hideTooltip;
+    triggerProps.onFocus = showTooltip;
+    triggerProps.onBlur = hideTooltip;
+  } else if (trigger === "click") {
+    triggerProps.onClick = toggleTooltip;
+  }
+
+  return (
+    <div {...triggerProps}>
+      {children}
+
+      {isVisible && content && (
+        <div
+          ref={tooltipRef}
+          className={`
+            absolute z-50 ${getPositionStyles()} ${maxWidth}
+            px-3 py-2 text-sm font-medium text-white
+            bg-gray-900 rounded-lg shadow-lg
+            transition-all duration-200 ease-out
+            pointer-events-none
+            ${contentClassName}
+          `}
+          role="tooltip"
+          aria-hidden={!isVisible}
+        >
+          {content}
+          {arrow && <div className={getArrowStyles()} />}
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default Tooltip;
+```
+
+## Usage Example
+
+```jsx
+import React from "react";
+import Tooltip from "./Tooltip";
+import {
+  InformationCircleIcon,
+  TrashIcon,
+  PencilIcon,
+  QuestionMarkCircleIcon,
+} from "@heroicons/react/24/outline";
+
+const App = () => {
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">Tooltip Examples</h1>
+
+      {/* Basic Usage */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Basic Tooltips</h2>
+        <div className="flex flex-wrap gap-6 items-center">
+          <Tooltip content="This is a basic tooltip">
+            <button className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600">
+              Hover me
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Click to show/hide" trigger="click">
+            <button className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600">
+              Click me
+            </button>
+          </Tooltip>
+
+          <Tooltip content="This tooltip appears instantly" delay={0}>
+            <span className="text-blue-600 underline cursor-help">
+              Instant tooltip
+            </span>
+          </Tooltip>
+        </div>
+      </div>
+
+      {/* Different Positions */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Positioning</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-8">
+          <Tooltip content="Tooltip on top" position="top">
+            <button className="px-3 py-2 bg-gray-500 text-white rounded text-sm">
+              Top
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Tooltip on bottom" position="bottom">
+            <button className="px-3 py-2 bg-gray-500 text-white rounded text-sm">
+              Bottom
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Tooltip on left" position="left">
+            <button className="px-3 py-2 bg-gray-500 text-white rounded text-sm">
+              Left
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Tooltip on right" position="right">
+            <button className="px-3 py-2 bg-gray-500 text-white rounded text-sm">
+              Right
+            </button>
+          </Tooltip>
+        </div>
+      </div>
+
+      {/* With Icons */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Icon Tooltips</h2>
+        <div className="flex gap-6 items-center">
+          <Tooltip content="Get help and documentation">
+            <button className="p-2 text-blue-600 hover:bg-blue-50 rounded-full">
+              <InformationCircleIcon className="w-5 h-5" />
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Delete this item permanently" position="bottom">
+            <button className="p-2 text-red-600 hover:bg-red-50 rounded-full">
+              <TrashIcon className="w-5 h-5" />
+            </button>
+          </Tooltip>
+
+          <Tooltip content="Edit item details" position="left">
+            <button className="p-2 text-green-600 hover:bg-green-50 rounded-full">
+              <PencilIcon className="w-5 h-5" />
+            </button>
+          </Tooltip>
+
+          <Tooltip
+            content="Need help? Click for more information"
+            trigger="click"
+          >
+            <button className="p-2 text-purple-600 hover:bg-purple-50 rounded-full">
+              <QuestionMarkCircleIcon className="w-5 h-5" />
+            </button>
+          </Tooltip>
+        </div>
+      </div>
+
+      {/* Advanced Examples */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Advanced Usage</h2>
+
+        {/* Rich Content Tooltip */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Rich Content</h3>
+          <Tooltip
+            content={
+              <div>
+                <div className="font-semibold mb-1">Pro Tip!</div>
+                <div>Use keyboard shortcuts to work faster:</div>
+                <ul className="mt-2 text-xs space-y-1">
+                  <li>• Ctrl+S to save</li>
+                  <li>• Ctrl+Z to undo</li>
+                  <li>• Ctrl+C to copy</li>
+                </ul>
+              </div>
+            }
+            maxWidth="max-w-sm"
+            position="bottom"
+          >
+            <span className="inline-flex items-center px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-medium cursor-help">
+              <QuestionMarkCircleIcon className="w-4 h-4 mr-1" />
+              Keyboard Shortcuts
+            </span>
+          </Tooltip>
+        </div>
+
+        {/* No Arrow Example */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Without Arrow</h3>
+          <Tooltip
+            content="Clean tooltip without arrow pointer"
+            arrow={false}
+            contentClassName="bg-black"
+          >
+            <button className="px-4 py-2 bg-gray-800 text-white rounded">
+              No Arrow
+            </button>
+          </Tooltip>
+        </div>
+
+        {/* Disabled State */}
+        <div className="space-y-4">
+          <h3 className="text-lg font-medium">Disabled Tooltip</h3>
+          <Tooltip content="This tooltip won't show" disabled>
+            <button className="px-4 py-2 bg-gray-400 text-gray-600 rounded cursor-not-allowed">
+              Disabled Tooltip
+            </button>
+          </Tooltip>
+        </div>
+      </div>
+
+      {/* Form Example */}
+      <div className="space-y-6">
+        <h2 className="text-xl font-semibold">Form Integration</h2>
+        <div className="max-w-md space-y-4">
+          <div>
+            <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              Email Address
+              <Tooltip
+                content="We'll never share your email with anyone else"
+                position="right"
+              >
+                <InformationCircleIcon className="w-4 h-4 ml-1 text-gray-400 cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="email"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your email"
+            />
+          </div>
+
+          <div>
+            <label className="flex items-center text-sm font-medium text-gray-700 mb-2">
+              Password
+              <Tooltip
+                content="Password must be at least 8 characters with uppercase, lowercase, and numbers"
+                position="right"
+                maxWidth="max-w-sm"
+              >
+                <InformationCircleIcon className="w-4 h-4 ml-1 text-gray-400 cursor-help" />
+              </Tooltip>
+            </label>
+            <input
+              type="password"
+              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter your password"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
 
 ## Props
 
-| Prop             | Type                                     | Default    | Description                                  |
-| ---------------- | ---------------------------------------- | ---------- | -------------------------------------------- |
-| `content`        | `string \| ReactNode`                    | `required` | The tooltip content to display               |
-| `children`       | `ReactNode`                              | `required` | The element that triggers the tooltip        |
-| `position`       | `'top' \| 'bottom' \| 'left' \| 'right'` | `'top'`    | Preferred position of the tooltip            |
-| `trigger`        | `'hover' \| 'click'`                     | `'hover'`  | How the tooltip is activated                 |
-| `delay`          | `number`                                 | `300`      | Delay in milliseconds before showing tooltip |
-| `hideDelay`      | `number`                                 | `100`      | Delay in milliseconds before hiding tooltip  |
-| `className`      | `string`                                 | `''`       | Additional CSS classes for the tooltip       |
-| `arrowClassName` | `string`                                 | `''`       | Additional CSS classes for the arrow         |
-| `disabled`       | `boolean`                                | `false`    | Whether the tooltip is disabled              |
-| `showArrow`      | `boolean`                                | `true`     | Whether to show the pointing arrow           |
+| Prop               | Type                                                                                                     | Default      | Description                             |
+| ------------------ | -------------------------------------------------------------------------------------------------------- | ------------ | --------------------------------------- |
+| `children`         | `ReactNode`                                                                                              | `required`   | Element that triggers the tooltip       |
+| `content`          | `string \| ReactNode`                                                                                    | `required`   | Tooltip content                         |
+| `position`         | `'top' \| 'bottom' \| 'left' \| 'right' \| 'top-left' \| 'top-right' \| 'bottom-left' \| 'bottom-right'` | `'top'`      | Tooltip position relative to trigger    |
+| `trigger`          | `'hover' \| 'click'`                                                                                     | `'hover'`    | How tooltip is triggered                |
+| `delay`            | `number`                                                                                                 | `500`        | Delay in ms before showing (hover only) |
+| `className`        | `string`                                                                                                 | `''`         | Additional classes for wrapper          |
+| `contentClassName` | `string`                                                                                                 | `''`         | Additional classes for tooltip content  |
+| `arrow`            | `boolean`                                                                                                | `true`       | Whether to show arrow pointer           |
+| `disabled`         | `boolean`                                                                                                | `false`      | Disable tooltip functionality           |
+| `maxWidth`         | `string`                                                                                                 | `'max-w-xs'` | Maximum width class                     |
 
-## Usage Examples
+## Features
 
-### Basic Hover Tooltip
+- ✅ **Smart Positioning**: Automatically adjusts position to stay in viewport
+- ✅ **Multiple Triggers**: Hover or click activation
+- ✅ **Customizable Delay**: Configurable show delay for hover tooltips
+- ✅ **Rich Content**: Support for text, HTML, and React components
+- ✅ **Smooth Animations**: CSS transitions for professional appearance
+- ✅ **Accessibility**: ARIA attributes and keyboard navigation
+- ✅ **Responsive**: Works across all screen sizes
+- ✅ **Arrow Pointer**: Optional arrow pointing to trigger element
 
-```jsx
-<Tooltip content="This is helpful information">
-  <button className="px-4 py-2 bg-blue-500 text-white rounded">Hover me</button>
-</Tooltip>
-```
+## Position Options
 
-### Click Tooltip with Custom Position
+### Basic Positions
 
-```jsx
-<Tooltip
-  content="Click tooltip with detailed information"
-  trigger="click"
-  position="bottom"
->
-  <span className="text-blue-500 cursor-pointer underline">
-    Click for more info
-  </span>
-</Tooltip>
-```
+- **top**: Above the element (default)
+- **bottom**: Below the element
+- **left**: To the left of the element
+- **right**: To the right of the element
 
-### Tooltip with React Content
+### Corner Positions
 
-```jsx
-const tooltipContent = (
-  <div>
-    <h4 className="font-bold text-sm mb-1">User Profile</h4>
-    <p className="text-xs">View and edit your profile information</p>
-  </div>
-);
+- **top-left**: Above and aligned to left edge
+- **top-right**: Above and aligned to right edge
+- **bottom-left**: Below and aligned to left edge
+- **bottom-right**: Below and aligned to right edge
 
-<Tooltip content={tooltipContent} position="right">
-  <img
-    src="/avatar.jpg"
-    alt="User Avatar"
-    className="w-8 h-8 rounded-full cursor-pointer"
-  />
-</Tooltip>;
-```
+## Common Patterns
 
-### Custom Styled Tooltip
+### Icon Tooltips
 
 ```jsx
-<Tooltip
-  content="Custom styled tooltip"
-  className="bg-purple-600 text-white border-2 border-purple-800 shadow-2xl"
-  arrowClassName="border-purple-800"
-  delay={500}
->
-  <button className="px-3 py-1 bg-purple-100 text-purple-800 rounded">
-    Custom Style
+<Tooltip content="Add new item">
+  <button className="p-2 text-blue-600 hover:bg-blue-50 rounded">
+    <PlusIcon className="w-5 h-5" />
   </button>
 </Tooltip>
 ```
-
-### Disabled Tooltip
-
-```jsx
-<Tooltip content="This tooltip won't show" disabled>
-  <button className="px-4 py-2 bg-gray-400 text-white rounded cursor-not-allowed">
-    Disabled Button
-  </button>
-</Tooltip>
-```
-
-## Positioning System
-
-The tooltip automatically calculates the best position based on:
-
-### Priority Order
-
-1. **Preferred Position**: The position you specify in the `position` prop
-2. **Viewport Constraints**: Automatically flips if there's not enough space
-3. **Fallback Positions**: Tries alternative positions in this order:
-   - `top` → `bottom` → `right` → `left`
-   - `bottom` → `top` → `left` → `right`
-   - `left` → `right` → `top` → `bottom`
-   - `right` → `left` → `bottom` → `top`
-
-### Smart Positioning
-
-```jsx
-// Will try 'top' first, but flip to 'bottom' if near top of viewport
-<Tooltip content="Smart positioning" position="top">
-  <button>Near viewport edge</button>
-</Tooltip>
-```
-
-## Advanced Examples
 
 ### Form Field Help
 
 ```jsx
-function FormField({ label, name, helpText }) {
-  return (
-    <div className="mb-4">
-      <label className="flex items-center gap-2 mb-1">
-        {label}
-        <Tooltip content={helpText} position="right">
-          <span className="text-gray-400 hover:text-gray-600 cursor-help">
-            ⓘ
-          </span>
-        </Tooltip>
-      </label>
-      <input
-        name={name}
-        className="w-full px-3 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-    </div>
-  );
-}
-
-<FormField
-  label="Email Address"
-  name="email"
-  helpText="We'll never share your email with anyone else"
-/>;
+<label className="flex items-center">
+  Username
+  <Tooltip content="Username must be 3-20 characters" position="right">
+    <InformationCircleIcon className="w-4 h-4 ml-1 text-gray-400" />
+  </Tooltip>
+</label>
 ```
 
-### Icon with Tooltip
+### Click Tooltips for Mobile
 
 ```jsx
-function IconWithTooltip({ icon, tooltip, onClick }) {
-  return (
-    <Tooltip content={tooltip}>
-      <button
-        onClick={onClick}
-        className="p-2 text-gray-600 hover:text-gray-800 hover:bg-gray-100 rounded"
-      >
-        {icon}
-      </button>
-    </Tooltip>
-  );
-}
-
-<div className="flex gap-2">
-  <IconWithTooltip
-    icon="📁"
-    tooltip="Open folder"
-    onClick={() => console.log("Open folder")}
-  />
-  <IconWithTooltip
-    icon="❤️"
-    tooltip="Add to favorites"
-    onClick={() => console.log("Add to favorites")}
-  />
-</div>;
+<Tooltip content="Detailed information here" trigger="click">
+  <span className="text-blue-600 underline cursor-pointer">Learn more</span>
+</Tooltip>
 ```
 
-## Preview
+### Rich Content Tooltips
 
-<iframe
-  src="https://stackblitz.com/edit/react-tooltip-component-demo?embed=1&file=src%2FTooltip.jsx&theme=dark&view=preview"
-  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-/>
+```jsx
+<Tooltip
+  content={
+    <div>
+      <div className="font-semibold">Feature Preview</div>
+      <div className="text-xs mt-1">Available in Pro plan</div>
+    </div>
+  }
+  maxWidth="max-w-sm"
+>
+  <button>Premium Feature</button>
+</Tooltip>
+```
 
-## Accessibility Features
+## Advanced Usage
 
-- **ARIA Attributes**: Proper `aria-describedby` and `role="tooltip"` attributes
-- **Keyboard Support**: Tooltips show/hide with focus and blur events
-- **Screen Reader Support**: Content is announced to assistive technologies
-- **High Contrast**: Works well with high contrast modes and themes
-- **Focus Management**: Doesn't interfere with keyboard navigation flow
+### Custom Styling
+
+```jsx
+// Dark theme tooltip
+<Tooltip
+  content="Dark themed tooltip"
+  contentClassName="bg-black text-white border border-gray-700"
+>
+  <button>Dark Tooltip</button>
+</Tooltip>
+
+// Colorful tooltip
+<Tooltip
+  content="Colorful notification"
+  contentClassName="bg-gradient-to-r from-purple-500 to-pink-500 text-white"
+  arrow={false}
+>
+  <button>Gradient Tooltip</button>
+</Tooltip>
+```
+
+### Controlled Tooltip
+
+```jsx
+const [showTooltip, setShowTooltip] = useState(false);
+
+<Tooltip
+  content="Controlled tooltip"
+  trigger="click"
+  isVisible={showTooltip}
+  onVisibilityChange={setShowTooltip}
+>
+  <button>Controlled</button>
+</Tooltip>;
+```
+
+### Long Content with Wrapping
+
+```jsx
+<Tooltip
+  content="This is a very long tooltip message that will wrap to multiple lines and demonstrate the max width functionality"
+  maxWidth="max-w-md"
+  position="bottom"
+>
+  <span className="cursor-help underline">Long tooltip example</span>
+</Tooltip>
+```
+
+## Trigger Types
+
+### Hover (Default)
+
+- Shows on mouse enter and focus
+- Hides on mouse leave and blur
+- Configurable delay for better UX
+
+### Click
+
+- Toggles on click
+- Good for mobile devices
+- Stays open until clicked again or focus lost
+
+## Positioning Logic
+
+The tooltip automatically adjusts its position when:
+
+- **Top tooltip** would overflow viewport top → switches to bottom
+- **Bottom tooltip** would overflow viewport bottom → switches to top
+- **Left tooltip** would overflow viewport left → switches to right
+- **Right tooltip** would overflow viewport right → switches to left
+
+## Installation
+
+Install Heroicons for icon examples:
+
+```bash
+npm install @heroicons/react
+```
 
 ## Best Practices
 
-1. **Keep content concise** - Tooltips should provide brief, helpful information
-2. **Use appropriate triggers** - Hover for quick info, click for complex content
-3. **Consider mobile users** - Click triggers work better on touch devices
-4. **Don't hide essential information** - Tooltips should enhance, not replace visible content
-5. **Test positioning** - Ensure tooltips don't get cut off by viewport edges
-6. **Use consistent styling** - Maintain visual consistency across your application
-7. **Provide keyboard access** - Ensure tooltip content is accessible via keyboard navigation
+1. **Keep content concise** - Tooltips should provide quick context
+2. **Use appropriate triggers** - Hover for desktop, click for mobile-friendly
+3. **Position wisely** - Consider tooltip content length and screen space
+4. **Accessibility first** - Ensure tooltips are keyboard accessible
+5. **Don't overuse** - Not every element needs a tooltip
+6. **Test on mobile** - Ensure tooltips work well on touch devices
+7. **Provide escape routes** - Always allow users to dismiss tooltips
+
+## Accessibility Features
+
+- **ARIA Roles**: Proper `tooltip` role for screen readers
+- **Keyboard Support**: Works with Tab navigation and focus states
+- **Screen Reader Friendly**: Content is announced when tooltip appears
+- **Focus Management**: Maintains focus on trigger element
+- **High Contrast**: Dark background ensures good contrast
+
+## Animation Details
+
+- **Entry**: Smooth fade-in with slight scale animation
+- **Exit**: Fade-out transition on hide
+- **Duration**: 200ms for snappy, professional feel
+- **Easing**: `ease-out` for natural motion
+
+## Notes
+
+- Tooltips automatically hide when trigger loses focus
+- Smart positioning prevents tooltips from going off-screen
+- Arrow pointer adjusts based on actual position
+- No external dependencies except Heroicons for icon examples
+- Works with both controlled and uncontrolled patterns

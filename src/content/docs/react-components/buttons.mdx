@@ -1,33 +1,329 @@
 ---
 title: Buttons
+description: A comprehensive button component library built with React and Tailwind CSS for all your UI needs.
 ---
 
-The following single button component is a versatile component allowing you to define your own variants, sizes, styles and more. With a pretty good setup out-of-the-box. If required you can style it however you need to for you own needs via `className`.
+A flexible and accessible button component with multiple variants, sizes, and states. Built with React and styled with Tailwind CSS for modern web applications.
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+## Component Code
 
-import buttonsApp from "./codes/Buttons/buttonsApp.txt?raw";
-import buttons from "./codes/Buttons/buttons.txt?raw";
+```jsx
+import React from "react";
 
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries required. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={buttonsApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={buttons} lang="jsx" title="buttons.jsx" />
-  </TabItem>
-</Tabs>
+const Button = ({
+  children,
+  variant = "primary",
+  size = "md",
+  disabled = false,
+  loading = false,
+  fullWidth = false,
+  leftIcon,
+  rightIcon,
+  onClick,
+  type = "button",
+  className = "",
+  ...props
+}) => {
+  const getVariantStyles = () => {
+    const baseStyles =
+      "font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed";
 
-### Preview
+    switch (variant) {
+      case "primary":
+        return `${baseStyles} bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 border border-transparent`;
+      case "secondary":
+        return `${baseStyles} bg-gray-600 text-white hover:bg-gray-700 focus:ring-gray-500 border border-transparent`;
+      case "outline":
+        return `${baseStyles} bg-transparent text-blue-600 border border-blue-600 hover:bg-blue-50 focus:ring-blue-500`;
+      case "ghost":
+        return `${baseStyles} bg-transparent text-gray-700 hover:bg-gray-100 focus:ring-gray-500 border border-transparent`;
+      case "danger":
+        return `${baseStyles} bg-red-600 text-white hover:bg-red-700 focus:ring-red-500 border border-transparent`;
+      case "success":
+        return `${baseStyles} bg-green-600 text-white hover:bg-green-700 focus:ring-green-500 border border-transparent`;
+      case "warning":
+        return `${baseStyles} bg-yellow-500 text-white hover:bg-yellow-600 focus:ring-yellow-500 border border-transparent`;
+      default:
+        return `${baseStyles} bg-gray-100 text-gray-900 hover:bg-gray-200 focus:ring-gray-500 border border-gray-300`;
+    }
+  };
 
-<iframe
-  src="https://stackblitz.com/edit/vitejs-vite-pbqdvp?embed=1&file=src%2Fcomponents%2FButton.jsx&theme=dark&view=preview"
-  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-/>
+  const getSizeStyles = () => {
+    switch (size) {
+      case "xs":
+        return "px-2.5 py-1.5 text-xs rounded";
+      case "sm":
+        return "px-3 py-2 text-sm rounded-md";
+      case "lg":
+        return "px-6 py-3 text-base rounded-lg";
+      case "xl":
+        return "px-8 py-4 text-lg rounded-lg";
+      default:
+        return "px-4 py-2 text-sm rounded-md";
+    }
+  };
+
+  const handleClick = (e) => {
+    if (!disabled && !loading && onClick) {
+      onClick(e);
+    }
+  };
+
+  return (
+    <button
+      type={type}
+      onClick={handleClick}
+      disabled={disabled || loading}
+      className={`
+        ${getVariantStyles()}
+        ${getSizeStyles()}
+        ${fullWidth ? "w-full" : "inline-flex"}
+        ${leftIcon || rightIcon ? "inline-flex items-center" : ""}
+        ${loading ? "cursor-wait" : ""}
+        ${className}
+      `}
+      {...props}
+    >
+      {loading ? (
+        <>
+          <svg
+            className="animate-spin -ml-1 mr-2 h-4 w-4"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <circle
+              className="opacity-25"
+              cx="12"
+              cy="12"
+              r="10"
+              stroke="currentColor"
+              strokeWidth="4"
+            ></circle>
+            <path
+              className="opacity-75"
+              fill="currentColor"
+              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+            ></path>
+          </svg>
+          Loading...
+        </>
+      ) : (
+        <>
+          {leftIcon && <span className="mr-2">{leftIcon}</span>}
+          {children}
+          {rightIcon && <span className="ml-2">{rightIcon}</span>}
+        </>
+      )}
+    </button>
+  );
+};
+
+export default Button;
+```
+
+## Usage Example
+
+```jsx
+import React, { useState } from "react";
+import Button from "./Button";
+import {
+  PlusIcon,
+  TrashIcon,
+  DownloadIcon,
+  ArrowRightIcon,
+} from "@heroicons/react/24/outline";
+
+const App = () => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSave = async () => {
+    setLoading(true);
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+    setLoading(false);
+    alert("Saved successfully!");
+  };
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">Button Examples</h1>
+
+      {/* Button Variants */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Button Variants</h2>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary">Primary</Button>
+          <Button variant="secondary">Secondary</Button>
+          <Button variant="outline">Outline</Button>
+          <Button variant="ghost">Ghost</Button>
+          <Button variant="danger">Danger</Button>
+          <Button variant="success">Success</Button>
+          <Button variant="warning">Warning</Button>
+        </div>
+      </div>
+
+      {/* Button Sizes */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Button Sizes</h2>
+        <div className="flex items-center gap-3">
+          <Button size="xs" variant="primary">
+            Extra Small
+          </Button>
+          <Button size="sm" variant="primary">
+            Small
+          </Button>
+          <Button size="md" variant="primary">
+            Medium
+          </Button>
+          <Button size="lg" variant="primary">
+            Large
+          </Button>
+          <Button size="xl" variant="primary">
+            Extra Large
+          </Button>
+        </div>
+      </div>
+
+      {/* Buttons with Icons */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Buttons with Icons</h2>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary" leftIcon={<PlusIcon className="w-4 h-4" />}>
+            Add Item
+          </Button>
+          <Button variant="danger" leftIcon={<TrashIcon className="w-4 h-4" />}>
+            Delete
+          </Button>
+          <Button
+            variant="outline"
+            rightIcon={<DownloadIcon className="w-4 h-4" />}
+          >
+            Download
+          </Button>
+          <Button
+            variant="ghost"
+            rightIcon={<ArrowRightIcon className="w-4 h-4" />}
+          >
+            Continue
+          </Button>
+        </div>
+      </div>
+
+      {/* Button States */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Button States</h2>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="primary">Normal</Button>
+          <Button variant="primary" disabled>
+            Disabled
+          </Button>
+          <Button variant="primary" loading={loading} onClick={handleSave}>
+            Save Changes
+          </Button>
+        </div>
+      </div>
+
+      {/* Full Width Buttons */}
+      <div className="space-y-4">
+        <h2 className="text-xl font-semibold">Full Width Button</h2>
+        <div className="max-w-md">
+          <Button variant="primary" fullWidth>
+            Full Width Button
+          </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+| Prop        | Type                                                                                     | Default     | Description                     |
+| ----------- | ---------------------------------------------------------------------------------------- | ----------- | ------------------------------- |
+| `children`  | `ReactNode`                                                                              | `required`  | Button content/text             |
+| `variant`   | `'primary' \| 'secondary' \| 'outline' \| 'ghost' \| 'danger' \| 'success' \| 'warning'` | `'primary'` | Visual style variant            |
+| `size`      | `'xs' \| 'sm' \| 'md' \| 'lg' \| 'xl'`                                                   | `'md'`      | Button size                     |
+| `disabled`  | `boolean`                                                                                | `false`     | Whether button is disabled      |
+| `loading`   | `boolean`                                                                                | `false`     | Show loading state with spinner |
+| `fullWidth` | `boolean`                                                                                | `false`     | Make button full width          |
+| `leftIcon`  | `ReactNode`                                                                              | `undefined` | Icon on the left side           |
+| `rightIcon` | `ReactNode`                                                                              | `undefined` | Icon on the right side          |
+| `onClick`   | `function`                                                                               | `undefined` | Click event handler             |
+| `type`      | `'button' \| 'submit' \| 'reset'`                                                        | `'button'`  | HTML button type                |
+| `className` | `string`                                                                                 | `''`        | Additional CSS classes          |
+
+## Features
+
+- ✅ **7 Variants**: Primary, secondary, outline, ghost, danger, success, warning
+- ✅ **5 Sizes**: From extra-small to extra-large
+- ✅ **Icon Support**: Left and right icon positioning
+- ✅ **Loading State**: Built-in spinner animation
+- ✅ **Disabled State**: Proper disabled styling and behavior
+- ✅ **Full Width**: Option for full-width buttons
+- ✅ **Accessibility**: Proper focus states and keyboard navigation
+
+## Button Variants
+
+- **Primary**: Blue background - main call-to-action buttons
+- **Secondary**: Gray background - secondary actions
+- **Outline**: Transparent with colored border - subtle actions
+- **Ghost**: Transparent background - minimal styling
+- **Danger**: Red background - destructive actions
+- **Success**: Green background - positive confirmations
+- **Warning**: Yellow background - caution actions
+
+## Common Patterns
+
+### Form Buttons
+
+```jsx
+<div className="flex gap-3">
+  <Button type="submit" variant="primary" loading={submitting}>
+    Submit
+  </Button>
+  <Button type="button" variant="outline" onClick={handleCancel}>
+    Cancel
+  </Button>
+</div>
+```
+
+### Action Buttons
+
+```jsx
+<Button
+  variant="danger"
+  leftIcon={<TrashIcon className="w-4 h-4" />}
+  onClick={handleDelete}
+>
+  Delete Item
+</Button>
+```
+
+### Loading Button
+
+```jsx
+<Button variant="primary" loading={isLoading} onClick={handleSubmit}>
+  {isLoading ? "Processing..." : "Process"}
+</Button>
+```
+
+## Installation
+
+Install Heroicons for button icons (optional):
+
+```bash
+npm install @heroicons/react
+```
+
+## Best Practices
+
+1. **Use semantic variants** - Choose variants that match the action's meaning
+2. **Consistent sizing** - Use consistent button sizes within the same interface
+3. **Provide feedback** - Use loading states for async operations
+4. **Clear labels** - Use descriptive, action-oriented button text
+5. **Proper spacing** - Maintain consistent spacing between buttons
+6. **Test accessibility** - Ensure buttons work with keyboard navigation

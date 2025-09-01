@@ -1,33 +1,382 @@
 ---
 title: Button Group
+description: A flexible button group component for creating connected button sets with React and Tailwind CSS.
 ---
 
-The following button group component is a single component which is generically used to group buttons. It is a great component to use if you want to group buttons together. You can style it in place via Tailwind and `className`, also you may define `direction` and `spacing` in place wherever you may use it.
+A versatile button group component that allows you to create sets of connected buttons with consistent styling. Perfect for toolbars, toggle switches, and action groups.
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+## Component Code
 
-import buttonGroupApp from "./codes/Button-Group/buttonGroupApp.txt?raw";
-import buttonGroup from "./codes/Button-Group/buttonGroup.txt?raw";
+```jsx
+import React, { useState } from "react";
 
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries needed. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={buttonGroupApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={buttonGroup} lang="jsx" title="buttonGroup.jsx" />
-  </TabItem>
-</Tabs>
+const ButtonGroup = ({
+  buttons = [],
+  variant = "default",
+  size = "md",
+  orientation = "horizontal",
+  selectable = false,
+  multiple = false,
+  selectedValues = [],
+  onSelectionChange,
+  className = "",
+}) => {
+  const [internalSelected, setInternalSelected] = useState(
+    new Set(
+      Array.isArray(selectedValues)
+        ? selectedValues
+        : [selectedValues].filter(Boolean)
+    )
+  );
 
-### Preview
+  const handleButtonClick = (button, index) => {
+    if (selectable) {
+      const newSelected = new Set(internalSelected);
 
-<iframe
-  src="https://stackblitz.com/edit/vitejs-vite-2eypjp?embed=1&file=src%2Fcomponents%2FButtonGroup.jsx&hideNavigation=1&theme=dark&view=preview"
-  style="width:100%; height: 500px; border:0; border-radius: 4px; overflow:hidden;"
-  sandbox="allow-scripts allow-same-origin allow-popups allow-forms allow-modals"
-/>
+      if (multiple) {
+        if (newSelected.has(button.value || index)) {
+          newSelected.delete(button.value || index);
+        } else {
+          newSelected.add(button.value || index);
+        }
+      } else {
+        if (newSelected.has(button.value || index)) {
+          newSelected.clear();
+        } else {
+          newSelected.clear();
+          newSelected.add(button.value || index);
+        }
+      }
+
+      setInternalSelected(newSelected);
+      if (onSelectionChange) {
+        onSelectionChange(Array.from(newSelected));
+      }
+    }
+
+    if (button.onClick) {
+      button.onClick(button, index);
+    }
+  };
+
+  const getVariantStyles = (isSelected = false) => {
+    const baseStyles =
+      "border focus:outline-none focus:ring-2 focus:ring-blue-500 focus:z-10 transition-all duration-200";
+
+    if (selectable && isSelected) {
+      switch (variant) {
+        case "primary":
+          return `${baseStyles} bg-blue-600 border-blue-600 text-white hover:bg-blue-700`;
+        case "secondary":
+          return `${baseStyles} bg-gray-600 border-gray-600 text-white hover:bg-gray-700`;
+        case "outline":
+          return `${baseStyles} bg-blue-50 border-blue-500 text-blue-700 hover:bg-blue-100`;
+        default:
+          return `${baseStyles} bg-gray-100 border-gray-400 text-gray-900 hover:bg-gray-200`;
+      }
+    }
+
+    switch (variant) {
+      case "primary":
+        return `${baseStyles} bg-blue-500 border-blue-500 text-white hover:bg-blue-600`;
+      case "secondary":
+        return `${baseStyles} bg-gray-500 border-gray-500 text-white hover:bg-gray-600`;
+      case "outline":
+        return `${baseStyles} bg-white border-gray-300 text-gray-700 hover:bg-gray-50`;
+      default:
+        return `${baseStyles} bg-white border-gray-300 text-gray-700 hover:bg-gray-50`;
+    }
+  };
+
+  const getSizeStyles = () => {
+    switch (size) {
+      case "sm":
+        return "px-3 py-1.5 text-sm";
+      case "lg":
+        return "px-6 py-3 text-base";
+      case "xl":
+        return "px-8 py-4 text-lg";
+      default:
+        return "px-4 py-2 text-sm";
+    }
+  };
+
+  const getPositionStyles = (index, total) => {
+    if (orientation === "vertical") {
+      if (index === 0) return "rounded-t-lg rounded-b-none border-b-0";
+      if (index === total - 1) return "rounded-b-lg rounded-t-none";
+      return "rounded-none border-b-0";
+    } else {
+      if (index === 0) return "rounded-l-lg rounded-r-none border-r-0";
+      if (index === total - 1) return "rounded-r-lg rounded-l-none";
+      return "rounded-none border-r-0";
+    }
+  };
+
+  const containerClasses =
+    orientation === "vertical"
+      ? "inline-flex flex-col"
+      : "inline-flex flex-row";
+
+  return (
+    <div className={`${containerClasses} ${className}`} role="group">
+      {buttons.map((button, index) => {
+        const isSelected =
+          selectable && internalSelected.has(button.value || index);
+        const isDisabled = button.disabled;
+
+        return (
+          <button
+            key={button.value || index}
+            onClick={() => !isDisabled && handleButtonClick(button, index)}
+            disabled={isDisabled}
+            className={`
+              ${getVariantStyles(isSelected)}
+              ${getSizeStyles()}
+              ${getPositionStyles(index, buttons.length)}
+              ${isDisabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}
+              relative
+            `}
+            aria-pressed={selectable ? isSelected : undefined}
+          >
+            {button.icon && <span className="mr-2">{button.icon}</span>}
+            {button.label}
+          </button>
+        );
+      })}
+    </div>
+  );
+};
+
+export default ButtonGroup;
+```
+
+## Usage Example
+
+```jsx
+import React, { useState } from "react";
+import ButtonGroup from "./ButtonGroup";
+import {
+  BoldIcon,
+  ItalicIcon,
+  UnderlineIcon,
+  AlignLeftIcon,
+  AlignCenterIcon,
+  AlignRightIcon,
+} from "@heroicons/react/24/outline";
+
+const App = () => {
+  const [alignment, setAlignment] = useState(["left"]);
+  const [formatting, setFormatting] = useState([]);
+
+  const alignmentButtons = [
+    {
+      label: "Left",
+      value: "left",
+      icon: <AlignLeftIcon className="w-4 h-4" />,
+    },
+    {
+      label: "Center",
+      value: "center",
+      icon: <AlignCenterIcon className="w-4 h-4" />,
+    },
+    {
+      label: "Right",
+      value: "right",
+      icon: <AlignRightIcon className="w-4 h-4" />,
+    },
+  ];
+
+  const formatButtons = [
+    { label: "Bold", value: "bold", icon: <BoldIcon className="w-4 h-4" /> },
+    {
+      label: "Italic",
+      value: "italic",
+      icon: <ItalicIcon className="w-4 h-4" />,
+    },
+    {
+      label: "Underline",
+      value: "underline",
+      icon: <UnderlineIcon className="w-4 h-4" />,
+    },
+  ];
+
+  const actionButtons = [
+    {
+      label: "Save",
+      onClick: () => alert("Saved!"),
+      value: "save",
+    },
+    {
+      label: "Cancel",
+      onClick: () => alert("Cancelled!"),
+      value: "cancel",
+    },
+    {
+      label: "Delete",
+      onClick: () => alert("Deleted!"),
+      value: "delete",
+      disabled: true,
+    },
+  ];
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">
+        Button Group Examples
+      </h1>
+
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-semibold mb-3">
+            Text Alignment (Single Select)
+          </h3>
+          <ButtonGroup
+            buttons={alignmentButtons}
+            variant="outline"
+            selectable={true}
+            multiple={false}
+            selectedValues={alignment}
+            onSelectionChange={setAlignment}
+          />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-3">
+            Text Formatting (Multi Select)
+          </h3>
+          <ButtonGroup
+            buttons={formatButtons}
+            variant="default"
+            selectable={true}
+            multiple={true}
+            selectedValues={formatting}
+            onSelectionChange={setFormatting}
+          />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Action Buttons</h3>
+          <ButtonGroup buttons={actionButtons} variant="primary" size="lg" />
+        </div>
+
+        <div>
+          <h3 className="text-lg font-semibold mb-3">Vertical Layout</h3>
+          <ButtonGroup
+            buttons={[
+              { label: "Option 1", value: "1" },
+              { label: "Option 2", value: "2" },
+              { label: "Option 3", value: "3" },
+            ]}
+            orientation="vertical"
+            variant="outline"
+            selectable={true}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+| Prop                | Type                                                 | Default        | Description                                    |
+| ------------------- | ---------------------------------------------------- | -------------- | ---------------------------------------------- |
+| `buttons`           | `Array<ButtonObject>`                                | `[]`           | Array of button configurations                 |
+| `variant`           | `'default' \| 'primary' \| 'secondary' \| 'outline'` | `'default'`    | Visual style variant                           |
+| `size`              | `'sm' \| 'md' \| 'lg' \| 'xl'`                       | `'md'`         | Button size                                    |
+| `orientation`       | `'horizontal' \| 'vertical'`                         | `'horizontal'` | Layout direction                               |
+| `selectable`        | `boolean`                                            | `false`        | Whether buttons can be selected/toggled        |
+| `multiple`          | `boolean`                                            | `false`        | Allow multiple selections (only if selectable) |
+| `selectedValues`    | `Array`                                              | `[]`           | Initially selected button values               |
+| `onSelectionChange` | `function`                                           | `undefined`    | Callback when selection changes                |
+| `className`         | `string`                                             | `''`           | Additional CSS classes                         |
+
+## Button Object Properties
+
+| Property   | Type               | Description                      |
+| ---------- | ------------------ | -------------------------------- |
+| `label`    | `string`           | Button text content              |
+| `value`    | `string \| number` | Unique identifier for the button |
+| `icon`     | `ReactNode`        | Optional icon element            |
+| `onClick`  | `function`         | Click handler for the button     |
+| `disabled` | `boolean`          | Whether the button is disabled   |
+
+## Features
+
+- ✅ **Multiple Variants**: Default, primary, secondary, and outline styles
+- ✅ **Flexible Sizing**: Small, medium, large, and extra-large options
+- ✅ **Orientation Support**: Horizontal and vertical layouts
+- ✅ **Selection Modes**: Single or multiple selection capability
+- ✅ **Icon Support**: Add icons to any button
+- ✅ **Disabled State**: Individual button disable functionality
+- ✅ **Accessibility**: Proper ARIA attributes and keyboard navigation
+
+## Common Use Cases
+
+### Toolbar Actions
+
+```jsx
+const toolbarButtons = [
+  { label: "New", value: "new", onClick: () => createNew() },
+  { label: "Save", value: "save", onClick: () => save() },
+  { label: "Export", value: "export", onClick: () => exportData() },
+];
+
+<ButtonGroup buttons={toolbarButtons} variant="outline" />;
+```
+
+### Toggle Options
+
+```jsx
+const viewOptions = [
+  { label: "List", value: "list" },
+  { label: "Grid", value: "grid" },
+  { label: "Card", value: "card" },
+];
+
+<ButtonGroup
+  buttons={viewOptions}
+  selectable={true}
+  selectedValues={["list"]}
+  onSelectionChange={(selected) => setViewMode(selected[0])}
+/>;
+```
+
+### Filter Controls
+
+```jsx
+const filterButtons = [
+  { label: "All", value: "all" },
+  { label: "Active", value: "active" },
+  { label: "Completed", value: "completed" },
+  { label: "Archived", value: "archived" },
+];
+
+<ButtonGroup
+  buttons={filterButtons}
+  variant="outline"
+  selectable={true}
+  multiple={true}
+  onSelectionChange={setActiveFilters}
+/>;
+```
+
+## Styling Variants
+
+- **Default**: Light gray background with subtle borders
+- **Primary**: Blue theme for primary actions
+- **Secondary**: Gray theme for secondary actions
+- **Outline**: Border-only style with transparent background
+
+## Best Practices
+
+1. **Keep labels concise** - Use short, clear button labels
+2. **Group related actions** - Only group logically related buttons
+3. **Limit group size** - Avoid too many buttons in one group (3-5 is ideal)
+4. **Use consistent icons** - If using icons, apply them consistently
+5. **Consider mobile** - Test on smaller screens to ensure usability
+6. **Provide feedback** - Use selection states to show active options
