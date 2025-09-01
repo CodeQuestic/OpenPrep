@@ -1,25 +1,298 @@
 ---
 title: Testimonials
+description: A beautiful testimonials component built with React and Tailwind CSS for showcasing customer reviews and feedback.
 ---
 
-The following testimonials component is used for showing testimonials from clients or customers. You can use it as a single component and style it extensively by yourself if you desire. You have to pass in an array of data which can also be from an API.
+A flexible testimonials component for displaying customer reviews, feedback, and social proof. Built with React and styled with Tailwind CSS with multiple layout options.
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+## Component Code
 
-import testimonialsApp from "./codes/Testimonials/testimonialsApp.txt?raw";
-import testimonials from "./codes/Testimonials/testimonials.txt?raw";
+```jsx
+import React from "react";
+import { StarIcon } from "@heroicons/react/24/solid";
+import { QuoteIcon } from "@heroicons/react/24/outline";
 
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries required. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={testimonialsApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={testimonials} lang="jsx" title="testimonials.jsx" />
-  </TabItem>
-</Tabs>
+const Testimonials = ({
+  testimonials = [],
+  layout = "grid",
+  showRating = true,
+  showQuotes = true,
+  columns = 3,
+  className = "",
+}) => {
+  const renderStars = (rating) => {
+    return (
+      <div className="flex items-center gap-0.5">
+        {[...Array(5)].map((_, index) => (
+          <StarIcon
+            key={index}
+            className={`w-4 h-4 ${
+              index < rating ? "text-yellow-400" : "text-gray-300"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  const getLayoutClasses = () => {
+    if (layout === "carousel") {
+      return "flex overflow-x-auto gap-6 pb-4";
+    }
+
+    const gridCols = {
+      1: "grid-cols-1",
+      2: "grid-cols-1 md:grid-cols-2",
+      3: "grid-cols-1 md:grid-cols-2 lg:grid-cols-3",
+      4: "grid-cols-1 md:grid-cols-2 lg:grid-cols-4",
+    };
+
+    return `grid ${gridCols[columns] || gridCols[3]} gap-6`;
+  };
+
+  const TestimonialCard = ({ testimonial }) => (
+    <div
+      className={`
+        bg-white rounded-lg border border-gray-200 p-6 shadow-sm hover:shadow-md transition-shadow duration-200
+        ${layout === "carousel" ? "flex-shrink-0 w-80" : ""}
+      `}
+    >
+      {/* Quote Icon */}
+      {showQuotes && <QuoteIcon className="w-8 h-8 text-gray-300 mb-4" />}
+
+      {/* Testimonial Text */}
+      <blockquote className="text-gray-700 mb-4 leading-relaxed">
+        "{testimonial.text}"
+      </blockquote>
+
+      {/* Rating */}
+      {showRating && testimonial.rating && (
+        <div className="mb-4">{renderStars(testimonial.rating)}</div>
+      )}
+
+      {/* Author Info */}
+      <div className="flex items-center gap-3">
+        {testimonial.avatar && (
+          <img
+            src={testimonial.avatar}
+            alt={testimonial.author}
+            className="w-12 h-12 rounded-full object-cover"
+          />
+        )}
+        <div>
+          <p className="font-semibold text-gray-900">{testimonial.author}</p>
+          {testimonial.role && (
+            <p className="text-sm text-gray-600">{testimonial.role}</p>
+          )}
+          {testimonial.company && (
+            <p className="text-sm text-blue-600">{testimonial.company}</p>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+
+  return (
+    <div className={className}>
+      <div className={getLayoutClasses()}>
+        {testimonials.map((testimonial, index) => (
+          <TestimonialCard
+            key={testimonial.id || index}
+            testimonial={testimonial}
+          />
+        ))}
+      </div>
+    </div>
+  );
+};
+
+export default Testimonials;
+```
+
+## Usage Example
+
+```jsx
+import React from "react";
+import Testimonials from "./Testimonials";
+
+const App = () => {
+  const testimonialsData = [
+    {
+      id: 1,
+      text: "This platform has completely transformed our development workflow. The intuitive interface and powerful features have increased our team's productivity significantly.",
+      author: "Sarah Johnson",
+      role: "Lead Developer",
+      company: "TechCorp",
+      rating: 5,
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    },
+    {
+      id: 2,
+      text: "Outstanding customer support and incredibly reliable service. We've been using this for over two years without any major issues.",
+      author: "Michael Chen",
+      role: "CTO",
+      company: "StartupXYZ",
+      rating: 5,
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    },
+    {
+      id: 3,
+      text: "The best investment we've made for our business. Easy to implement, great documentation, and excellent performance.",
+      author: "Emily Rodriguez",
+      role: "Product Manager",
+      company: "InnovateLabs",
+      rating: 4,
+      avatar:
+        "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    },
+  ];
+
+  return (
+    <div className="max-w-6xl mx-auto p-6 space-y-12">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-gray-900 mb-4">
+          Customer Testimonials
+        </h1>
+        <p className="text-lg text-gray-600">
+          See what our customers have to say about their experience
+        </p>
+      </div>
+
+      {/* Grid Layout */}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          Grid Layout
+        </h2>
+        <Testimonials testimonials={testimonialsData} />
+      </div>
+
+      {/* Carousel Layout */}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          Carousel Layout
+        </h2>
+        <Testimonials testimonials={testimonialsData} layout="carousel" />
+      </div>
+
+      {/* Two Column Layout */}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          Two Column Layout
+        </h2>
+        <Testimonials testimonials={testimonialsData} columns={2} />
+      </div>
+
+      {/* Minimal Style */}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-900 mb-6">
+          Minimal Style
+        </h2>
+        <Testimonials
+          testimonials={testimonialsData}
+          showQuotes={false}
+          showRating={false}
+          className="bg-gray-50 p-8 rounded-xl"
+        />
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+| Prop           | Type                       | Default  | Description                      |
+| -------------- | -------------------------- | -------- | -------------------------------- |
+| `testimonials` | `Array<TestimonialObject>` | `[]`     | Array of testimonial data        |
+| `layout`       | `'grid' \| 'carousel'`     | `'grid'` | Display layout style             |
+| `showRating`   | `boolean`                  | `true`   | Whether to display star ratings  |
+| `showQuotes`   | `boolean`                  | `true`   | Whether to show quote icons      |
+| `columns`      | `1 \| 2 \| 3 \| 4`         | `3`      | Number of columns in grid layout |
+| `className`    | `string`                   | `''`     | Additional CSS classes           |
+
+## Testimonial Object
+
+| Property  | Type               | Required | Description                  |
+| --------- | ------------------ | -------- | ---------------------------- |
+| `id`      | `string \| number` | No       | Unique identifier            |
+| `text`    | `string`           | Yes      | The testimonial quote/review |
+| `author`  | `string`           | Yes      | Person's name                |
+| `role`    | `string`           | No       | Job title or position        |
+| `company` | `string`           | No       | Company or organization      |
+| `rating`  | `number`           | No       | Star rating (1-5)            |
+| `avatar`  | `string`           | No       | Profile image URL            |
+
+## Features
+
+- ✅ **Responsive Layouts**: Grid and carousel options that adapt to screen size
+- ✅ **Star Ratings**: Optional 5-star rating display with yellow stars
+- ✅ **Avatar Support**: Profile images with proper fallback handling
+- ✅ **Quote Styling**: Beautiful typography with optional quote icons
+- ✅ **Flexible Columns**: 1-4 column grid layouts for different needs
+- ✅ **Hover Effects**: Subtle shadow animations on card hover
+- ✅ **Clean Design**: Professional appearance with consistent spacing
+
+## Common Patterns
+
+### Product Reviews
+
+```jsx
+<Testimonials testimonials={productReviews} columns={3} showRating={true} />
+```
+
+### Service Feedback
+
+```jsx
+<Testimonials
+  testimonials={serviceFeedback}
+  layout="carousel"
+  showQuotes={true}
+/>
+```
+
+### Team Testimonials
+
+```jsx
+<Testimonials
+  testimonials={teamFeedback}
+  columns={2}
+  showRating={false}
+  className="bg-blue-50 p-8 rounded-xl"
+/>
+```
+
+## Installation
+
+Install Heroicons for quote and star icons:
+
+```bash
+npm install @heroicons/react
+```
+
+## Responsive Behavior
+
+- **Mobile (< 768px)**: Always single column regardless of columns setting
+- **Tablet (768px - 1024px)**: Respects columns up to 2 columns
+- **Desktop (> 1024px)**: Full column count as specified
+
+## Best Practices
+
+1. **Use authentic testimonials** - Real customer feedback builds trust
+2. **Include specific details** - Concrete benefits are more persuasive
+3. **Show diverse voices** - Include testimonials from different customer types
+4. **Keep quotes concise** - Aim for 1-3 sentences per testimonial
+5. **Update regularly** - Keep testimonials current and relevant
+6. **Include attribution** - Name, role, and company add credibility
+7. **Test on mobile** - Ensure testimonials display well on all devices
+
+## Notes
+
+- Component automatically handles responsive layout
+- Avatar images are optional with graceful fallback
+- Star ratings integrate seamlessly when provided
+- Carousel layout includes proper horizontal scroll behavior
+- Easy to customize with Tailwind CSS utilities

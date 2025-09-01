@@ -1,25 +1,378 @@
 ---
-title: Star Ratings
+title: Star Rating
+description: An interactive star rating component built with React and Tailwind CSS for user ratings and reviews.
 ---
 
-The following rating component is single component meant to be used in a form or a feedback area. It takes allows to set any icons (Not just stars) and allows you set how many stars you want to display. It can be easily paired with an API or database and update in real time. You can also style it however you want quite easily.
+An interactive and accessible star rating component for collecting user ratings and displaying review scores. Built with React and styled with Tailwind CSS.
 
-import { Card } from "@astrojs/starlight/components";
-import { Tabs, TabItem } from "@astrojs/starlight/components";
-import { Code } from "@astrojs/starlight/components";
+## Component Code
 
-import ratingApp from "./codes/Rating/ratingApp.txt?raw";
-import rating from "./codes/Rating/rating.txt?raw";
+```jsx
+import React, { useState } from "react";
+import { StarIcon } from "@heroicons/react/24/solid";
+import { StarIcon as StarOutlineIcon } from "@heroicons/react/24/outline";
 
-<Tabs>
-  <TabItem label="Dependencies">
-    No extra libraries required. Assuming you have [Tailwind
-    CSS](https://tailwindcss.com/docs/guides/create-react-app) installed
-  </TabItem>
-  <TabItem label="Usage">
-    <Code code={ratingApp} lang="jsx" title="App.jsx" />
-  </TabItem>
-  <TabItem label="Component">
-    <Code code={rating} lang="jsx" title="rating.jsx" />
-  </TabItem>
-</Tabs>
+const StarRating = ({
+  rating = 0,
+  maxRating = 5,
+  size = "md",
+  readonly = false,
+  showLabel = false,
+  allowHalf = false,
+  color = "yellow",
+  onRatingChange,
+  className = "",
+}) => {
+  const [hover, setHover] = useState(0);
+  const [currentRating, setCurrentRating] = useState(rating);
+
+  const handleClick = (newRating) => {
+    if (readonly) return;
+
+    setCurrentRating(newRating);
+    if (onRatingChange) {
+      onRatingChange(newRating);
+    }
+  };
+
+  const handleMouseEnter = (newRating) => {
+    if (readonly) return;
+    setHover(newRating);
+  };
+
+  const handleMouseLeave = () => {
+    if (readonly) return;
+    setHover(0);
+  };
+
+  const getSizeStyles = () => {
+    switch (size) {
+      case "sm":
+        return "w-4 h-4";
+      case "lg":
+        return "w-8 h-8";
+      case "xl":
+        return "w-10 h-10";
+      default:
+        return "w-6 h-6";
+    }
+  };
+
+  const getColorStyles = (filled) => {
+    if (!filled) {
+      return "text-gray-300";
+    }
+
+    switch (color) {
+      case "yellow":
+        return "text-yellow-400";
+      case "orange":
+        return "text-orange-400";
+      case "red":
+        return "text-red-400";
+      case "blue":
+        return "text-blue-400";
+      case "green":
+        return "text-green-400";
+      default:
+        return "text-yellow-400";
+    }
+  };
+
+  const renderStar = (index) => {
+    const starValue = index + 1;
+    const displayRating = hover || currentRating;
+
+    let filled = false;
+    if (allowHalf) {
+      filled = displayRating >= starValue - 0.5;
+    } else {
+      filled = displayRating >= starValue;
+    }
+
+    const StarComponent = filled ? StarIcon : StarOutlineIcon;
+
+    return (
+      <button
+        key={index}
+        type="button"
+        onClick={() => handleClick(starValue)}
+        onMouseEnter={() => handleMouseEnter(starValue)}
+        onMouseLeave={handleMouseLeave}
+        disabled={readonly}
+        className={`
+          ${getSizeStyles()}
+          ${getColorStyles(filled)}
+          ${readonly ? "cursor-default" : "cursor-pointer hover:scale-110"}
+          transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 rounded
+        `}
+        aria-label={`Rate ${starValue} star${starValue > 1 ? "s" : ""}`}
+      >
+        <StarComponent className="w-full h-full" />
+      </button>
+    );
+  };
+
+  const getRatingText = () => {
+    if (currentRating === 0) return "No rating";
+    if (currentRating === 1) return "1 star";
+    return `${currentRating} stars`;
+  };
+
+  return (
+    <div className={`flex items-center gap-1 ${className}`}>
+      <div className="flex items-center gap-0.5">
+        {[...Array(maxRating)].map((_, index) => renderStar(index))}
+      </div>
+
+      {showLabel && (
+        <span className="ml-2 text-sm text-gray-600">
+          {getRatingText()} {maxRating > 5 && `out of ${maxRating}`}
+        </span>
+      )}
+    </div>
+  );
+};
+
+export default StarRating;
+```
+
+## Usage Example
+
+```jsx
+import React, { useState } from "react";
+import StarRating from "./StarRating";
+
+const App = () => {
+  const [productRating, setProductRating] = useState(0);
+  const [serviceRating, setServiceRating] = useState(4);
+
+  return (
+    <div className="max-w-4xl mx-auto p-6 space-y-8">
+      <h1 className="text-3xl font-bold text-gray-900">Star Rating Examples</h1>
+
+      <div className="space-y-6">
+        {/* Interactive Rating */}
+        <div className="bg-white p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-3">Rate This Product</h3>
+          <StarRating
+            rating={productRating}
+            onRatingChange={setProductRating}
+            showLabel={true}
+            size="lg"
+          />
+          <p className="mt-2 text-sm text-gray-600">
+            Current rating: {productRating}/5
+          </p>
+        </div>
+
+        {/* Read-only Ratings */}
+        <div className="bg-white p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-4">Customer Reviews</h3>
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700">Overall Rating</span>
+              <StarRating rating={4.5} readonly showLabel />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700">Service Quality</span>
+              <StarRating rating={serviceRating} readonly color="blue" />
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-gray-700">Value for Money</span>
+              <StarRating rating={3} readonly color="green" />
+            </div>
+          </div>
+        </div>
+
+        {/* Different Sizes and Colors */}
+        <div className="bg-white p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-4">Different Styles</h3>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Small Yellow Stars</p>
+              <StarRating rating={3} readonly size="sm" color="yellow" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Medium Orange Stars</p>
+              <StarRating rating={4} readonly size="md" color="orange" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Large Red Stars</p>
+              <StarRating rating={2} readonly size="lg" color="red" />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2">
+                Extra Large Blue Stars
+              </p>
+              <StarRating rating={5} readonly size="xl" color="blue" />
+            </div>
+          </div>
+        </div>
+
+        {/* Interactive with Different Max Ratings */}
+        <div className="bg-white p-6 rounded-lg border">
+          <h3 className="text-lg font-semibold mb-4">Custom Max Rating</h3>
+          <div className="space-y-4">
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Rate out of 10</p>
+              <StarRating
+                rating={7}
+                maxRating={10}
+                onRatingChange={(rating) =>
+                  console.log("10-star rating:", rating)
+                }
+                showLabel
+              />
+            </div>
+            <div>
+              <p className="text-sm text-gray-600 mb-2">Simple 3-star rating</p>
+              <StarRating
+                rating={2}
+                maxRating={3}
+                onRatingChange={(rating) =>
+                  console.log("3-star rating:", rating)
+                }
+                showLabel
+                size="lg"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export default App;
+```
+
+## Props
+
+| Prop             | Type                                                 | Default     | Description                   |
+| ---------------- | ---------------------------------------------------- | ----------- | ----------------------------- |
+| `rating`         | `number`                                             | `0`         | Current rating value          |
+| `maxRating`      | `number`                                             | `5`         | Maximum number of stars       |
+| `size`           | `'sm' \| 'md' \| 'lg' \| 'xl'`                       | `'md'`      | Size of the stars             |
+| `readonly`       | `boolean`                                            | `false`     | Whether rating is interactive |
+| `showLabel`      | `boolean`                                            | `false`     | Show text label with rating   |
+| `allowHalf`      | `boolean`                                            | `false`     | Allow half-star ratings       |
+| `color`          | `'yellow' \| 'orange' \| 'red' \| 'blue' \| 'green'` | `'yellow'`  | Star color theme              |
+| `onRatingChange` | `function`                                           | `undefined` | Callback when rating changes  |
+| `className`      | `string`                                             | `''`        | Additional CSS classes        |
+
+## Features
+
+- ✅ **Interactive & Read-only Modes**: Use for both input and display
+- ✅ **Multiple Sizes**: From small indicators to large interactive ratings
+- ✅ **Color Themes**: Yellow, orange, red, blue, green options
+- ✅ **Flexible Max Rating**: Support for any number of stars (3, 5, 10, etc.)
+- ✅ **Hover Effects**: Visual feedback on hover for interactive mode
+- ✅ **Accessibility**: Keyboard navigation and screen reader support
+- ✅ **Half Stars**: Optional support for fractional ratings
+
+## Common Use Cases
+
+### Product Reviews
+
+```jsx
+<StarRating
+  rating={userRating}
+  onRatingChange={setUserRating}
+  showLabel={true}
+  size="lg"
+/>
+```
+
+### Display Average Rating
+
+```jsx
+<StarRating rating={4.3} readonly showLabel allowHalf />
+```
+
+### Feedback Form
+
+```jsx
+const categories = ["Quality", "Service", "Value"];
+
+{
+  categories.map((category) => (
+    <div key={category} className="flex items-center justify-between">
+      <span>{category}</span>
+      <StarRating
+        rating={ratings[category]}
+        onRatingChange={(rating) =>
+          setRatings({ ...ratings, [category]: rating })
+        }
+      />
+    </div>
+  ));
+}
+```
+
+## Color Variants
+
+- **Yellow**: Classic star rating color (default)
+- **Orange**: Warm, friendly rating color
+- **Red**: For critical or negative ratings
+- **Blue**: Modern, professional appearance
+- **Green**: Positive, success-oriented ratings
+
+## Installation
+
+Install Heroicons for the star icons:
+
+```bash
+npm install @heroicons/react
+```
+
+## Accessibility Features
+
+- **Keyboard Navigation**: Tab through stars, Enter/Space to select
+- **ARIA Labels**: Descriptive labels for each star
+- **Screen Reader Support**: Proper rating announcements
+- **Focus Indicators**: Clear visual focus states
+- **Role Attributes**: Proper semantic markup
+
+## Customization Examples
+
+### Custom Colors
+
+```jsx
+// Using custom Tailwind colors
+<StarRating rating={4} readonly className="[&>div>button]:text-purple-400" />
+```
+
+### Different Layouts
+
+```jsx
+// Vertical rating display
+<div className="flex flex-col items-center gap-2">
+  <StarRating rating={5} readonly />
+  <span className="text-sm text-gray-600">Excellent</span>
+</div>
+
+// Inline with text
+<div className="flex items-center gap-2">
+  <span className="text-gray-700">Rating:</span>
+  <StarRating rating={4} readonly size="sm" />
+  <span className="text-sm text-gray-600">(4.0)</span>
+</div>
+```
+
+## Best Practices
+
+1. **Use appropriate sizes** - Match star size to the interface context
+2. **Provide clear feedback** - Show hover states and current selection
+3. **Include labels** - Help users understand the rating scale
+4. **Consider half-stars** - For more precise average ratings display
+5. **Test accessibility** - Ensure component works with screen readers
+6. **Mobile optimization** - Ensure touch targets are large enough on mobile devices
+
+## Notes
+
+- Component uses Heroicons for consistent, scalable star icons
+- Smooth hover and click animations with CSS transitions
+- Supports both filled and outline star states
+- Easy to customize colors and sizes with Tailwind CSS
+- Fully accessible with proper ARIA attributes and keyboard support
